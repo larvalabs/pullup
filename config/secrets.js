@@ -23,8 +23,8 @@ module.exports = {
   },
 
   github: {
-    clientID: 'Your Client ID',
-    clientSecret: 'Your Client Secret',
+    clientID: process.env.GITHUB_CLIENTID,
+    clientSecret: process.env.GITHUB_SECRET,
     callbackURL: '/auth/github/callback',
     passReqToCallback: true
   },

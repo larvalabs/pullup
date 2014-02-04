@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  .page-header
+    h2
+      Recent News
+
+  table.table.table-condensed
+    thead
+      tr
+        th №
+        th Title
+        th User
+    tbody
+      each item, index in items
+        tr
+          td= index + 1
+          td
+            a(href=item.url, target='_blank')
+              | #{item.title}
+          td= item.poster.username

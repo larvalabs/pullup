@@ -8,6 +8,7 @@ var GitHubStrategy = require('passport-github').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var User = require('../models/User');
 var secrets = require('./secrets');
+var userlist = require('./userlist');
 var _ = require('underscore');
 
 passport.serializeUser(function(user, done) {
@@ -82,6 +83,14 @@ passport.use(new FacebookStrategy(secrets.facebook, function (req, accessToken, 
 passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refreshToken, profile, done) {
   if (req.user) {
     User.findOne({ $or: [{ github: profile.id }, { email: profile.email }] }, function(err, existingUser) {
+      // Check for user in authorized user list
+      console.log("Checking for user " + profile.username);
+      var index = userlist.users.indexOf(profile.username);
+      console.log("Index in authorized users: " + index);
+      if (index == -1) {
+        req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
+        done(err);
+      }
       if (existingUser) {
         req.flash('errors', { msg: 'There is already a GitHub account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
         done(err);
@@ -101,9 +110,19 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
       }
     });
   } else {
+    // Check for user in authorized user list
+    console.log("Checking for user in else block " + profile.username);
+    var index = userlist.users.indexOf(profile.username);
+    console.log("Index in authorized users: " + index);
+    if (index == -1) {
+      req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
+      done();
+    }
+
     User.findOne({ github: profile.id }, function(err, existingUser) {
       if (existingUser) return done(null, existingUser);
       var user = new User();
+      user.username = profile.username;
       user.email = profile._json.email;
       user.github = profile.id;
       user.tokens.push({ kind: 'github', accessToken: accessToken });

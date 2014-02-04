@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+  form.form-horizontal(id='signup-form', method='POST')
+    legend Submit News
+    .form-group
+      label.col-sm-3.control-label(for='title') Title
+      .col-sm-7
+        input.form-control(type='text', name='title', id='title', placeholder='Title', autofocus)
+    .form-group
+      label.col-sm-3.control-label(for='username') URL
+      .col-sm-7
+        input.form-control(type='text', name='url', id='url', placeholder='URL')
+    .form-group
+      .col-sm-offset-3.col-sm-7
+        button.btn.btn-success(type='submit')
+          i.fa.fa-check
+          | Submit
