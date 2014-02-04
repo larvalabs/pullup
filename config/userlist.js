@@ -1,3 +1,6 @@
 module.exports = {
-	users: ['megamattron']
+	users: [
+		'megamattron', 
+		'pents90'
+	]
 };
