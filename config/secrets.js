@@ -1,5 +1,5 @@
 module.exports = {
-  db: 'localhost',
+  db: process.env.MONGOHQ_URL || 'localhost',
 
   sendgrid: {
     user: 'Your SendGrid Username',
@@ -25,7 +25,7 @@ module.exports = {
   github: {
     clientID: process.env.GITHUB_CLIENTID,
     clientSecret: process.env.GITHUB_SECRET,
-    callbackURL: '/auth/github/callback',
+    callbackURL: process.env.GITHUB_CALLBACK ||  '/auth/github/callback',
     passReqToCallback: true
   },
 
