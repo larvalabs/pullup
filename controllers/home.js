@@ -8,3 +8,9 @@ exports.index = function(req, res) {
     title: 'Home'
   });
 };
+
+exports.signup = function(req, res) {
+  res.render('howtosignup', {
+    title: 'How to Sign Up'
+  });
+};
