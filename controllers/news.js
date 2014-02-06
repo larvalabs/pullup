@@ -11,16 +11,28 @@ exports.index = function(req, res) {
   .limit(30)
   .populate('poster')
   .exec(function(err, newsItems) {
-//    console.log("Error: " + err);
-//    console.log("Items: " + newsItems);
-    for (var i = 0; i<newsItems.length; i++){
-      console.log(newsItems[i].title);
-    }
-
     res.render('news/index', {
       title: 'Recent News',
       items: newsItems
     })
+  });
+}
+
+exports.userNews = function(req, res) {
+  User
+  .find({'username': req.params.id})
+  .exec(function(err, users) {
+    NewsItem
+    .find({'poster': users[0].id})
+    .sort('-created')
+    .limit(30)
+    .populate('poster')
+    .exec(function(err, newsItems) {
+      res.render('news/index', {
+        title: 'News shared by ' + users[0].username,
+        items: newsItems
+      })
+    });
   });
 }
 
