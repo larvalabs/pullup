@@ -1,6 +1,7 @@
 module.exports = {
 	users: [
 		'megamattron', 
-		'pents90'
+		'pents90',
+		'michaelnovakjr'
 	]
 };
