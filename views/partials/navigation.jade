@@ -6,14 +6,16 @@
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href='/') codepile
+      a.navbar-brand(href='/') pullup
     .collapse.navbar-collapse
       ul.nav.navbar-nav
         if user
           li(class=title=='Submit News'?'active':undefined)
             a(href='/news/submit') Submit News
-        li(class=title=='Contact'?'active':undefined)
-          a(href='/contact') Contact
+        li(class=title=='About'?'active':undefined)
+          a(href='/about') About
+        //li(class=title=='Contact'?'active':undefined)
+        //  a(href='/contact') Contact
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)

@@ -11,6 +11,12 @@ exports.index = function(req, res) {
 
 exports.signup = function(req, res) {
   res.render('howtosignup', {
-    title: 'How to Sign Up'
+    title: 'Signup'
+  });
+};
+
+exports.about = function(req, res) {
+  res.render('about', {
+    title: 'About'
   });
 };

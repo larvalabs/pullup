@@ -11,8 +11,8 @@ exports.index = function(req, res) {
   .limit(30)
   .populate('poster')
   .exec(function(err, newsItems) {
-    console.log("Error: " + err);
-    console.log("Items: " + newsItems);
+//    console.log("Error: " + err);
+//    console.log("Items: " + newsItems);
     for (var i = 0; i<newsItems.length; i++){
       console.log(newsItems[i].title);
     }
