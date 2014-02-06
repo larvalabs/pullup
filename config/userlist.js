@@ -3,6 +3,7 @@ module.exports = {
 		'megamattron', 
 		'pents90',
 		'michaelnovakjr',
-		'markbao'
+		'markbao',
+		'sp1d3rx'
 	]
 };
