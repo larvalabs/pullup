@@ -8,7 +8,12 @@ block content
             |  Make the site better and become a full member. See <a href="/about">here</a> for more details.
 
     .page-header
-        h4 #{title}
+        h4
+          if filteredUser
+            | News shared by 
+            a(href='http://github.com/' + filteredUser, target='_blank') #{filteredUser}
+          else
+            | Recent News
 
     table.table.table-condensed
         thead
