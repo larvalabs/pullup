@@ -15,7 +15,9 @@ block content
             tr
                 th #
                 th Title
-                th User
+
+                if !filteredUser
+                    th User
         tbody
             each item, index in items
                 tr
@@ -23,4 +25,7 @@ block content
                     td
                         a(href=item.url, target='_blank')
                             | #{item.title}
-                    td= item.poster.username
+                    if !filteredUser
+                        td
+                            a(href='/news/' + item.poster.username) 
+                                | #{item.poster.username}

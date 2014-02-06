@@ -30,7 +30,8 @@ exports.userNews = function(req, res) {
     .exec(function(err, newsItems) {
       res.render('news/index', {
         title: 'News shared by ' + users[0].username,
-        items: newsItems
+        items: newsItems,
+        filteredUser: users[0].username
       })
     });
   });
