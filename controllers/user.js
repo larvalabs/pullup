@@ -119,7 +119,6 @@ exports.postUpdateProfile = function(req, res, next) {
     if (err) return next(err);
     user.email = req.body.email || '';
     user.profile.name = req.body.name || '';
-    user.profile.gender = req.body.gender || '';
     user.profile.location = req.body.location || '';
     user.profile.website = req.body.website || '';
 
