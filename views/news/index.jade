@@ -1,20 +1,26 @@
 extends ../layout
 
 block content
-  .page-header
-    h4 Top News
+    if !user
+        .alert.alert-info
+            i.fa.fa-cloud-upload
+            strong Join this site via pull request!
+            |  Make the site better and become a full member. See <a href="/about">here</a> for more details.
 
-  table.table.table-condensed
-    thead
-      tr
-        th #
-        th Title
-        th User
-    tbody
-      each item, index in items
-        tr
-          td= index + 1
-          td
-            a(href=item.url, target='_blank')
-              | #{item.title}
-          td= item.poster.username
+    .page-header
+        h4 Top News
+
+    table.table.table-condensed
+        thead
+            tr
+                th #
+                th Title
+                th User
+        tbody
+            each item, index in items
+                tr
+                    td= index + 1
+                    td
+                        a(href=item.url, target='_blank')
+                            | #{item.title}
+                    td= item.poster.username
