@@ -12,12 +12,34 @@ exports.index = function(req, res) {
   .limit(30)
   .populate('poster')
   .exec(function(err, newsItems) {
-    res.render('news/index', {
-      title: 'Recent News',
-      items: newsItems
-    })
+
+    Vote
+    .find({ id: { $in: newsItems.map(function (item) { return item.id; }) } })
+    .exec(function (err, votes) {
+
+      newsItems = newsItems.map(function (item) {
+        item = item.toObject();
+        item.votes = votes.reduce(function (prev, curr, i) {
+
+          // count this item as voted for if the logged in user has a vote tallied
+          if(req.user && req.user.id && curr.voter.toString() === req.user.id.toString()) {
+            item.votedFor = true;
+          }
+
+          return prev + curr.amount;
+        }, 0);
+
+        return item;
+      });
+
+      res.render('news/index', {
+        title: 'Recent News',
+        items: newsItems
+      });
+
+    });
   });
-}
+};
 
 exports.userNews = function(req, res) {
   User
