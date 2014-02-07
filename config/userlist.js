@@ -17,6 +17,7 @@ module.exports = {
         'tito0224',
         'hemanth',
 		'treygriffith',
+                'tejohnso',
 		'megamattron', 
 		'pents90',
 		'michaelnovakjr',
