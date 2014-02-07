@@ -13,6 +13,10 @@ var userlist = require('./userlist');
 var _ = require('underscore');
 
 var generate_userlist = function(callback){
+  if (!process.env.PORT){
+    callback([]);
+    return;
+  }
   var https = require('https');
   https.get(
     {
@@ -118,7 +122,7 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
 
         var index = users.indexOf(profile.username);
         console.log("Index in authorized users: " + index);
-        if (index == -1) {
+        if (process.env.PORT && index == -1) {
           req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
           done(err);
         }
@@ -150,7 +154,7 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
 
         var index = users.indexOf(profile.username);
         console.log("Index in authorized users: " + index);
-        if (index == -1) {
+        if (process.env.PORT && index == -1) {
           req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
           done();
         }
@@ -168,7 +172,7 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
           done(err, user);
         });
       })
-      
+
     });
   }
 }));

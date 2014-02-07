@@ -31,10 +31,8 @@ node app.js
 ```
 
 # Pre-reqs for local login
-To log in to your development instance you'll need to:
+To log in to your development instance you'll need to create a GitHub application and set the following environment variables:
 
-A) Add your github name (temporarily) to config/passport.js line 31 (array definition of userlist before populated via github API)
-B) create a GitHub application and set the following environment variables:
 ```bash
 export GITHUB_CLIENTID='CLIENTID'
 export GITHUB_SECRET='SECRET'
