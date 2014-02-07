@@ -5,15 +5,18 @@ var mongoose = require('mongoose')
 var voteSchema = new mongoose.Schema({
   item: {
     type: Schema.Types.ObjectId,
-    ref: 'NewsItem'
+    ref: 'NewsItem',
+    required: true
   },
   voter: {
     type: String,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   amount: {
     type: Number,
-    default: 1
+    default: 1,
+    required: true
   }
 });
 
