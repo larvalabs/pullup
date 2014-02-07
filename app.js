@@ -61,6 +61,7 @@ app.use(express.compress());
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.cookieParser());
+app.use(express.bodyParser());
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(expressValidator());
@@ -110,6 +111,7 @@ app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews)
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 app.get('/news/:id', newsController.userNews);
 app.get('/api', apiController.getApi);
+app.post('/api/hook', apiController.hook);
 app.get('/api/foursquare', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFoursquare);
 app.get('/api/tumblr', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTumblr);
 app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);

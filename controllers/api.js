@@ -12,6 +12,7 @@ var foursquare = require('node-foursquare')({ secrets: secrets.foursquare });
 var Github = require('github-api');
 var Twit = require('twit');
 var paypal = require('paypal-rest-sdk');
+var Netmask = require('netmask').Netmask;
 
 /**
  * GET /api
@@ -22,6 +23,55 @@ exports.getApi = function(req, res) {
   res.render('api/index', {
     title: 'API Browser'
   });
+};
+
+/*
+ * GET /api/hook
+ * Restarts the website on a GitHub hook
+ */
+
+exports.hook = function(req, res) {
+  var authorized = false;
+  for (var i = 0; i < secrets.hooks.length; i++) {
+    var block = new Netmask(secrets.hooks[i]);
+    if (block.contains(req.connection.remoteAddress)) {
+      authorized = true;
+      break;
+    }
+  }
+  if (authorized) {
+    try {
+      var allow = false;
+      console.log(req.body.repository.name);
+      if (secrets.hook_repository === req.body.repository.owner.name + '/' + req.body.repository.name) {
+        if (req.body.ref === "refs/heads/master") {
+          allow = true;
+          for (var i = 0; i < req.body.commits.length; i++) {
+            if (req.body.commits[i].message.indexOf('[noupdate]') !== -1) {
+              allow = false;
+            }
+          }
+        }
+      }
+      if (allow) {
+        console.log('Updating site on GitHub hook');
+        var git = require('child_process').exec('git pull && npm install', function (err, stdout, stderr) {
+          if (err === null) {
+            process.exit(0); // Watchdog restarts at this point
+          } else {
+            console.log('Error occured updating on GitHub hook.');
+          }
+        });
+      }
+    } catch (ex) {
+      // Just drop it if we get nasty JSON
+      console.log(ex);
+    }
+    res.statusCode = 200;
+  } else {
+    res.statusCode = 401;
+  }
+  res.end();
 };
 
 /**

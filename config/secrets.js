@@ -1,6 +1,13 @@
 module.exports = {
   db: process.env.MONGOHQ_URL || 'localhost',
 
+  hooks: [
+    "192.30.252.0/22", // Github
+    "127.0.0.1" // Localhost
+  ],
+
+  hook_repository: "larvalabs/pullup",
+
   sendgrid: {
     user: 'Your SendGrid Username',
     password: 'Your SendGrid Password'
