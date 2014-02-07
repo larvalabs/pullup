@@ -21,3 +21,6 @@ node_modules
 Thumbs.db
 
 public/vendor
+
+.vagrant/
+vagrant_ansible_inventory_default
