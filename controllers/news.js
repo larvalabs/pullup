@@ -3,6 +3,7 @@ var passport = require('passport');
 var _ = require('underscore');
 var User = require('../models/User');
 var NewsItem = require('../models/NewsItem');
+var request = require('request');
 
 exports.index = function(req, res) {
   NewsItem
@@ -16,7 +17,7 @@ exports.index = function(req, res) {
       items: newsItems
     })
   });
-}
+};
 
 exports.userNews = function(req, res) {
   User
@@ -35,7 +36,22 @@ exports.userNews = function(req, res) {
       })
     });
   });
-}
+};
+
+exports.sourceNews = function(req, res) {
+  NewsItem
+  .find({'source': req.params.source})
+  .sort('-created')
+  .limit(30)
+  .populate('poster')
+  .exec(function(err, newsItems) {
+    res.render('news/index', {
+      title: 'Recent news from ' + req.params.source,
+      items: newsItems,
+      filteredSource: req.params.source
+    })
+  });
+};
 
 /**
  * GET /news/submit
@@ -46,6 +62,23 @@ exports.submitNews = function(req, res) {
   //if (!req.user) return res.redirect('/login');
   res.render('news/submit', {
     title: 'Submit News'
+  });
+};
+
+/**
+ * GET /news/summarize
+ * Summarize given url.
+ */
+
+exports.summarize = function(req, res) {
+  request('http://clipped.me/algorithm/clippedapi.php?url='+req.query.url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.write(body);
+      res.end();
+    } else {
+      res.end();
+    }
   });
 };
 
@@ -72,7 +105,9 @@ exports.postNews = function(req, res, next) {
   var newsItem = new NewsItem({
     title: req.body.title,
     url: req.body.url,
-    poster: req.user.id
+    poster: req.user.id,
+    summary: req.body.summary,
+    source: req.body.source
   });
 
   newsItem.save(function(err) {
