@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+<<<<<<< HEAD
   if ($("#url").length > 0) {
     $("#url").on('change', function() {
       var url = $(this).val();
