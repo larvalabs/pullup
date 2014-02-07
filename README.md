@@ -44,7 +44,7 @@ Lots more technical details [here](https://github.com/larvalabs/pullup/blob/mast
 Using the Vagrant-based Development Environment
 -----------------------
 
-You'll need [VirtualBox](https://www.virtualbox.org/wiki/Downloads), (Vagrant)[http://www.vagrantup.com/downloads.html], and (Ansible)[https://devopsu.com/guides/ansible-mac-osx.html] installed to use this environment.
+You'll need [VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](http://www.vagrantup.com/downloads.html), and [Ansible](https://devopsu.com/guides/ansible-mac-osx.html) installed to use this environment.
 
 Update the GitHub environment variables in `vagrant/tasks/setup_app.yml`
 
