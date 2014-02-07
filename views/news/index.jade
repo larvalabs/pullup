@@ -33,7 +33,8 @@ block content
                         if !item.votedFor
                             form(action='/news/' + item._id, method='POST')
                                 input(type='hidden', name='amount', value='1')
-                                input(type='submit', class='upvote', value='Vote Up')
+                                button(type='submit', class='upvote')
+                                    i.fa.fa-chevron-up
 
                     td
                         span.badge= item.votes
