@@ -9,11 +9,11 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var User = require('../models/User');
 var secrets = require('./secrets');
 var userlist = require('./userlist');
-var https = require('https');
 
 var _ = require('underscore');
 
 var generate_userlist = function(callback){
+  var https = require('https');
   https.get(
     {
       hostname : 'api.github.com',
@@ -32,8 +32,7 @@ var generate_userlist = function(callback){
         JSON.parse(data).forEach(function(user){
           userlist.push(user.login)
         })
-        console.log(userlist)
-        if (callback) callback(userlist)
+        if (callback) callback(userlist);
       })
     }
   ).on('error', function(e) {
@@ -144,18 +143,17 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
       })
     });
   } else {
-    // Check for user in authorized user list
-    console.log("Checking for user in else block " + profile.username);
-    generate_userlist(function(users){
+    User.findOne({ github: profile.id }, function(err, existingUser) {
+          // Check for user in authorized user list
+      console.log("Checking for user in else block " + profile.username);
+      generate_userlist(function(users){
 
-      var index = users.indexOf(profile.username);
-      console.log("Index in authorized users: " + index);
-      if (index == -1) {
-        req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
-        done();
-      }
-
-      User.findOne({ github: profile.id }, function(err, existingUser) {
+        var index = users.indexOf(profile.username);
+        console.log("Index in authorized users: " + index);
+        if (index == -1) {
+          req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
+          done();
+        }
         if (existingUser) return done(null, existingUser);
         var user = new User();
         user.username = profile.username;
@@ -169,9 +167,9 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
         user.save(function(err) {
           done(err, user);
         });
-      });
-
-    })
+      })
+      
+    });
   }
 }));
 
