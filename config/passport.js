@@ -9,7 +9,37 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var User = require('../models/User');
 var secrets = require('./secrets');
 var userlist = require('./userlist');
+var https = require('https');
+
 var _ = require('underscore');
+
+var generate_userlist = function(callback){
+  https.get(
+    {
+      hostname : 'api.github.com',
+      path : '/repos/larvalabs/pullup/contributors',
+      headers : {
+        'User-Agent' : 'http://developer.github.com/v3/#user-agent-required'
+      }
+    },
+    function(res){
+      var data = "";
+      res.on('data', function(d) {
+        data += d;
+      });
+      res.on('end',function(){
+        var userlist = [];
+        JSON.parse(data).forEach(function(user){
+          userlist.push(user.login)
+        })
+        console.log(userlist)
+        if (callback) callback(userlist)
+      })
+    }
+  ).on('error', function(e) {
+    if (callback) callback([])
+  });
+}
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -85,55 +115,63 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
     User.findOne({ $or: [{ github: profile.id }, { email: profile.email }] }, function(err, existingUser) {
       // Check for user in authorized user list
       console.log("Checking for user " + profile.username);
-      var index = userlist.users.indexOf(profile.username);
-      console.log("Index in authorized users: " + index);
-      if (index == -1) {
-        req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
-        done(err);
-      }
-      if (existingUser) {
-        req.flash('errors', { msg: 'There is already a GitHub account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-        done(err);
-      } else {
-        User.findById(req.user.id, function(err, user) {
-          user.github = profile.id;
-          user.tokens.push({ kind: 'github', accessToken: accessToken });
-          user.profile.name = user.profile.name || profile.displayName;
-          user.profile.picture = user.profile.picture || profile._json.avatar_url;
-          user.profile.location = user.profile.location || profile._json.location;
-          user.profile.website = user.profile.website || profile._json.blog;
-          user.save(function(err) {
-            req.flash('info', { msg: 'GitHub account has been linked.' });
-            done(err, user);
+      generate_userlist(function(users){
+
+        var index = users.indexOf(profile.username);
+        console.log("Index in authorized users: " + index);
+        if (index == -1) {
+          req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
+          done(err);
+        }
+        if (existingUser) {
+          req.flash('errors', { msg: 'There is already a GitHub account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+          done(err);
+        } else {
+          User.findById(req.user.id, function(err, user) {
+            user.github = profile.id;
+            user.tokens.push({ kind: 'github', accessToken: accessToken });
+            user.profile.name = user.profile.name || profile.displayName;
+            user.profile.picture = user.profile.picture || profile._json.avatar_url;
+            user.profile.location = user.profile.location || profile._json.location;
+            user.profile.website = user.profile.website || profile._json.blog;
+            user.save(function(err) {
+              req.flash('info', { msg: 'GitHub account has been linked.' });
+              done(err, user);
+            });
           });
-        });
-      }
+        }
+
+      })
     });
   } else {
     // Check for user in authorized user list
     console.log("Checking for user in else block " + profile.username);
-    var index = userlist.users.indexOf(profile.username);
-    console.log("Index in authorized users: " + index);
-    if (index == -1) {
-      req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
-      done();
-    }
+    generate_userlist(function(users){
 
-    User.findOne({ github: profile.id }, function(err, existingUser) {
-      if (existingUser) return done(null, existingUser);
-      var user = new User();
-      user.username = profile.username;
-      user.email = profile._json.email;
-      user.github = profile.id;
-      user.tokens.push({ kind: 'github', accessToken: accessToken });
-      user.profile.name = profile.displayName;
-      user.profile.picture = profile._json.avatar_url;
-      user.profile.location = profile._json.location;
-      user.profile.website = profile._json.blog;
-      user.save(function(err) {
-        done(err, user);
+      var index = users.indexOf(profile.username);
+      console.log("Index in authorized users: " + index);
+      if (index == -1) {
+        req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
+        done();
+      }
+
+      User.findOne({ github: profile.id }, function(err, existingUser) {
+        if (existingUser) return done(null, existingUser);
+        var user = new User();
+        user.username = profile.username;
+        user.email = profile._json.email;
+        user.github = profile.id;
+        user.tokens.push({ kind: 'github', accessToken: accessToken });
+        user.profile.name = profile.displayName;
+        user.profile.picture = profile._json.avatar_url;
+        user.profile.location = profile._json.location;
+        user.profile.website = profile._json.blog;
+        user.save(function(err) {
+          done(err, user);
+        });
       });
-    });
+
+    })
   }
 }));
 
