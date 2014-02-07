@@ -1,5 +1,6 @@
 module.exports = {
     users: [ // ADD YOUR USERNAME AT THE TOP
+        'diminoten',
         'LeandroLovisolo',
         'euank',
         'humd',
@@ -8,12 +9,12 @@ module.exports = {
         'pksjce',
         'tito0224',
         'hemanth',
-		'treygriffith',
-		'megamattron', 
-		'pents90',
-		'michaelnovakjr',
-		'markbao',
-		'kalmi',
-		'lablayers'
-	]
+        'treygriffith',
+        'megamattron', 
+        'pents90',
+        'michaelnovakjr',
+        'markbao',
+        'kalmi',
+        'lablayers'
+    ]
 };

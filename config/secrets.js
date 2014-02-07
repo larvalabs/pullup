@@ -23,8 +23,8 @@ module.exports = {
   },
 
   github: {
-    clientID: process.env.GITHUB_CLIENTID,
-    clientSecret: process.env.GITHUB_SECRET,
+    clientID: process.env.GITHUB_CLIENTID || 'none',
+    clientSecret: process.env.GITHUB_SECRET || 'none',
     callbackURL: process.env.GITHUB_CALLBACK ||  '/auth/github/callback',
     passReqToCallback: true
   },
@@ -61,5 +61,12 @@ module.exports = {
     client_secret: 'Your Client Secret',
     returnUrl: 'http://localhost:3000/api/paypal/success',
     cancelUrl: 'http://localhost:3000/api/paypal/cancel'
+  },
+  
+  reddit: {
+    clientID: process.env.REDDIT_CLIENTID || 'none',
+    clientSecret: process.env.REDDIT_CLIENTSECRET || 'none',
+    callbackURL: process.env.REDDIT_CALLBACKURL || 'http://localhost:3000/auth/reddit/callback',
+    passReqToCallback: true
   }
 };
