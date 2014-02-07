@@ -6,6 +6,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var GitHubStrategy = require('passport-github').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var RedditStrategy = require('passport-reddit').Strategy;
 var User = require('../models/User');
 var secrets = require('./secrets');
 var userlist = require('./userlist');
@@ -254,6 +255,63 @@ passport.use('foursquare', new OAuth2Strategy({
         done(err, user);
       });
     });
+  }
+));
+
+/**
+ * Sign in with Reddit.
+ */
+
+
+passport.use(new RedditStrategy(secrets.reddit, function(req, accessToken, refreshToken, profile, done){
+    if(req.user) {
+      User.findOne({reddit: profile.id}, function(err, existingUser) {
+        // Check for user in authorized user list
+        console.log("Checking for user " + profile.username);
+        var index = userlist.users.indexOf(profile.username);
+        console.log("Index in authorized users: " + index);
+        if (index == -1) {
+          req.flash('errors', { msg: 'Your Reddit account is not authorized.' });
+          done(err);
+        }
+        if(existingUser) {
+          req.flash('errors', {msg: 'There is already a Reddit account that belongs to you.  Sign in with that account, or delete it, then link it with your current account.'});
+          done(err);
+        } else {
+          User.findById(req.user.id, function(err, user) {
+            user.reddit = profile.id;
+            user.tokens.push({ kind: 'reddit', accessToken: accessToken });
+            user.save(function(err) {
+                req.flash('info', {msg: 'Reddit account has been linked.'});
+                done(err);
+            });
+          });
+        }
+      });
+    } else {
+      // Check for user in authorized user list
+      console.log("Checking for user in else block " + profile.name);
+      var index = userlist.users.indexOf(profile.name);
+      console.log("Index in authorized users: " + index);
+      if (index == -1) {
+        req.flash('errors', { msg: 'Your Reddit account is not authorized.' });
+        done();
+      }
+
+      console.log(profile.id);
+      User.findOne({ reddit: profile.id }, function(err, existingUser) {
+        if (existingUser) return done(null, existingUser); 
+        var user = new User();
+        user.username = profile.name;
+        user.reddit = profile.id;
+        user.email = profile.name;
+        user.profile.name = profile.name;
+        user.tokens.push({ kind: 'reddit', accessToken: accessToken });  
+        user.save(function(err) {
+            done(err, user);
+        });
+      });
+    }
   }
 ));
 
