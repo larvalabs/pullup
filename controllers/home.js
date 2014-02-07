@@ -20,3 +20,7 @@ exports.about = function(req, res) {
     title: 'About'
   });
 };
+
+exports.redirectHome = function(req, res) {
+	return res.redirect('/');
+}

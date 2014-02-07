@@ -111,6 +111,7 @@ app.get('/news', newsController.index);
 app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews);
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 app.get('/news/:id', newsController.userNews);
+app.get('/news/search', homeController.redirectHome)
 app.post('/news/search', searchController.searchNews);
 app.get('/api', apiController.getApi);
 app.get('/api/foursquare', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFoursquare);
