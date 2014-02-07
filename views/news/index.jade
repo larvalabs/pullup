@@ -23,6 +23,8 @@ block content
 
                 if !filteredUser
                     th User
+
+                th Date
         tbody.news-table
             each item, index in items
                 tr
@@ -34,3 +36,5 @@ block content
                         td
                             a(href='/news/' + item.poster.username) 
                                 | #{item.poster.username}
+                    td.timeago(title=item.created.toISOString())
+                        | #{item.created}
