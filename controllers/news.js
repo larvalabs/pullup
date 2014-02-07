@@ -155,8 +155,13 @@ exports.vote = function (req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    res.flash('errors', errors);
+    req.flash('errors', errors);
     return res.redirect(req.get('referrer') || '/');
+  }
+
+  if (!req.user) {
+    req.flash('errors', { msg: 'Only members can upvote news items.' });
+    return res.redirect('/signup');
   }
 
   var vote = new Vote({
