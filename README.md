@@ -11,8 +11,7 @@ How to join
 Summary:
 - Fork and set up project for development (see below)
 - Add a feature, fix a bug, improve the design, etc.
-- Add your GitHub username to the [authorized users list](https://github.com/larvalabs/pullup/blob/master/config/userlist.js).
-- Submit a pull request! When we merge, you'll be allowed to log in.
+- Submit a pull request! When we merge your changes, you'll be allowed to log in. We use the github API to track contributors, who get exclusive access.
 
 Development Setup
 ---------------
@@ -31,8 +30,11 @@ npm install
 node app.js
 ```
 
-To log in to your development instance you'll need to create a GitHub application and set the following environment variables:
+# Pre-reqs for local login
+To log in to your development instance you'll need to:
 
+A) Add your github name (temporarily) to config/passport.js line 31 (array definition of userlist before populated via github API)
+B) create a GitHub application and set the following environment variables:
 ```bash
 export GITHUB_CLIENTID='CLIENTID'
 export GITHUB_SECRET='SECRET'
