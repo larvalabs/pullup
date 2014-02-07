@@ -14,6 +14,7 @@ module.exports = {
 		'michaelnovakjr',
 		'markbao',
 		'kalmi',
-		'lablayers'
+		'lablayers',
+		'williamle8300',
 	]
 };
