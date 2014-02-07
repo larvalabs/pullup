@@ -1,5 +1,6 @@
+var mongoose = require('mongoose');
 module.exports = {
-  db: process.env.MONGOHQ_URL || 'localhost',
+  db: process.env.MONGOHQ_URL || 'localhost', 
 
   sendgrid: {
     user: 'Your SendGrid Username',
