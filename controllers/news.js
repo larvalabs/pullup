@@ -4,6 +4,7 @@ var _ = require('underscore');
 var User = require('../models/User');
 var NewsItem = require('../models/NewsItem');
 var Vote = require('../models/Vote');
+var request = require('request');
 
 exports.index = function(req, res, next) {
   NewsItem
@@ -30,6 +31,7 @@ exports.index = function(req, res, next) {
 };
 
 exports.userNews = function(req, res) {
+    console.log("Finding user news for id " + req.params.id);
   User
   .find({'username': req.params.id})
   .exec(function(err, users) {
@@ -56,7 +58,22 @@ exports.userNews = function(req, res) {
 
     });
   });
-}
+};
+
+exports.sourceNews = function(req, res) {
+  NewsItem
+  .find({'source': req.params.source})
+  .sort('-created')
+  .limit(30)
+  .populate('poster')
+  .exec(function(err, newsItems) {
+    res.render('news/index', {
+      title: 'Recent news from ' + req.params.source,
+      items: newsItems,
+      filteredSource: req.params.source
+    })
+  });
+};
 
 function addVotesToNewsItems(newsItems, user, callback) {
 
@@ -102,6 +119,23 @@ exports.submitNews = function(req, res) {
 };
 
 /**
+ * GET /news/summarize
+ * Summarize given url.
+ */
+
+exports.summarize = function(req, res) {
+  request('http://clipped.me/algorithm/clippedapi.php?url='+req.query.url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.write(body);
+      res.end();
+    } else {
+      res.end();
+    }
+  });
+};
+
+/**
  * POST /news/submit
  * Submit news item.
  * @param {string} title
@@ -124,7 +158,9 @@ exports.postNews = function(req, res, next) {
   var newsItem = new NewsItem({
     title: req.body.title,
     url: req.body.url,
-    poster: req.user.id
+    poster: req.user.id,
+    summary: req.body.summary,
+    source: req.body.source
   });
 
   newsItem.save(function(err) {

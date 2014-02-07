@@ -131,8 +131,11 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 app.get('/news', newsController.index);
 app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews);
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
+app.get('/news/summarize', newsController.summarize);
+app.get('/news/source/:source', newsController.sourceNews);
 app.get('/news/:id', newsController.userNews);
 app.post('/news/:id', newsController.vote);
+app.get('/news/user/:id', newsController.userNews);
 
 /**
  * API Routes
