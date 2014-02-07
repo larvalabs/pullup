@@ -171,8 +171,6 @@ exports.postNews = function(req, res, next) {
   });
 
 };
-<<<<<<< HEAD
-
 
 /**
  * PUT /news/:item
@@ -216,5 +214,3 @@ exports.vote = function (req, res, next) {
 
 
 };
-=======
->>>>>>> links filtered username on posts to website
