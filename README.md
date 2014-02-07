@@ -40,6 +40,28 @@ export GITHUB_SECRET='SECRET'
 
 Lots more technical details [here](https://github.com/larvalabs/pullup/blob/master/hackathon-starter-readme.md).
 
+
+Using the Vagrant-based Development Environment
+-----------------------
+
+You'll need [VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](http://www.vagrantup.com/downloads.html), and [Ansible](https://devopsu.com/guides/ansible-mac-osx.html) installed to use this environment.
+
+Update the GitHub environment variables in `vagrant/tasks/setup_app.yml`
+
+Fire up the Vagrant VM:
+	
+	vagrant up
+
+Ensure Ansible has run successfully and provisioned the boxes.  If not, try again using `vagrant provision`
+
+Then, ssh in and follow the installation steps:
+
+	vagrant ssh
+	cd /vagrant/
+	npm install
+	node app.js
+
+
 Credits
 -------
 
