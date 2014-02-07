@@ -20,6 +20,7 @@ block content
             tr
                 th #
                 th
+                th Votes
                 th Title
 
                 if !filteredUser
@@ -30,9 +31,12 @@ block content
                     td= index + 1
                     td
                         if !item.votedFor
-                            form(action='/news/' + item.id, method='POST')
+                            form(action='/news/' + item._id, method='POST')
                                 input(type='hidden', name='amount', value='1')
                                 input(type='submit', class='upvote', value='Vote Up')
+
+                    td
+                        span.badge= item.votes
                     td
                         a(href=item.url, target='_blank')
                             | #{item.title}
