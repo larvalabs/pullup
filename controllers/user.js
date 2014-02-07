@@ -121,7 +121,13 @@ exports.postUpdateProfile = function(req, res, next) {
     user.profile.name = req.body.name || '';
     user.profile.gender = req.body.gender || '';
     user.profile.location = req.body.location || '';
-    user.profile.website = req.body.website || '';
+    if (req.body.website.match(/https?:\/\//i)) {
+      user.profile.website = req.body.website;
+    } else if (user.profile.website) {
+      user.profile.website = 'http://' + req.body.website;
+    } else {
+      user.profile.website = '';
+    }
 
     user.save(function(err) {
       if (err) return next(err);

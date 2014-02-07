@@ -31,7 +31,8 @@ exports.userNews = function(req, res) {
       res.render('news/index', {
         title: 'News shared by ' + users[0].username,
         items: newsItems,
-        filteredUser: users[0].username
+        filteredUser: users[0].username,
+        filteredUserWebsite: users[0].profile.website
       })
     });
   });
