@@ -20,6 +20,7 @@ block content
             tr
                 th #
                 th Title
+                th Date
 
                 if !filteredUser
                     th User
@@ -30,6 +31,8 @@ block content
                     td
                         a(href=item.url, target='_blank')
                             | #{item.title}
+                    td
+                        item.created
                     if !filteredUser
                         td
                             a(href='/news/' + item.poster.username) 
