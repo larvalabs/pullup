@@ -55,17 +55,11 @@ exports.hook = function(req, res) {
       }
       if (allow) {
         console.log('Updating site on GitHub hook');
-        var git = require('child_process').exec('git pull', function (err, stdout, stderr) {
+        var git = require('child_process').exec('git pull && npm install', function (err, stdout, stderr) {
           if (err === null) {
-            var npm = require('child_process').exec('npm install', function (err, stdout, stderr) {
-              if (err === null) {
-                process.exit(0); // Watchdog restarts at this point
-              } else {
-                console.log('Error occured pulling latest revision.');
-              }
-            });
+            process.exit(0); // Watchdog restarts at this point
           } else {
-            console.log('Error occured pulling latest revision.');
+            console.log('Error occured updating on GitHub hook.');
           }
         });
       }
