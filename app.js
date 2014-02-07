@@ -4,6 +4,7 @@
 
 var express = require('express');
 var mongoose = require('mongoose');
+var passport = require('passport');
 
 /**
  * Create Express server.
@@ -25,9 +26,9 @@ mongoose.connection.on('error', function() {
  * Express configuration.
  */
 
-require('./config')(app, express, mongoose);
+require('./config')(app, express, mongoose, passport);
 
-require('./routes')(app);
+require('./routes')(app, passport);
 
 app.listen(app.get('port'), function() {
   console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.settings.env);

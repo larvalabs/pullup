@@ -1,4 +1,4 @@
-module.exports=function(app, userController){
+module.exports=function(app, passport){
 
 	/**
 	 * Load controllers.

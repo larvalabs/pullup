@@ -1,11 +1,10 @@
-module.exports=function(app, express, mongoose){
+module.exports=function(app, express, mongoose, passport){
 
 	
 	var MongoStore = require('connect-mongo')(express);
 	var flash = require('express-flash');
 	var less = require('less-middleware');
 	var path = require('path');
-	var passport = require('passport');
 	var expressValidator = require('express-validator');
 
 	var hour = 3600000;
