@@ -23,6 +23,7 @@ block content
                 th #
                 th
                 th Votes
+                th
                 th Title
                 if !filteredSource
                     th Source
@@ -41,6 +42,7 @@ block content
 
                     td
                         span.badge= item.votes
+                    td.timeago(title="#{item.created}")= timeago(item.created)
                     td
                         a(href=item.url, target='_blank')
                             | #{item.title}

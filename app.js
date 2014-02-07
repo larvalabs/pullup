@@ -10,6 +10,7 @@ var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
+var timeago = require('timeago');
 
 /**
  * Create Express server.
@@ -86,6 +87,7 @@ app.use(function(req, res) {
   res.render('404', { status: 404 });
 });
 app.use(express.errorHandler());
+app.locals.timeago = timeago;
 
 /**
  * Application routes.
