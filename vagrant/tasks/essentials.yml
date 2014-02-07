@@ -1,0 +1,17 @@
+---
+# TODO: only update if this hasn't been done recently - see https://coderwall.com/p/0xtstw
+- name: ensure apt-get is up to date
+  apt: update_cache=yes
+  sudo: yes
+
+- name: ensure build-essential installed
+  apt: pkg=build-essential state=present
+  sudo: yes
+
+- name: ensure git is installed
+  apt: pkg=git state=present
+  sudo: yes
+
+- name: ensure curl is installed
+  apt: pkg=curl state=present
+  sudo: yes

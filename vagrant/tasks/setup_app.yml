@@ -1,0 +1,11 @@
+- name: Add Environment Variables
+  lineinfile:
+    dest=/etc/environment
+    line={{item}}
+    state=present
+    insertafter=EOF
+    create=True
+  with_items:
+    - "GITHUB_CLIENTID='CLIENTID'"
+    - "GITHUB_SECRET='SECRET'"
+  sudo: yes
