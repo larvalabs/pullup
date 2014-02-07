@@ -67,13 +67,18 @@ exports.postNews = function(req, res, next) {
     return res.redirect('/news/submit');
   }
 
-  console.log("Posting for user id "+req.user.id);
+  if (req.body.url.search(/\b(http|https)/)){
+      req.body.url = 'http://' + req.body.url;        
+  }
+  console.log("Posting "+req.body.url+" for user id "+req.user.id);
 
   var newsItem = new NewsItem({
     title: req.body.title,
     url: req.body.url,
     poster: req.user.id
   });
+
+
 
   newsItem.save(function(err) {
     if (err) {

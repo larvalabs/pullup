@@ -10,6 +10,8 @@ var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
+var mongooseTypes = require("mongoose-types");
+    mongooseTypes.loadTypes(mongoose);
 
 /**
  * Create Express server.
