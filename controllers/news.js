@@ -61,7 +61,7 @@ exports.userNews = function(req, res) {
 function addVotesToNewsItems(newsItems, user, callback) {
 
   Vote
-  .find({ id: { $in: newsItems.map(function (item) { return item.id; }) } })
+  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) } })
   .exec(function (err, votes) {
 
     if(err) return callback(err);
@@ -69,15 +69,18 @@ function addVotesToNewsItems(newsItems, user, callback) {
     newsItems = newsItems.map(function (item) {
       item = typeof item.toObject === 'function' ? item.toObject() : item;
 
-      item.votes = votes.reduce(function (prev, curr, i) {
+      item.votes = votes
+        .filter(function (vote) {
+          return vote.item.toString() === item._id.toString();
+        }).reduce(function (prev, curr, i) {
 
-        // count this item as voted for if the logged in user has a vote tallied
-        if(user && user.id && curr.voter.toString() === user.id.toString()) {
-          item.votedFor = true;
-        }
+          // count this item as voted for if the logged in user has a vote tallied
+          if(user && user.id && curr.voter.toString() === user.id.toString()) {
+            item.votedFor = true;
+          }
 
-        return prev + curr.amount;
-      }, 0);
+          return prev + curr.amount;
+        }, 0);
 
       return item;
     });
