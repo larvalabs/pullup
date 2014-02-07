@@ -11,7 +11,10 @@ block content
         h4
           if filteredUser
             | News shared by 
-            a(href='http://github.com/' + filteredUser, target='_blank') #{filteredUser}
+            if filteredUserWebsite
+                a(href=filteredUserWebsite, target='_blank') #{filteredUser}
+            else
+                a(href='http://github.com/' + filteredUser, target='_blank') #{filteredUser}
           else
             | Recent News
 
