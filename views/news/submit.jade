@@ -3,14 +3,25 @@ extends ../layout
 block content
   form.form-horizontal(id='signup-form', method='POST')
     legend Submit News
+    p
+      em Just populate the URL and press tab, and let us fill out the rest!
+
+    .form-group
+      label.col-sm-3.control-label(for='url') URL
+      .col-sm-7
+        input.form-control(type='text', name='url', id='url', placeholder='URL', autofocus)
     .form-group
       label.col-sm-3.control-label(for='title') Title
       .col-sm-7
-        input.form-control(type='text', name='title', id='title', placeholder='Title', autofocus)
+        input.form-control(type='text', name='title', id='title', placeholder='Title')
     .form-group
-      label.col-sm-3.control-label(for='username') URL
+      label.col-sm-3.control-label(for='source') Source
       .col-sm-7
-        input.form-control(type='text', name='url', id='url', placeholder='URL')
+        input.form-control(type='text', name='source', id='source')
+    .form-group
+      label.col-sm-3.control-label(for='summary') Summary
+      .col-sm-7
+        textarea.form-control(type='text', name='summary', id='summary', style='height:200px')
     .form-group
       .col-sm-offset-3.col-sm-7
         button.btn.btn-success(type='submit')

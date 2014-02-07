@@ -12,6 +12,8 @@ block content
           if filteredUser
             | News shared by 
             a(href='http://github.com/' + filteredUser, target='_blank') #{filteredUser}
+          else if filteredSource
+            | News from #{filteredSource}
           else
             | Recent News
 
@@ -20,7 +22,8 @@ block content
             tr
                 th #
                 th Title
-
+                if !filteredSource
+                    th Source
                 if !filteredUser
                     th User
         tbody.news-table
@@ -30,7 +33,18 @@ block content
                     td
                         a(href=item.url, target='_blank')
                             | #{item.title}
+                        if item.summary
+                            &nbsp;
+                            a(href="#", class="show-summary")
+                                | ...
+                        br
+                        p(class='hidden')
+                            em= item.summary
+                    if !filteredSource
+                        td
+                            a(href='/news/source/' + item.source) 
+                                | #{item.source}
                     if !filteredUser
                         td
-                            a(href='/news/' + item.poster.username) 
+                            a(href='/news/user/' + item.poster.username) 
                                 | #{item.poster.username}
