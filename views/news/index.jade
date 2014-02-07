@@ -44,7 +44,7 @@ block content
                         span.badge= item.votes
                     td.timeago(title="#{item.created}")= timeago(item.created)
                     td
-                        a(href=item.url, target='_blank')
+                        a(href=item.url)
                             | #{item.title}
                         if item.summary
                             | &nbsp;
