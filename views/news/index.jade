@@ -29,9 +29,10 @@ block content
                 tr
                     td= index + 1
                     td
-                        form(action='/news/' + item.id, method='POST')
-                            input(type='hidden', name='amount', value='1')
-                            input(type='submit', class='upvote', value='Vote Up')
+                        if !item.votedFor
+                            form(action='/news/' + item.id, method='POST')
+                                input(type='hidden', name='amount', value='1')
+                                input(type='submit', class='upvote', value='Vote Up')
                     td
                         a(href=item.url, target='_blank')
                             | #{item.title}
