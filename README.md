@@ -28,15 +28,16 @@ cd pullup
 # Install NPM dependencies
 npm install
 
-node app.js
-```
-
-To log in to your development instance you'll need to create a GitHub application and set the following environment variables:
+# Register a new application on GitHub (https://github.com/settings/applications) 
+# Now that you have your application setup you can set the following environment variables:
 
 ```bash
 export GITHUB_CLIENTID='CLIENTID'
 export GITHUB_SECRET='SECRET'
 ```
+# Once those are set you can run the local development version
+node app.js
+
 
 Lots more technical details [here](https://github.com/larvalabs/pullup/blob/master/hackathon-starter-readme.md).
 

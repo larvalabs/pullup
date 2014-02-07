@@ -4,6 +4,7 @@ module.exports = {
 		'pents90',
 		'michaelnovakjr',
 		'markbao',
+		'dcancel',
 		'lablayers'
 	]
 };
