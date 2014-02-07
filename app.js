@@ -10,6 +10,7 @@ var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
+var argv = require('optimist').argv;
 
 /**
  * Create Express server.
@@ -54,7 +55,7 @@ var week = (day * 7);
 var month = (day * 30);
 
 app.locals.cacheBuster = Date.now();
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || argv.p || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.compress());
