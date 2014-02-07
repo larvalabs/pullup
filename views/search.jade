@@ -1,4 +1,4 @@
-extends ../layout
+extends layout
 
 block content
     if !user
@@ -20,7 +20,11 @@ block content
           form(name="search", action="/news/search", method="post")
             input(type="text", name="query")
             input(type="submit", value="Search")
-
+        h6 
+          | Search for
+          = ' \'' + searchQuery
+          = '\' has found ' + searchCount
+          = ' results' 
     table.table.table-condensed
         thead
             tr
