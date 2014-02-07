@@ -132,6 +132,7 @@ app.get('/news', newsController.index);
 app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews);
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 app.get('/news/:id', newsController.userNews);
+app.post('/news/:id', newsController.vote);
 
 /**
  * API Routes

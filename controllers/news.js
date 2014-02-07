@@ -3,6 +3,7 @@ var passport = require('passport');
 var _ = require('underscore');
 var User = require('../models/User');
 var NewsItem = require('../models/NewsItem');
+var Vote = require('../models/Vote');
 
 exports.index = function(req, res) {
   NewsItem
@@ -86,5 +87,44 @@ exports.postNews = function(req, res, next) {
     req.flash('success', { msg: 'News item submitted. Thanks!' });
     res.redirect('/news');
   });
+
+};
+
+
+/**
+ * PUT /news/:item
+ * Vote up a news item.
+ * @param {number} amount Which direction and amount to vote up a news item (limited to +1 for now)
+ */
+
+exports.vote = function (req, res, next) {
+
+  req.assert('amount', 'Items can only be upvoted.').equals('1');
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    res.flash('errors', errors);
+    return res.redirect(req.get('referrer') || '/');
+  }
+
+  var vote = new Vote({
+    item: req.params.id,
+    voter: req.user.id,
+    amount: req.body.amount
+  });
+
+  vote.save(function (err) {
+    if (err) {
+      if (err.code === 11000) {
+        req.flash('errors', { msg: 'You can only upvote an item once.' });
+      }
+      return res.redirect(req.get('referrer') || '/');
+    }
+
+    req.flash('success', { msg: 'News item upvoted. Awesome!' });
+    res.redirect(req.get('referrer') || '/');
+  });
+
 
 };
