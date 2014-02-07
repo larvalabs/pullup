@@ -19,6 +19,7 @@ block content
         thead
             tr
                 th #
+                th
                 th Title
 
                 if !filteredUser
@@ -27,6 +28,10 @@ block content
             each item, index in items
                 tr
                     td= index + 1
+                    td
+                        form(action=item.id, method='POST')
+                            input(type='hidden', name='amount', value='1')
+                            input(type='submit', class='upvote', value='Vote Up')
                     td
                         a(href=item.url, target='_blank')
                             | #{item.title}
