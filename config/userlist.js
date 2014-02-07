@@ -5,6 +5,7 @@ module.exports = {
 		'michaelnovakjr',
 		'markbao',
 		'kalmi',
-		'lablayers'
+		'lablayers',
+		'humd'
 	]
 };
