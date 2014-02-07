@@ -3,7 +3,7 @@ module.exports = {
         'barretts',
         'pksjce',
         'tito0224',
-        'gnumanth',
+        'hemanth',
 		'treygriffith',
 		'megamattron', 
 		'pents90',
