@@ -48,10 +48,10 @@ mongoose.connection.on('error', function() {
  * Express configuration.
  */
 
-var hour = 3600000;
-var day = (hour * 24);
-var week = (day * 7);
-var month = (day * 30);
+var hour = 60 * 60 * 1000;
+var day = 24 * hour;
+var week = 7 * day;
+var month = 30 * day;
 
 app.locals.cacheBuster = Date.now();
 app.set('port', process.env.PORT || 3000);
