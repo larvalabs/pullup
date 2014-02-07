@@ -126,7 +126,7 @@ exports.submitNews = function(req, res) {
 exports.summarize = function(req, res) {
   request('http://clipped.me/algorithm/clippedapi.php?url='+req.query.url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.writeHead(200, { 'Content-Type': 'application/json;charset=utf-8' });
       res.write(body);
       res.end();
     } else {
