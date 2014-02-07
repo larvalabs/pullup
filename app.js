@@ -99,7 +99,6 @@ app.locals.timeago = timeago;
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
-//app.post('/signup', userController.postSignup);
 
 /**
  * Static Page Routes
