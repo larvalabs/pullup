@@ -4,6 +4,8 @@ var userSchema = require('./User.js');
 var newsItemSchema = new mongoose.Schema({
   title: { type: String, default: '' },
   url: { type: String, unique: true },
+  summary: { type: String },
+  source: { type: String },
   poster: { type: String, ref: 'User' },
   created: { type: Date, default: Date.now }
 });

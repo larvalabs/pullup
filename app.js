@@ -11,6 +11,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var crypto = require('crypto');
+var timeago = require('timeago');
 
 /**
  * Create Express server.
@@ -87,29 +88,62 @@ app.use(function(req, res) {
   res.render('404', { status: 404 });
 });
 app.use(express.errorHandler());
+app.locals.timeago = timeago;
 
 /**
  * Application routes.
  */
 
-app.get('/', newsController.index);
+/**
+ * Sign in / out Routes
+ */
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
-app.get('/signup', homeController.signup);
-app.get('/about', homeController.about);
 //app.post('/signup', userController.postSignup);
+
+/**
+ * Static Page Routes
+ */
+
+app.get('/about', homeController.about);
+app.get('/signup', homeController.signup);
+
+/**
+ * Contact Routes
+ */
+
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
+
+/**
+ * User Account Routes
+ */
+
+app.get('/', newsController.index);
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+
+/**
+ * News Routes
+ */
+
 app.get('/news', newsController.index);
 app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews);
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
+app.get('/news/summarize', newsController.summarize);
+app.get('/news/source/:source', newsController.sourceNews);
 app.get('/news/:id', newsController.userNews);
+app.post('/news/:id', newsController.vote);
+app.get('/news/user/:id', newsController.userNews);
+
+/**
+ * API Routes
+ */
+
 app.get('/api', apiController.getApi);
 app.get('/api/foursquare', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFoursquare);
 app.get('/api/tumblr', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTumblr);

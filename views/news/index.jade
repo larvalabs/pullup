@@ -12,6 +12,8 @@ block content
           if filteredUser
             | News shared by 
             a(href='http://github.com/' + filteredUser, target='_blank') #{filteredUser}
+          else if filteredSource
+            | News from #{filteredSource}
           else
             | Recent News
 
@@ -19,8 +21,12 @@ block content
         thead
             tr
                 th #
+                th
+                th Votes
+                th
                 th Title
-
+                if !filteredSource
+                    th Source
                 if !filteredUser
                     th User
         tbody.news-table
@@ -28,9 +34,30 @@ block content
                 tr
                     td= index + 1
                     td
-                        a(href=item.url, target='_blank')
+                        if !item.votedFor
+                            form(action='/news/' + item._id, method='POST')
+                                input(type='hidden', name='amount', value='1')
+                                button(type='submit', class='upvote')
+                                    i.fa.fa-chevron-up
+
+                    td
+                        span.badge= item.votes
+                    td.timeago(title="#{item.created}")= timeago(item.created)
+                    td
+                        a(href=item.url)
                             | #{item.title}
+                        if item.summary
+                            | &nbsp;
+                            a(href="#", class="show-summary")
+                                | ...
+                        br
+                        p(class='hidden summary')
+                            em= item.summary
+                    if !filteredSource
+                        td
+                            a(href='/news/source/' + item.source) 
+                                | #{item.source}
                     if !filteredUser
                         td
-                            a(href='/news/' + item.poster.username) 
+                            a(href='/news/user/' + item.poster.username) 
                                 | #{item.poster.username}
