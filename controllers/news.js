@@ -98,7 +98,7 @@ exports.postComment = function (req, res, next) {
       return res.redirect('/news/'+req.params.id);
     }
 
-    req.flash('success', { msg: 'Comment posted. Thanks!' });
+    req.flash('success', { msg  : 'Comment posted. Thanks!' });
     res.redirect('/news/'+req.params.id);
   });
 };
