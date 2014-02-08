@@ -9,8 +9,20 @@ block content
 
     .page-header
         h4
-          a(href=item.url)
-                | #{item.title}
+            a(href=item.url)= item.title
+            if item.summary
+                | &nbsp;
+                a(href="#", class="show-summary")
+                    | ...
+                br
+                p(class='hidden summary')
+                    em= item.summary
+        | submitted 
+        span.timeago(title="#{item.created}")= timeago(item.created)
+        |  by 
+        a(href='/news/user/' + item.poster.username)= item.poster.username
+        |  from 
+        a(href='/news/source/' + item.source)= item.source
     .row
       form(action=item._id + '/comments', method='POST')
         textarea.form-control(name='contents')

@@ -40,6 +40,7 @@ exports.comments = function (req, res, next) {
 
   NewsItem
   .findById(req.params.id)
+  .populate('poster')
   .exec(function (err, newsItem) {
 
     if(err) return next(err);
