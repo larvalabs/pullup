@@ -45,13 +45,14 @@ exports.userNews = function(req, res) {
       if(err) return next(err);
 
       addVotesToNewsItems(newsItems, req.user, function (err, newsItems) {
-
+        
         if(err) return next(err);
 
         res.render('news/index', {
           title: 'News shared by ' + users[0].username,
           items: newsItems,
-          filteredUser: users[0].username
+          filteredUser: users[0].username,
+          userProfile: users[0].profile
         });
 
       });
@@ -126,7 +127,7 @@ exports.submitNews = function(req, res) {
 exports.summarize = function(req, res) {
   request('http://clipped.me/algorithm/clippedapi.php?url='+req.query.url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.writeHead(200, { 'Content-Type': 'application/json;charset=utf-8' });
       res.write(body);
       res.end();
     } else {
