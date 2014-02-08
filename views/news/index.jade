@@ -38,7 +38,7 @@ block content
                 th Votes
                 th
                 th Title
-                th Comments
+                th
                 if !filteredSource
                     th Source
                 if !filteredUser
@@ -69,7 +69,7 @@ block content
                             em= item.summary
                     td
                         a(href='/news/' + item._id)
-                            | Comments
+                            | View Comments
                     if !filteredSource
                         td
                             a(href='/news/source/' + item.source) 
