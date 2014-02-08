@@ -31,7 +31,6 @@ npm install
 # Register a new application on GitHub (https://github.com/settings/applications) 
 # Now that you have your application setup you can set the following environment variables:
 
-```bash
 export GITHUB_CLIENTID='CLIENTID'
 export GITHUB_SECRET='SECRET'
 ```
