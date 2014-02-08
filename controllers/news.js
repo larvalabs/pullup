@@ -71,6 +71,38 @@ exports.comments = function (req, res, next) {
   });
 };
 
+/**
+ * POST /news/:id/comments
+ * Post a comment about a news page
+ */
+
+exports.postComment = function (req, res, next) {
+  req.assert('contents', 'Comment cannot be blank.').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/news/'+req.params.id);
+  }
+
+  var comment = new Comment({
+    contents: req.body.contents,
+    poster: req.user.id,
+    item: req.params.id,
+    itemType: 'news'
+  });
+
+  comment.save(function(err) {
+    if (err) {
+      return res.redirect('/news/'+req.params.id);
+    }
+
+    req.flash('success', { msg: 'Comment posted. Thanks!' });
+    res.redirect('/news/'+req.params.id);
+  });
+};
+
 exports.userNews = function(req, res) {
     console.log("Finding user news for id " + req.params.id);
   User

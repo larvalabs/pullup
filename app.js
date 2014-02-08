@@ -136,6 +136,7 @@ app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 app.get('/news/summarize', newsController.summarize);
 app.get('/news/source/:source', newsController.sourceNews);
 app.get('/news/:id', newsController.comments);
+app.post('/news/:id/comments', newsController.postComment);
 app.post('/news/:id', newsController.vote);
 app.get('/news/user/:id', newsController.userNews);
 
