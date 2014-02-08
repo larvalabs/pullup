@@ -23,6 +23,7 @@ module.exports = {
         'michaelnovakjr',
         'markbao',
         'kalmi',
-        'lablayers'
+        'lablayers',
+        'dfjones'
     ]
 };
