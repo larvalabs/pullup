@@ -48,7 +48,8 @@ exports.userNews = function(req, res) {
           title: 'News shared by ' + users[0].username,
           items: newsItems,
           filteredUser: users[0].username,
-          filteredUserWebsite: users[0].profile.website
+          filteredUserWebsite: users[0].profile.website,
+            userProfile: users[0].profile
         });
       });
     });
@@ -143,7 +144,7 @@ exports.submitNews = function(req, res) {
 exports.summarize = function(req, res) {
   request('http://clipped.me/algorithm/clippedapi.php?url='+req.query.url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.writeHead(200, { 'Content-Type': 'application/json;charset=utf-8' });
       res.write(body);
       res.end();
     } else {
