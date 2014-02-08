@@ -1,0 +1,37 @@
+extends ../layout
+
+block content
+    if !user
+        .alert.alert-info
+            i.fa.fa-cloud-upload
+            strong Join this site via pull request!
+            |  Make the site better and become a full member. See <a href="/about">here</a> for more details.
+
+    .page-header
+        h4
+            a(href=item.url)= item.title
+            if item.summary
+                | &nbsp;
+                a(href="#", class="show-summary")
+                    | ...
+                br
+                p(class='hidden summary')
+                    em= item.summary
+        | submitted 
+        span.timeago(title="#{item.created}")= timeago(item.created)
+        |  by 
+        a(href='/news/user/' + item.poster.username)= item.poster.username
+        |  from 
+        a(href='/news/source/' + item.source)= item.source
+    .row
+      form(action=item._id + '/comments', method='POST')
+        textarea.form-control(name='contents')
+        br
+        input.btn.btn-primary(type='submit', value='Add Comment')
+
+    each comment, index in comments
+      p.comment
+        .poster= comment.poster.username
+        blockquote.content= comment.contents
+
+
