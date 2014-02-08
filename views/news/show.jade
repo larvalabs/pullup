@@ -12,6 +12,11 @@ block content
           a(href=item.url)
                 | #{item.title}
 
+    form(action=item._id + '/comments', method='POST')
+      textarea.form-control(name='contents')
+      br
+      input.btn.btn-primary(type='submit', value='Add Comment')
+
     each comment, index in comments
       .comment
         .poster= comment.poster.username
