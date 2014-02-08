@@ -5,6 +5,7 @@ var User = require('../models/User');
 var NewsItem = require('../models/NewsItem');
 var Vote = require('../models/Vote');
 var request = require('request');
+var async = require('async');
 
 exports.index = function(req, res, next) {
   NewsItem
@@ -42,15 +43,27 @@ exports.comments = function (req, res, next) {
 
     if(err) return next(err);
 
-    getVotesForNewsItem(newsItem, req.user, function (err, newsItem) {
+    async.parallel({
+      votes: function (cb) {
+        getVotesForNewsItem(newsItem, req.user, cb);
+      },
+      comments: function (cb) {
+        Comment
+        .find({
+          item: newsItem._id,
+          itemType: 'news'
+        })
+        .exec(cb);
+      }
+    }, function (err, results) {
 
       if(err) return next(err);
 
       res.render('news/show', {
         title: newsItem.title,
-        item: newsItem
+        item: newsItem,
+        comments: results.comments
       });
-
     });
 
   });
