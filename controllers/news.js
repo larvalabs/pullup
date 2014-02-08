@@ -176,10 +176,8 @@ function getVotesForNewsItems(newsItems, user, callback) {
     if(err) return callback(err);
 
     newsItems = newsItems.map(function (item) {
-      return addVotesToNewsItemObject(item, user, votes);
+      return addVotesToNewsItem(item, user, votes);
     });
-
-    console.log(newsItems);
 
     callback(null, newsItems);
   });
@@ -192,7 +190,7 @@ function getVotesForNewsItem(newsItem, user, callback) {
 
     if(err) return callback(err);
 
-    callback(null, addVotesToNewsItemObject(newsItem, user, votes));
+    callback(null, addVotesToNewsItem(newsItem, user, votes));
   });
 }
 
@@ -318,7 +316,6 @@ exports.vote = function (req, res, next) {
   vote.save(function (err) {
     if (err) {
       if (err.code === 11000) {
-        console.log(err);
         req.flash('errors', { msg: 'You can only upvote an item once.' });
       }
       return res.redirect(req.get('referrer') || '/');
