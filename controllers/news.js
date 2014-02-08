@@ -131,8 +131,16 @@ function addVotesToNewsItems(newsItems, user, callback) {
 
 exports.submitNews = function(req, res) {
   //if (!req.user) return res.redirect('/login');
+
+  if (req.query.u) {
+    var address = req.query.u;
+  } else {
+    var address = "";
+  }
+
   res.render('news/submit', {
-    title: 'Submit News'
+    title: 'Submit News',
+    address: address
   });
 };
 

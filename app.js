@@ -106,6 +106,7 @@ app.get('/logout', userController.logout);
  */
 
 app.get('/about', homeController.about);
+app.get('/bookmarklet', homeController.bookmarklet);
 app.get('/signup', homeController.signup);
 
 /**
