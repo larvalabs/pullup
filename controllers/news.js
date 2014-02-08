@@ -41,21 +41,16 @@ exports.userNews = function(req, res) {
     .limit(30)
     .populate('poster')
     .exec(function(err, newsItems) {
-
       if(err) return next(err);
-
       addVotesToNewsItems(newsItems, req.user, function (err, newsItems) {
-
         if(err) return next(err);
-
         res.render('news/index', {
           title: 'News shared by ' + users[0].username,
           items: newsItems,
-          filteredUser: users[0].username
+          filteredUser: users[0].username,
+          filteredUserWebsite: users[0].profile.website
         });
-
       });
-
     });
   });
 };
@@ -176,7 +171,6 @@ exports.postNews = function(req, res, next) {
   });
 
 };
-
 
 /**
  * PUT /news/:item
