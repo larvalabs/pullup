@@ -16,7 +16,17 @@ block content
             | News from #{filteredSource}
           else
             | Recent News
-
+    .user-profile
+        if userProfile
+            if userProfile.picture
+                <img src="#{userProfile.picture}"> 
+            if userProfile.name
+                | <br><b>Name:</b> #{userProfile.name}
+            if userProfile.location
+                | <br><b>Location:</b> #{userProfile.location}
+            if userProfile.website
+                | <br> <b>Website:</b> <a target="_blank" href="#{userProfile.website}">#{userProfile.website}</a>
+                
     table.table.table-condensed
         thead
             tr
