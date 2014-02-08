@@ -16,7 +16,7 @@ exports.index = function(req, res, next) {
 
     if(err) return next(err);
 
-    addVotesToNewsItems(newsItems, req.user, function (err, newsItems) {
+    sortByScore(newsItems, req.user, function (err, newsItems) {
 
       if(err) return next(err);
 
@@ -74,6 +74,30 @@ exports.sourceNews = function(req, res) {
     })
   });
 };
+
+function sortByScore(newsItems, user, callback) {
+  var gravity = 1.8;
+
+  addVotesToNewsItems(newsItems, user, function(err, newsItems) {
+    if (err) return callback(err);
+
+    var now = new Date();
+    newsItems = newsItems.map(function (item) {
+      var ageInHours = (now.getTime() - item.created.getTime()) / 3600000;
+      console.log("ageInHours: " + ageInHours);
+      item.score = (item.votes - 1) / Math.pow(ageInHours + 2, gravity);
+      console.log("score: " + item.score);
+      return item;
+    });
+
+    // sort with highest scores first
+    newsItems.sort(function (a,b) {
+      return b.score - a.score;
+    });
+
+    callback(null, newsItems);
+  });
+}
 
 function addVotesToNewsItems(newsItems, user, callback) {
 
