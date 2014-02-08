@@ -6,16 +6,16 @@ block content
 
   form.form-horizontal(action='/account/profile', method='POST')
     .form-group
-      label.col-xs-2.control-label(for='email') Email
-      .col-xs-4
+      label.col-xs-12.col-sm-2.control-label(for='email') Email
+      .col-xs-12.col-sm-4
         input.form-control(type='email', name='email', id='email', value='#{user.email}')
     .form-group
-      label.col-xs-2.control-label(for='name') Name
-      .col-xs-4
+      label.col-xs-12.col-sm-2.control-label(for='name') Name
+      .col-xs-12.col-sm-4
         input.form-control(type='text', name='name', id='name', value='#{user.profile.name}')
     .form-group
       label.col-xs-2.control-label(for='gender') Gender
-      .col-xs-4
+      .col-xs-12.col-sm-4
         label.radio
           input(type='radio', checked=user.profile.gender=='male', name='gender', value='male', data-toggle='radio')
           | Male
@@ -23,15 +23,15 @@ block content
           input(type='radio', checked=user.profile.gender=='female', name='gender', value='female', data-toggle='radio')
           | Female
     .form-group
-      label.col-xs-2.control-label(for='location') Location
-      .col-xs-4
+      label.col-xs-12.col-sm-2.control-label(for='location') Location
+      .col-xs-12.col-sm-4
         input.form-control(type='text', name='location', id='location', value='#{user.profile.location}')
     .form-group
-      label.col-xs-2.control-label(for='website') Website
-      .col-xs-4
+      label.col-xs-12.col-sm-2.control-label(for='website') Website
+      .col-xs-12.col-sm-4
         input.form-control(type='text', name='website', id='website', value='#{user.profile.website}')
     .form-group
-      .col-xs-offset-2.col-xs-4
+      .col-xs-offset-0.col-xs-12.col-sm-offset-2.col-sm-4
         button.btn.btn.btn-primary(type='submit') Update Profile
 
 
@@ -41,15 +41,15 @@ block content
 
   form.form-horizontal(action='/account/password', method='POST')
     .form-group
-      label.col-xs-3.control-label(for='password') New Password
-      .col-xs-4
+      label.col-xs-12.col-sm-2.control-label(for='password') New Password
+      .col-xs-12.col-sm-4
         input.form-control(type='password', name='password', id='password')
     .form-group
-      label.col-xs-3.control-label(for='confirmPassword') Confirm Password
-      .col-xs-4
+      label.col-xs-12.col-sm-2.control-label(for='confirmPassword') Confirm Password
+      .col-xs-12.col-sm-4
         input.form-control(type='password', name='confirmPassword', id='confirmPassword')
     .form-group
-      .col-xs-offset-3.col-xs-4
+      .col-xs-offset-0.col-xs-12.col-sm-offset-2.col-sm-4
         button.btn.btn.btn-primary(type='submit') Change Password
 
   .page-header
