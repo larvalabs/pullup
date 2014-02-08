@@ -45,7 +45,7 @@ exports.userNews = function(req, res) {
       if(err) return next(err);
 
       addVotesToNewsItems(newsItems, req.user, function (err, newsItems) {
-        console.log(users[0]);
+        
         if(err) return next(err);
 
         res.render('news/index', {
