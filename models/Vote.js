@@ -10,6 +10,7 @@ var voteSchema = new mongoose.Schema({
   itemType: {
     type: String,
     required: true,
+    enum: ['news', 'comment'],
     default: 'news'
   },
   voter: {
