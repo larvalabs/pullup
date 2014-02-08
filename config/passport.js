@@ -89,25 +89,25 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
       console.log("Index in authorized users: " + index);
       if (index == -1) {
         req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
-        done(err);
+        return done(err);
       }
       if (existingUser) {
         req.flash('errors', { msg: 'There is already a GitHub account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-        done(err);
-      } else {
-        User.findById(req.user.id, function(err, user) {
-          user.github = profile.id;
-          user.tokens.push({ kind: 'github', accessToken: accessToken });
-          user.profile.name = user.profile.name || profile.displayName;
-          user.profile.picture = user.profile.picture || profile._json.avatar_url;
-          user.profile.location = user.profile.location || profile._json.location;
-          user.profile.website = user.profile.website || profile._json.blog;
-          user.save(function(err) {
-            req.flash('info', { msg: 'GitHub account has been linked.' });
-            done(err, user);
-          });
-        });
+        return done(err);
       }
+
+      User.findById(req.user.id, function(err, user) {
+        user.github = profile.id;
+        user.tokens.push({ kind: 'github', accessToken: accessToken });
+        user.profile.name = user.profile.name || profile.displayName;
+        user.profile.picture = user.profile.picture || profile._json.avatar_url;
+        user.profile.location = user.profile.location || profile._json.location;
+        user.profile.website = user.profile.website || profile._json.blog;
+        user.save(function(err) {
+          req.flash('info', { msg: 'GitHub account has been linked.' });
+          done(err, user);
+        });
+      });
     });
   } else {
     // Check for user in authorized user list
@@ -116,7 +116,7 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
     console.log("Index in authorized users: " + index);
     if (index == -1) {
       req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
-      done();
+      return done();
     }
 
     User.findOne({ github: profile.id }, function(err, existingUser) {

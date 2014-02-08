@@ -1,0 +1,18 @@
+- name: install node.js build dependencies
+  apt: pkg={{item}} state=present
+  sudo: yes
+  with_items:
+      - python-software-properties
+      - python
+
+- name: add apt-get repository for latest node
+  shell: add-apt-repository -y ppa:chris-lea/node.js
+  sudo: yes
+
+- name: ensure apt-get is up to date with added node dependencies
+  apt: update_cache=yes
+  sudo: yes
+
+- name: install node.js
+  apt: pkg=nodejs state=present
+  sudo: yes

@@ -11,12 +11,14 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var argv = require('optimist').argv;
+var timeago = require('timeago');
 
 /**
  * Create Express server.
  */
 
 var app = express();
+
 
 /**
  * Load controllers.
@@ -59,7 +61,7 @@ app.set('port', process.env.PORT || argv.p || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.compress());
-app.use(express.favicon());
+app.use(express.favicon(path.join(__dirname, 'public/img/favicon.ico')));
 app.use(express.logger('dev'));
 app.use(express.cookieParser());
 app.use(express.json());
@@ -87,29 +89,61 @@ app.use(function(req, res) {
   res.render('404', { status: 404 });
 });
 app.use(express.errorHandler());
+app.locals.timeago = timeago;
 
 /**
  * Application routes.
  */
 
-app.get('/', newsController.index);
+/**
+ * Sign in / out Routes
+ */
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
-app.get('/signup', homeController.signup);
+
+/**
+ * Static Page Routes
+ */
+
 app.get('/about', homeController.about);
-//app.post('/signup', userController.postSignup);
+app.get('/signup', homeController.signup);
+
+/**
+ * Contact Routes
+ */
+
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
+
+/**
+ * User Account Routes
+ */
+
+app.get('/', newsController.index);
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+
+/**
+ * News Routes
+ */
+
 app.get('/news', newsController.index);
 app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews);
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
+app.get('/news/summarize', newsController.summarize);
+app.get('/news/source/:source', newsController.sourceNews);
 app.get('/news/:id', newsController.userNews);
+app.post('/news/:id', newsController.vote);
+app.get('/news/user/:id', newsController.userNews);
+
+/**
+ * API Routes
+ */
+
 app.get('/api', apiController.getApi);
 app.get('/api/foursquare', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFoursquare);
 app.get('/api/tumblr', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTumblr);

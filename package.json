@@ -29,6 +29,7 @@
     "underscore": "~1.5.2",
     "paypal-rest-sdk": "~0.6.4",
     "connect-mongo": "~0.4.0",
-    "optimist": "latest"
+    "optimist": "latest",
+    "timeago": "~0.1.0"
   }
 }
