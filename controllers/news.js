@@ -53,6 +53,7 @@ exports.comments = function (req, res, next) {
           item: newsItem._id,
           itemType: 'news'
         })
+        .populate('poster')
         .exec(cb);
       }
     }, function (err, results) {

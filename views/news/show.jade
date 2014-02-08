@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+    if !user
+        .alert.alert-info
+            i.fa.fa-cloud-upload
+            strong Join this site via pull request!
+            |  Make the site better and become a full member. See <a href="/about">here</a> for more details.
+
+    .page-header
+        h4
+          a(href=item.url)
+                | #{item.title}
+
+    each comment, index in comments
+      .comment
+        .poster= comment.poster.username
+        .content= comment.contents
+
+
