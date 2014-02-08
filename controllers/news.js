@@ -170,7 +170,7 @@ function sortByScore(newsItems, user, callback) {
 
 function getVotesForNewsItems(newsItems, user, callback) {
   Vote
-  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) }, itemType: 'news' })
+  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) }, itemType: { $in: ['news', null] } })
   .exec(function (err, votes) {
 
     if(err) return callback(err);
@@ -179,13 +179,15 @@ function getVotesForNewsItems(newsItems, user, callback) {
       return addVotesToNewsItemObject(item, user, votes);
     });
 
+    console.log(newsItems);
+
     callback(null, newsItems);
   });
 }
 
 function getVotesForNewsItem(newsItem, user, callback) {
   Vote
-  .find({ item: newsItem, itemType: 'news' })
+  .find({ item: newsItem, itemType: { $in: ['news', null] } })
   .exec(function (err, votes) {
 
     if(err) return callback(err);
@@ -194,7 +196,7 @@ function getVotesForNewsItem(newsItem, user, callback) {
   });
 }
 
-function addVotesToNewsItemObject(newsItem, user, votes) {
+function addVotesToNewsItem(newsItem, user, votes) {
 
   newsItem = typeof newsItem.toObject === 'function' ? newsItem.toObject() : newsItem;
 
@@ -316,6 +318,7 @@ exports.vote = function (req, res, next) {
   vote.save(function (err) {
     if (err) {
       if (err.code === 11000) {
+        console.log(err);
         req.flash('errors', { msg: 'You can only upvote an item once.' });
       }
       return res.redirect(req.get('referrer') || '/');
