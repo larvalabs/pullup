@@ -84,9 +84,7 @@ function sortByScore(newsItems, user, callback) {
     var now = new Date();
     newsItems = newsItems.map(function (item) {
       var ageInHours = (now.getTime() - item.created.getTime()) / 3600000;
-      console.log("ageInHours: " + ageInHours);
       item.score = (item.votes - 1) / Math.pow(ageInHours + 2, gravity);
-      console.log("score: " + item.score);
       return item;
     });
 
