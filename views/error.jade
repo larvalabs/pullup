@@ -1,0 +1,13 @@
+extends ./layout
+
+block content
+	h1 You broke it :(
+	h2 
+	| you can help by reporting this or by fixing it, findout how on  a(href="https://github.com/larvalabs/pullup") Git
+	p. The stack trace is located in the page source.
+
+	.error
+		.name #{error.name}
+		.message #{error.message}
+		//
+			#{error.stack}

@@ -86,7 +86,11 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: week }));
 app.use(function(req, res) {
   res.render('404', { status: 404 });
 });
-app.use(express.errorHandler());
+app.use(function(err, req, res, next){
+  console.error("req: "+req +"\nerror:"+err.stack);
+  res.statusCode = 500;
+  res.render('error',{error:err});
+});
 app.locals.timeago = timeago;
 
 /**
