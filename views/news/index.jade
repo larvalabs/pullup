@@ -38,6 +38,7 @@ block content
                 th Votes
                 th
                 th Title
+                th Comments
                 if !filteredSource
                     th Source
                 if !filteredUser
@@ -66,6 +67,9 @@ block content
                         br
                         p(class='hidden summary')
                             em= item.summary
+                    td
+                        a(href='/news/' + item._id)
+                            | Comments
                     if !filteredSource
                         td
                             a(href='/news/source/' + item.source) 

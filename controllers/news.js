@@ -4,6 +4,7 @@ var _ = require('underscore');
 var User = require('../models/User');
 var NewsItem = require('../models/NewsItem');
 var Vote = require('../models/Vote');
+var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
 
