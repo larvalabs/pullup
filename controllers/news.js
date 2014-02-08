@@ -163,11 +163,11 @@ function getVotesForNewsItem(newsItem, user, callback) {
 
 function addVotesToNewsItemObject(newsItem, user, votes) {
 
-  newsItem = typeof item.toObject === 'function' ? item.toObject() : item;
+  newsItem = typeof newsItem.toObject === 'function' ? newsItem.toObject() : newsItem;
 
   newsItem.votes = votes
     .filter(function (vote) {
-      return vote.item.toString() === item._id.toString();
+      return vote.item.toString() === newsItem._id.toString();
     }).reduce(function (prev, curr, i) {
 
       // count this item as voted for if the logged in user has a vote tallied
