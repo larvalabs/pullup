@@ -170,7 +170,7 @@ function sortByScore(newsItems, user, callback) {
 
 function getVotesForNewsItems(newsItems, user, callback) {
   Vote
-  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) } })
+  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) }, itemType: 'news' })
   .exec(function (err, votes) {
 
     if(err) return callback(err);
@@ -185,7 +185,7 @@ function getVotesForNewsItems(newsItems, user, callback) {
 
 function getVotesForNewsItem(newsItem, user, callback) {
   Vote
-  .find({ item: newsItem })
+  .find({ item: newsItem, itemType: 'news' })
   .exec(function (err, votes) {
 
     if(err) return callback(err);
