@@ -4,7 +4,9 @@ var _ = require('underscore');
 var User = require('../models/User');
 var NewsItem = require('../models/NewsItem');
 var Vote = require('../models/Vote');
+var Comment = require('../models/Comment');
 var request = require('request');
+var async = require('async');
 
 exports.index = function(req, res, next) {
   NewsItem
@@ -20,13 +22,101 @@ exports.index = function(req, res, next) {
 
       if(err) return next(err);
 
-      res.render('news/index', {
-        title: 'Recent News',
-        items: newsItems
+      var counter = newsItems.length;
+
+      _.each(newsItems, function (newsItem) {
+        Comment.count({ item:newsItem._id, itemType: 'news' }).exec(function (err, count) {
+
+          if (err) return next(err);
+
+          if (counter>1) {
+            newsItem.comment_count = count;
+            counter--;
+          } else {
+            newsItem.comment_count = count;
+
+            res.render('news/index', {
+              title: 'Recent News',
+              items: newsItems
+            });
+          }
+        });
       });
 
     });
 
+  });
+};
+
+/**
+ * GET /news/:id
+ * View comments on a news item
+ */
+exports.comments = function (req, res, next) {
+
+  NewsItem
+  .findById(req.params.id)
+  .populate('poster')
+  .exec(function (err, newsItem) {
+
+    if(err) return next(err);
+
+    async.parallel({
+      votes: function (cb) {
+        getVotesForNewsItem(newsItem, req.user, cb);
+      },
+      comments: function (cb) {
+        Comment
+        .find({
+          item: newsItem._id,
+          itemType: 'news'
+        })
+        .populate('poster')
+        .exec(cb);
+      }
+    }, function (err, results) {
+
+      if(err) return next(err);
+
+      res.render('news/show', {
+        title: newsItem.title,
+        item: newsItem,
+        comments: results.comments
+      });
+    });
+
+  });
+};
+
+/**
+ * POST /news/:id/comments
+ * Post a comment about a news page
+ */
+
+exports.postComment = function (req, res, next) {
+  req.assert('contents', 'Comment cannot be blank.').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/news/'+req.params.id);
+  }
+
+  var comment = new Comment({
+    contents: req.body.contents,
+    poster: req.user.id,
+    item: req.params.id,
+    itemType: 'news'
+  });
+
+  comment.save(function(err) {
+    if (err) {
+      return res.redirect('/news/'+req.params.id);
+    }
+
+    req.flash('success', { msg  : 'Comment posted. Thanks!' });
+    res.redirect('/news/'+req.params.id);
   });
 };
 
@@ -42,7 +132,9 @@ exports.userNews = function(req, res) {
     .populate('poster')
     .exec(function(err, newsItems) {
       if(err) return next(err);
-      addVotesToNewsItems(newsItems, req.user, function (err, newsItems) {
+
+      getVotesForNewsItems(newsItems, req.user, function (err, newsItems) {
+
         if(err) return next(err);
         res.render('news/index', {
           title: 'News shared by ' + users[0].username,
@@ -74,13 +166,12 @@ exports.sourceNews = function(req, res) {
 function sortByScore(newsItems, user, callback) {
   var gravity = 1.8;
 
-  addVotesToNewsItems(newsItems, user, function(err, newsItems) {
+  getVotesForNewsItems(newsItems, user, function(err, newsItems) {
     if (err) return callback(err);
 
     var now = new Date();
     newsItems = newsItems.map(function (item) {
-      var ageInHours = (now.getTime() - item.created.getTime()) / 3600000;
-      item.score = (item.votes - 1) / Math.pow(ageInHours + 2, gravity);
+      calculateScore(item, now, gravity);
       return item;
     });
 
@@ -93,35 +184,59 @@ function sortByScore(newsItems, user, callback) {
   });
 }
 
-function addVotesToNewsItems(newsItems, user, callback) {
+function calculateScore(item, now, gravity) {
+  var votes = item.votes;
+  if (votes === 0) {
+    votes = 0.1;
+  }
+  var ageInHours = (now.getTime() - item.created.getTime()) / 3600000;
+  item.score = votes / Math.pow(ageInHours + 2, gravity);
+}
 
+function getVotesForNewsItems(newsItems, user, callback) {
   Vote
-  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) } })
+  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) }, itemType: { $in: ['news', null] } })
   .exec(function (err, votes) {
 
     if(err) return callback(err);
 
     newsItems = newsItems.map(function (item) {
-      item = typeof item.toObject === 'function' ? item.toObject() : item;
-
-      item.votes = votes
-        .filter(function (vote) {
-          return vote.item.toString() === item._id.toString();
-        }).reduce(function (prev, curr, i) {
-
-          // count this item as voted for if the logged in user has a vote tallied
-          if(user && user.id && curr.voter.toString() === user.id.toString()) {
-            item.votedFor = true;
-          }
-
-          return prev + curr.amount;
-        }, 0);
-
-      return item;
+      return addVotesToNewsItem(item, user, votes);
     });
 
     callback(null, newsItems);
   });
+}
+
+function getVotesForNewsItem(newsItem, user, callback) {
+  Vote
+  .find({ item: newsItem, itemType: { $in: ['news', null] } })
+  .exec(function (err, votes) {
+
+    if(err) return callback(err);
+
+    callback(null, addVotesToNewsItem(newsItem, user, votes));
+  });
+}
+
+function addVotesToNewsItem(newsItem, user, votes) {
+
+  newsItem = typeof newsItem.toObject === 'function' ? newsItem.toObject() : newsItem;
+
+  newsItem.votes = votes
+    .filter(function (vote) {
+      return vote.item.toString() === newsItem._id.toString();
+    }).reduce(function (prev, curr, i) {
+
+      // count this item as voted for if the logged in user has a vote tallied
+      if(user && user.id && curr.voter.toString() === user.id.toString()) {
+        newsItem.votedFor = true;
+      }
+
+      return prev + curr.amount;
+    }, 0);
+
+  return newsItem;
 }
 
 /**
@@ -130,12 +245,19 @@ function addVotesToNewsItems(newsItems, user, callback) {
  */
 
 exports.submitNews = function(req, res) {
-  var newsItem = new NewsItem({
+
+  if (req.query.u) {
+    var address = req.query.u;
+  } else {
+    var address = "";
+  }
+
+  var newsItem = {
     source: '',
     summary: '',
     title: '',
-    url: ''
-  });
+    url: address
+  };
 
   res.render('news/submit', {
     newsItem: newsItem,

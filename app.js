@@ -10,6 +10,7 @@ var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
+var argv = require('optimist').argv;
 var timeago = require('timeago');
 
 /**
@@ -56,7 +57,7 @@ var week = (day * 7);
 var month = (day * 30);
 
 app.locals.cacheBuster = Date.now();
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || argv.p || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.compress());
@@ -87,7 +88,11 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: week }));
 app.use(function(req, res) {
   res.render('404', { status: 404 });
 });
-app.use(express.errorHandler());
+app.use(function(err, req, res, next){
+  console.error("req: "+req +"\nerror:"+err.stack);
+  res.statusCode = 500;
+  res.render('error',{error:err});
+});
 app.locals.timeago = timeago;
 
 /**
@@ -106,6 +111,7 @@ app.get('/logout', userController.logout);
  */
 
 app.get('/about', homeController.about);
+app.get('/bookmarklet', homeController.bookmarklet);
 app.get('/signup', homeController.signup);
 
 /**
@@ -135,7 +141,8 @@ app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews)
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 app.get('/news/summarize', newsController.summarize);
 app.get('/news/source/:source', newsController.sourceNews);
-app.get('/news/:id', newsController.userNews);
+app.get('/news/:id', newsController.comments);
+app.post('/news/:id/comments', newsController.postComment);
 app.post('/news/:id', newsController.vote);
 app.get('/news/user/:id', newsController.userNews);
 

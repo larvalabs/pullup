@@ -1,8 +1,8 @@
 $(document).ready(function() {
 
   if ($("#url").length > 0) {
-    $("#url").on('change', function() {
-      var url = $(this).val();
+    $("#title").on('focus', function() {
+      var url = $("#url").val();
       $.get("/news/summarize?url=" + url, function(response) {
         if (response) {
           $("#title").val(response.title);
@@ -11,6 +11,7 @@ $(document).ready(function() {
         }
       });
     })
+    $('input[autofocus]').trigger('focus');//force fire it on the autofocus element
   }
 
   if($(".show-summary").length > 0) {

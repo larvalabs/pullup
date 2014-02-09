@@ -5,15 +5,23 @@ block content
     legend Submit News
     p
       em Just populate the URL and press tab, and let us fill out the rest!
+      |  You can also use our 
+      a(href='/bookmarklet') bookmarklet.
 
     .form-group
       label.col-sm-3.control-label(for='url') URL
       .col-sm-7
-        input.form-control(type='text', name='url', id='url', placeholder='URL', autofocus, value='#{newsItem.url}')
+        if newsItem.url
+          input.form-control(type='text', name='url', id='url', value='#{newsItem.url}', placeholder='URL')
+        else
+          input.form-control(type='text', name='url', id='url', value='#{newsItem.url}', placeholder='URL', autofocus)
     .form-group
       label.col-sm-3.control-label(for='title') Title
       .col-sm-7
-        input.form-control(type='text', name='title', id='title', placeholder='Title', value='#{newsItem.title}')
+        if newsItem.url
+          input.form-control(type='text', name='title', id='title', placeholder='Title', value='#{newsItem.title}', autofocus)
+        else
+          input.form-control(type='text', name='title', id='title', placeholder='Title', value='#{newsItem.title}')
     .form-group
       label.col-sm-3.control-label(for='source') Source
       .col-sm-7
