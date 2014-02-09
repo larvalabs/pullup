@@ -130,8 +130,15 @@ function addVotesToNewsItems(newsItems, user, callback) {
  */
 
 exports.submitNews = function(req, res) {
-  //if (!req.user) return res.redirect('/login');
+  var newsItem = new NewsItem({
+    source: '',
+    summary: '',
+    title: '',
+    url: ''
+  });
+
   res.render('news/submit', {
+    newsItem: newsItem,
     title: 'Submit News'
   });
 };
@@ -161,15 +168,6 @@ exports.summarize = function(req, res) {
  */
 
 exports.postNews = function(req, res, next) {
-  req.assert('title', 'Title cannot be blank.').notEmpty();
-  req.assert('url', 'URL cannot be blank.').notEmpty();
-
-  var errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/news/submit');
-  }
 
   console.log("Posting for user id "+req.user.id);
 
@@ -180,6 +178,19 @@ exports.postNews = function(req, res, next) {
     summary: req.body.summary,
     source: req.body.source
   });
+
+  req.assert('title', 'Title cannot be blank.').notEmpty();
+  req.assert('url', 'URL cannot be blank.').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.render('news/submit', {
+      newsItem: newsItem,
+      title: 'Submit News'
+    });
+  }
 
   newsItem.save(function(err) {
     if (err) {
