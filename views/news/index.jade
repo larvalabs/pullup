@@ -2,7 +2,8 @@ extends ../layout
 
 block content
     if !user
-        .alert.alert-info
+        .alert.alert-info.alert-dismissable
+            button.close(type='button', data-dismiss='alert', aria-hidden='true') ×
             i.fa.fa-cloud-upload
             strong Join this site via pull request!
             |  Make the site better and become a full member. See <a href="/about">here</a> for more details.
@@ -10,7 +11,7 @@ block content
     .page-header
         h4
           if filteredUser
-            | News shared by 
+            | News shared by
             if filteredUserWebsite
                 a(href=filteredUserWebsite, target='_blank') #{filteredUser}
             else
@@ -22,14 +23,14 @@ block content
     .user-profile
         if userProfile
             if userProfile.picture
-                <img src="#{userProfile.picture}"> 
+                <img src="#{userProfile.picture}">
             if userProfile.name
                 | <br><b>Name:</b> #{userProfile.name}
             if userProfile.location
                 | <br><b>Location:</b> #{userProfile.location}
             if userProfile.website
                 | <br> <b>Website:</b> <a target="_blank" href="#{userProfile.website}">#{userProfile.website}</a>
-                
+
     table.table.table-condensed
         thead
             tr
@@ -72,9 +73,9 @@ block content
                             | View Comments
                     if !filteredSource
                         td
-                            a(href='/news/source/' + item.source) 
+                            a(href='/news/source/' + item.source)
                                 | #{item.source}
                     if !filteredUser
                         td
-                            a(href='/news/user/' + item.poster.username) 
+                            a(href='/news/user/' + item.poster.username)
                                 | #{item.poster.username}
