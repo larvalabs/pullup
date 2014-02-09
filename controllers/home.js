@@ -20,3 +20,9 @@ exports.about = function(req, res) {
     title: 'About'
   });
 };
+
+exports.bookmarklet = function(req, res) {
+  res.render('bookmarklet', {
+    title: 'Bookmarklet'
+  });
+};
