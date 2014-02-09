@@ -155,8 +155,7 @@ function sortByScore(newsItems, user, callback) {
 
     var now = new Date();
     newsItems = newsItems.map(function (item) {
-      var ageInHours = (now.getTime() - item.created.getTime()) / 3600000;
-      item.score = (item.votes - 1) / Math.pow(ageInHours + 2, gravity);
+      calculateScore(item, now, gravity);
       return item;
     });
 
@@ -167,6 +166,15 @@ function sortByScore(newsItems, user, callback) {
 
     callback(null, newsItems);
   });
+}
+
+function calculateScore(item, now, gravity) {
+  var votes = item.votes;
+  if (votes === 0) {
+    votes = 0.1;
+  }
+  var ageInHours = (now.getTime() - item.created.getTime()) / 3600000;
+  item.score = votes / Math.pow(ageInHours + 2, gravity);
 }
 
 function getVotesForNewsItems(newsItems, user, callback) {
