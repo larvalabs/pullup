@@ -80,7 +80,9 @@ app.use(passport.session());
 app.use(function(req, res, next) {
   res.locals.user = req.user;
   
-  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'none'; default-src 'self' https://gravatar.com http://themes.googleusercontent.com http://fonts.googleapis.com");
+  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'none'; default-src 'self' https://gravatar.com http://themes.googleusercontent.com http://fonts.googleapis.com; style-src 'self'");
+  
+  res.setHeader("X-Frame-Options", "DENY");
   
   next();
 });
