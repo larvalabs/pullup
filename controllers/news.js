@@ -332,8 +332,19 @@ exports.postNews = function(req, res, next) {
         return res.redirect('/news/submit');
       }
     } else {
-      req.flash('success', { msg: 'News item submitted. Thanks!' });
-      res.redirect('/news');
+      // cast an initial vote for a submitted story
+      var vote = new Vote({
+        item: newsItem,
+        voter: req.user.id,
+        amount: 1
+      });
+
+      vote.save(function (err) {
+        if (err) return res.redirect('/news/submit');
+
+        req.flash('success', { msg: 'News item submitted. Thanks!' });
+        res.redirect('/news');
+      });
     }
   });
 
