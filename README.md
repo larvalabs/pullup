@@ -1,6 +1,6 @@
 PullUp
 ======
-A website you join via pull request. See it live at http://pullup.herokuapp.com
+A website you join via pull request. See it live at http://pullup.io
 
 What would it be like if every user of a site had contributed some code? Let's find out! Right now the site is little more
 than a terrible Hacker News type thing, but let's see if it can grow into something more.
