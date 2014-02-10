@@ -79,6 +79,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(req, res, next) {
   res.locals.user = req.user;
+  
+  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'none';");
+  
+  res.setHeader("X-Frame-Options", "DENY");
+  
   next();
 });
 app.use(flash());
@@ -93,6 +98,7 @@ app.use(function(err, req, res, next){
   res.statusCode = 500;
   res.render('error',{error:err});
 });
+
 app.locals.timeago = timeago;
 
 /**
