@@ -25,8 +25,13 @@ Vagrant.configure("2") do |config|
   # forward SSH keys
   config.ssh.forward_agent = true
 
-  # provisioning with ansible
-  config.vm.provision :ansible do |ansible|
-    ansible.playbook = "./vagrant/playbook.yml"
-  end
+  if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM)
+    # provisioning with ansible on windows
+    config.vm.provision "shell", path: "./vagrant/ansible-windows.sh"
+  else
+    # provisioning with ansible
+    config.vm.provision :ansible do |ansible|
+      ansible.playbook = "./vagrant/playbook.yml"
+    end
+  end 
 end

@@ -8,28 +8,38 @@ block content
             strong Join this site via pull request!
             |  Make the site better and become a full member. See <a href="/about">here</a> for more details.
 
-    .page-header
-        h4
-          if filteredUser
-            | News shared by
-            if filteredUserWebsite
-                a(href=filteredUserWebsite, target='_blank') #{filteredUser}
-            else
-                a(href='http://github.com/' + filteredUser, target='_blank') #{filteredUser}
-          else if filteredSource
-            | News from #{filteredSource}
-          else
-            | Recent News
-    .user-profile
-        if userProfile
-            if userProfile.picture
-                <img src="#{userProfile.picture}">
-            if userProfile.name
-                | <br><b>Name:</b> #{userProfile.name}
-            if userProfile.location
-                | <br><b>Location:</b> #{userProfile.location}
-            if userProfile.website
-                | <br> <b>Website:</b> <a target="_blank" href="#{userProfile.website}">#{userProfile.website}</a>
+    if !filteredUser
+        .page-header
+            h4
+              if filteredSource
+                | News from #{filteredSource}
+              else
+                | Recent News
+    else
+        .row.user-profile
+            .col-md-6
+                if userProfile
+                    h1
+                        if userProfile.picture
+                            img(src='#{userProfile.picture}')
+                        if userProfile.name
+                            | #{userProfile.name}
+            .col-md-6
+                dl.pull-right
+                    dt GitHub:
+                    dd
+                        a(href='http://github.com/#{filteredUser}', target='_blank') http://github.com/#{filteredUser}
+                    br
+                    if userProfile.location
+                        dt Location:
+                        dd= userProfile.location
+                        br
+                    if userProfile.website
+                        dt Website:
+                        dd
+                            a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
+        .page-header
+            h4 News Submitted
 
     table.table.table-condensed
         thead
