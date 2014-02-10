@@ -5,10 +5,20 @@ $(document).ready(function() {
       var url = $("#url").val();
       $.get("/news/summarize?url=" + url, function(response) {
         if (response) {
-          $("#title").val(response.title);
-          $("#source").val(response.source);
-          $("#summary").val(response.summary.join(" "));
-        }
+		  if(typeof response.title !== "undefined"){
+			$("#title").val(response.title);
+		  }
+		  
+		  if(typeof response.source !== "undefined"){
+			$("#source").val(response.source);
+		  }
+		  else $("#source").val(url);
+		  
+		  if(typeof response.summary !== "undefined"){
+			$("#summary").val(response.summary.join(" "));
+		  }
+        
+		}
       });
     })
     $('input[autofocus]').trigger('focus');//force fire it on the autofocus element
