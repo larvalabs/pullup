@@ -34,12 +34,18 @@ npm install
 export GITHUB_CLIENTID='CLIENTID'
 export GITHUB_SECRET='SECRET'
 ```
-# Once those are set you can run the local development version
-node app.js
+
+Once those are set you can run the local development version:
+
+    node app.js
 
 
 Lots more technical details [here](https://github.com/larvalabs/pullup/blob/master/hackathon-starter-readme.md).
 
+Pullup Dev Community
+--------------------
+
+On Freenode IRC @ #pullup
 
 Using the Vagrant-based Development Environment
 -----------------------
