@@ -65,6 +65,33 @@ body {
   color: rgba(0, 0, 0, 0.65);
 }
 
+// User Profile
+// -------------------------
+
+.user-profile {
+  @height: @line-height-computed * 3;
+  
+  h1 {
+    margin: 0;
+    line-height: @height;
+
+    img {
+      width:  @height;
+      height: @height;
+      margin-right: 5px;
+      border-radius: 5px;
+    }
+  }
+
+  dl {
+    dt {
+      float: left;
+      width: 80px;
+    }
+    dd { display: inline; }
+  }
+}
+
 // Social Buttons
 // -------------------------
 
@@ -107,6 +134,9 @@ body {
     color: #fff;
   }
 }
+
+// Miscellaneous
+// -------------------------
 
 // Extra space between font-awesome icons and text
 [class^="fa-"],
