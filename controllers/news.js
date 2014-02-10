@@ -318,12 +318,23 @@ exports.postNews = function(req, res, next) {
     if (err) {
       if (err.code === 11000) {
         req.flash('errors', { msg: 'That URL already exists as a news item.' });
-      }
-      return res.redirect('/news/submit');
-    }
 
-    req.flash('success', { msg: 'News item submitted. Thanks!' });
-    res.redirect('/news');
+        NewsItem.findOne({url: newsItem.url}).exec( function (err, item) {
+          if (err) {
+            return res.redirect('/news/submit');
+          }
+          return res.redirect('/news/' + item._id);
+        });
+
+      } else {
+        console.log('Error saving submission: ' + err.code);
+        req.flash('errors', { msg: 'An error occurred while processing your request, please try again.' });
+        return res.redirect('/news/submit');
+      }
+    } else {
+      req.flash('success', { msg: 'News item submitted. Thanks!' });
+      res.redirect('/news');
+    }
   });
 
 };
