@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+<<<<<<< HEAD
   if ($("#url").length > 0) {
     $("#title").on('focus', function() {
       var url = $("#url").val();
@@ -22,5 +23,15 @@ $(document).ready(function() {
   }
 
   $("#copyright").text(new Date().getFullYear());
+
+  (function hideNavMenuOnBodyClick() {
+    $('body').on('click', function() {
+      $('.navbar-collapse.in').collapse('hide');
+    });
+
+    $('.navbar-collapse').on('click', function(event) {
+      event.stopPropagation();
+    });
+  }());
 
 });
