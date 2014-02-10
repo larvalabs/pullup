@@ -47,7 +47,6 @@ block content
                 th #
                 th
                 th Votes
-                th
                 th Title
                 th Comments
                 if !filteredSource
@@ -67,7 +66,6 @@ block content
 
                     td
                         span.badge= item.votes
-                    td.timeago(title="#{item.created}")= timeago(item.created)
                     td
                         a(href=item.url)
                             | #{item.title}
@@ -75,6 +73,8 @@ block content
                             | &nbsp;
                             a(href="#", class="show-summary")
                                 | ...
+                        br
+                        small.submit-date(title="#{item.created}")= timeago(item.created)
                         br
                         p(class='hidden summary')
                             em= item.summary
