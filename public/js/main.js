@@ -1,6 +1,5 @@
 $(document).ready(function() {
 
-<<<<<<< HEAD
   if ($("#url").length > 0) {
     $("#title").on('focus', function() {
       var url = $("#url").val();
