@@ -1,5 +1,7 @@
 module.exports = {
     users: [ // ADD YOUR USERNAME AT THE TOP
+        'crandles',
+        'bobnisco',
         'jeromegn',
         'mattclaw',
         'crankeye',

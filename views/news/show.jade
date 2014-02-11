@@ -17,17 +17,18 @@ block content
                 br
                 p(class='hidden summary')
                     em= item.summary
-        | submitted 
+        | submitted
         span.timeago(title="#{item.created}")= timeago(item.created)
-        |  by 
+        |  by
         a(href='/news/user/' + item.poster.username)= item.poster.username
-        |  from 
+        |  from
         a(href='/news/source/' + item.source)= item.source
-    .row
-      form(action=item._id + '/comments', method='POST')
-        textarea.form-control(name='contents')
-        br
-        input.btn.btn-primary(type='submit', value='Add Comment')
+    if user
+        .row
+          form(action=item._id + '/comments', method='POST')
+            textarea.form-control(name='contents')
+            br
+            input.btn.btn-primary(type='submit', value='Add Comment')
 
     each comment, index in comments
       p.comment
