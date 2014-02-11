@@ -34,12 +34,10 @@ $(document).ready(function() {
   $("#copyright").text(new Date().getFullYear());
 
   (function hideNavMenuOnBodyClick() {
-    $('body').on('click', function() {
-      $('.navbar-collapse.in').collapse('hide');
-    });
-
-    $('.navbar-collapse').on('click', function(event) {
-      event.stopPropagation();
+    $('body').on('click', function(e) {
+      if (! $('.navbar').has(e.target).length) {
+        $('.navbar-collapse.in').collapse('hide');
+      }
     });
   }());
 
