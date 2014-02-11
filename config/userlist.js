@@ -27,6 +27,7 @@ module.exports = {
         'humd',
         'bwlang',
         'barretts',
+        'asah',
         'pksjce',
         'tito0224',
         'hemanth',
