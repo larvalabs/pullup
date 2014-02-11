@@ -95,6 +95,7 @@ exports.comments = function (req, res, next) {
 
 exports.postComment = function (req, res, next) {
   req.assert('contents', 'Comment cannot be blank.').notEmpty();
+  req.assert(['user','id'], 'You must be logged in to post a comment.').notEmpty();
 
   var errors = req.validationErrors();
 
