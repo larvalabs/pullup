@@ -78,7 +78,13 @@ block content
                                 small #{item.poster.username}
                             small #{' '}with#{' '}
                             a(href='/news/' + item._id)
-                                small #{item.comment_count} comment(s)
+                                case item.comment_count
+                                    when 0
+                                        small No comments
+                                    when 1
+                                        small 1 comment
+                                    default
+                                        small #{item.comment_count} comments
                         br
                         p(class='hidden summary')
                             em= item.summary
