@@ -17,11 +17,11 @@ block content
                 br
                 p(class='hidden summary')
                     em= item.summary
-        | submitted
+        | submitted&nbsp;
         span.timeago(title="#{item.created}")= timeago(item.created)
-        |  by
+        | &nbsp;by&nbsp;
         a(href='/news/user/' + item.poster.username)= item.poster.username
-        |  from
+        | &nbsp;from&nbsp;
         a(href='/news/source/' + item.source)= item.source
     if user
         .row
@@ -33,7 +33,7 @@ block content
     each comment, index in comments
       p.comment
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
-        &nbsp;
+        | &nbsp;
         span.timeago(title="#{comment.created}")= timeago(comment.created)
         blockquote.content= comment.contents
 
