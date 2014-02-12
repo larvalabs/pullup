@@ -30,9 +30,8 @@ block content
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
         | &nbsp;
         span.timeago(title="#{comment.created}")= timeago(comment.created)
-        if user && user.username == comment.poster.username
-            form(action="/news/" + item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
-              button(type="submit", class="delete btn btn-danger btn-xs", title="Delete")='X'
-        blockquote.content= comment.contents
-
-
+        blockquote.content(style="background-color: #f6f7f8")
+            if user && user.username == comment.poster.username
+                form(action="/news/" + item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
+                  button(type="submit", class="delete btn btn-danger btn-xs pull-right", title="Delete") ×
+            = comment.contents
