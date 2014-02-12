@@ -36,6 +36,7 @@ module.exports = {
         'kennethrapp',
         'lablayers',
         'lgarron',
+        'lukemiles',
         'LeandroLovisolo',
         'marco-fiset',
         'markbao',
