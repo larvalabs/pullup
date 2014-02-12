@@ -60,7 +60,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function (req, accessToken, 
     });
   } else {
     User.findOne({ facebook: profile.id }, function(err, existingUser) {
-      console.log(profile)
+      console.log(profile);
       if (existingUser) return done(null, existingUser);
       var user = new User();
       user.email = profile._json.email;
