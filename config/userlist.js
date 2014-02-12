@@ -56,6 +56,7 @@ module.exports = {
         'tejohnso',
         'theprofessor117',
         'tito0224',
+        'travishorn',
         'treygriffith',
         'williamle8300'
     ]

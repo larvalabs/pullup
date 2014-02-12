@@ -10,6 +10,9 @@
     "type": "git",
     "url": "https://github.com/larvalabs/pullup.git"
   },
+  "scripts": {
+    "test": "gulp test"
+  },
   "dependencies": {
     "async": "~0.2.10",
     "bcrypt-nodejs": "~0.0.3",
