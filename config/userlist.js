@@ -52,7 +52,7 @@ module.exports = {
         'sorpaas',
         'sp1d3rx',
         'swelham',
-        'tcate',
+        'thomascate',
         'tejohnso',
         'theprofessor117',
         'tito0224',
