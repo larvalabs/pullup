@@ -17,11 +17,11 @@ block content
                 br
                 p(class='hidden summary')
                     em= item.summary
-        | submitted 
+        | submitted
         span.timeago(title="#{item.created}")= timeago(item.created)
-        |  by 
+        |  by
         a(href='/news/user/' + item.poster.username)= item.poster.username
-        |  from 
+        |  from
         a(href='/news/source/' + item.source)= item.source
     if user
         .row
