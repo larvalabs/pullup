@@ -26,8 +26,16 @@ $(document).ready(function() {
 
   if($(".show-summary").length > 0) {
     $(".show-summary").on('click', function(e) {
+
+      if ($("p.item-summary").length ) {
+        $("p.item-summary").toggleClass('hidden');
+      }
+
+      if ($(this).siblings("p.summary").length ) {
+        $(this).siblings("p").toggleClass('hidden');
+      }
+
       e.preventDefault();
-      $("p.item-summary").toggleClass('hidden');
     });
   }
 
