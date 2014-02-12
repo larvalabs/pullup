@@ -28,7 +28,7 @@ cd pullup
 # Install NPM dependencies
 npm install
 
-# Register a new application on GitHub (https://github.com/settings/applications) 
+# Register a new application on GitHub (https://github.com/settings/applications)
 # Now that you have your application setup you can set the following environment variables:
 
 export GITHUB_CLIENTID='CLIENTID'
@@ -40,24 +40,24 @@ Once those are set you can run the local development version:
     node app.js
 
 
-Lots more technical details [here](https://github.com/larvalabs/pullup/blob/master/hackathon-starter-readme.md).
+You can find out more technical details in the [Readme for Hackathon Starter](https://github.com/larvalabs/pullup/blob/master/hackathon-starter-readme.md).
 
 Pullup Dev Community
 --------------------
 
-On Freenode IRC @ #pullup
+IRC: #pullup on freenode [(join via Webchat)](https://webchat.freenode.net?channels=%23pullup)
 
 Using the Vagrant-based Development Environment
 -----------------------
 
-You'll need [VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](http://www.vagrantup.com/downloads.html), and [Ansible](https://devopsu.com/guides/ansible-mac-osx.html) installed to use this environment. 
+You'll need [VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](http://www.vagrantup.com/downloads.html), and [Ansible](https://devopsu.com/guides/ansible-mac-osx.html) installed to use this environment.
 
 **Note**: Windows users do not need Ansible installed. (A script will run and install Ansible on the guest machine for you)
 
 Update the GitHub environment variables in `vagrant/tasks/setup_app.yml`
 
 Fire up the Vagrant VM:
-	
+
 	vagrant up
 
 Ensure Ansible has run successfully and provisioned the boxes.  If not, try again using `vagrant provision`
@@ -68,7 +68,7 @@ Then, ssh in and follow the installation steps:
 	cd /vagrant/
 	npm install
 	node app.js
-	
+
 #### Vagrant Development on a Windows Host
 Windows lacks support for symlinks in synced folders. Use `npm install --no-bin-links` instead of `npm install` when installing.
 

@@ -17,4 +17,4 @@ forward. Other than that, go for it!
 
 * [Current bugs and requested features](https://github.com/larvalabs/pullup/issues?state=open)
 * [Setup and general instructions](https://github.com/larvalabs/pullup/blob/master/README.md)
-* #pullup IRC channel on freenode.org
+* IRC: #pullup on freenode [(join via Webchat)](https://webchat.freenode.net?channels=%23pullup)
