@@ -45,6 +45,6 @@ module.exports = {
         'kalmi',
         'lablayers',
         'dfjones',
-		'exadeci'
+        'exadeci'
     ]
 };
