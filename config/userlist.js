@@ -42,6 +42,7 @@ module.exports = {
         'mattclaw',
         'megamattron',
         'michaelnovakjr',
+        'mreinhardt',
         'msied',
         'pents90',
         'pksjce',
