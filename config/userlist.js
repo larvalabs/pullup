@@ -50,6 +50,7 @@ module.exports = {
         'singularperturbation',
         'sorpaas',
         'sp1d3rx',
+        'sriehl',
         'swelham',
         'tcate',
         'tejohnso',
