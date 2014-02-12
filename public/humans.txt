@@ -1,0 +1,7 @@
+/* TEAM */
+    Founder: Larva Labs (http://larvalabs.com/) 
+    Contributors: https://github.com/larvalabs/pullup/blob/master/config/userlist.js 
+
+/* SITE */
+    Language: English
+    Software: NodeJS, MongoDB, Bootstrap 3, Flatly 
