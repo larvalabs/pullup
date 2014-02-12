@@ -26,6 +26,7 @@ module.exports = {
         'ianwalter',
         'isaaczafuta',
         'jeffawang',
+        'jensenbox',
         'jeromegn',
         'jmcelwain',
         'joewright',
@@ -64,7 +65,6 @@ module.exports = {
         'travishorn',
         'treygriffith',
         'utdemir',
-        'williamle8300',
-        'jensenbox'
+        'williamle8300'
     ]
 };
