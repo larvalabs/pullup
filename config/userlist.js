@@ -45,6 +45,7 @@ module.exports = {
         'singularperturbation',
         'sorpaas',
         'sp1d3rx',
+        'sriehl',
         'swelham',
         'tejohnso',
         'theprofessor117',
