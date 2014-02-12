@@ -12,6 +12,7 @@ module.exports = {
         'crankeye',
         'd7p',
         'dcancel',
+        'dck273',
         'dfjones',
         'dylnclrk',
         'eik3',
