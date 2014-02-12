@@ -23,6 +23,7 @@ module.exports = {
         'isaaczafuta',
         'jeffawang',
         'jeromegn',
+        'jphatton',
         'julbaxter',
         'kalmi',
         'kasperlewau',
