@@ -58,6 +58,7 @@ module.exports = {
         'tito0224',
         'travishorn',
         'treygriffith',
+        'utdemir',
         'williamle8300'
     ]
 };
