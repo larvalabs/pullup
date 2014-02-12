@@ -41,6 +41,7 @@ module.exports = {
         'qguv',
         'roryokane',
         'rtfeldman',
+        'ryanwi',
         'shedd',
         'sorpaas',
         'sp1d3rx',
