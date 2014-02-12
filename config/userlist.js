@@ -18,6 +18,7 @@ module.exports = {
         'eik3',
         'euank',
         'evsie001',
+        'exadeci',
         'gwillen',
         'hemanth',
         'humd',
