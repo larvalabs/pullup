@@ -11,6 +11,20 @@ var secrets = require('./secrets');
 var userlist = require('./userlist');
 var _ = require('underscore');
 
+function findUserIndex(username) {
+  var userIndex = -1;
+  var expr = new RegExp('^' + username + '$', 'i');
+
+  userlist.users.some(function(name, index) {
+    if (name.match(expr)) {
+      userIndex = index;
+      return true;
+    }
+  });
+
+  return userIndex;
+}
+
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
@@ -60,7 +74,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function (req, accessToken, 
     });
   } else {
     User.findOne({ facebook: profile.id }, function(err, existingUser) {
-      console.log(profile)
+      console.log(profile);
       if (existingUser) return done(null, existingUser);
       var user = new User();
       user.email = profile._json.email;
@@ -85,7 +99,7 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
     User.findOne({ $or: [{ github: profile.id }, { email: profile.email }] }, function(err, existingUser) {
       // Check for user in authorized user list
       console.log("Checking for user " + profile.username);
-      var index = userlist.users.indexOf(profile.username);
+      var index = findUserIndex(profile.username);
       console.log("Index in authorized users: " + index);
       if (index == -1) {
         req.flash('errors', { msg: 'Your GitHub account is not authorized.' });
@@ -112,7 +126,7 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
   } else {
     // Check for user in authorized user list
     console.log("Checking for user in else block " + profile.username);
-    var index = userlist.users.indexOf(profile.username);
+    var index = findUserIndex(profile.username);
     console.log("Index in authorized users: " + index);
     if (index == -1) {
       req.flash('errors', { msg: 'Your GitHub account is not authorized.' });

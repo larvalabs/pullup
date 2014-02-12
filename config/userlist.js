@@ -44,6 +44,7 @@ module.exports = {
         'shedd',
         'sorpaas',
         'sp1d3rx',
+        'swelham',
         'tejohnso',
         'theprofessor117',
         'tito0224',
