@@ -8,20 +8,19 @@ block content
             |  Make the site better and become a full member. See the <a href="/about">about page</a> for more details.
 
     .page-header
-        h4
+        h3
             a(href=item.url)= item.title
-            if item.summary
+            if item.summary && ! item.isSelfPost()
                 | &nbsp;
                 a(href="#", class="show-summary")
                     | ...
-                br
-                p(class='hidden summary')
-                    em= item.summary
-        | submitted
+        h4
+          p(class="item-summary #{item.isSelfPost() ? '' : 'hidden'}")= item.summary
+        = 'submitted '
         span.timeago(title="#{item.created}")= timeago(item.created)
-        |  by
+        = ' by '
         a(href='/news/user/' + item.poster.username)= item.poster.username
-        |  from
+        = ' from '
         a(href='/news/source/' + item.source)= item.source
     if user
         .row
@@ -33,7 +32,7 @@ block content
     each comment, index in comments
       p.comment
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
-        &nbsp;
+        | &nbsp;
         span.timeago(title="#{comment.created}")= timeago(comment.created)
         blockquote.content= comment.contents
 

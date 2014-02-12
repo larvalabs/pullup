@@ -167,7 +167,7 @@ exports.sourceNews = function(req, res) {
       title: 'Recent news from ' + req.params.source,
       items: newsItems,
       filteredSource: req.params.source
-    })
+    });
   });
 };
 
@@ -253,11 +253,12 @@ function addVotesToNewsItem(newsItem, user, votes) {
  */
 
 exports.submitNews = function(req, res) {
+    var address;
 
   if (req.query.u) {
-    var address = req.query.u;
+    address = req.query.u;
   } else {
-    var address = "";
+    address = "";
   }
 
   var newsItem = {
@@ -309,17 +310,29 @@ exports.postNews = function(req, res, next) {
     source: req.body.source
   });
 
-  req.assert('title', 'Title cannot be blank.').notEmpty();
-  req.assert('url', 'URL cannot be blank.').notEmpty();
+  var posttype = req.body['posttype'];
 
+  req.assert('title', 'Title cannot be blank.').notEmpty(); 
+  if (posttype === 'self') {
+    req.assert('summary', 'Post summary cannot be blank.').notEmpty();
+  } else {
+    req.assert('url', 'URL cannot be blank.').notEmpty();
+  }
+ 
   var errors = req.validationErrors();
 
   if (errors) {
     req.flash('errors', errors);
     return res.render('news/submit', {
       newsItem: newsItem,
-      title: 'Submit News'
+      title: 'Submit News',
+      posttype: posttype
     });
+  }
+
+  if (posttype === 'self') {
+    newsItem.url = '/news/' + newsItem._id;
+    newsItem.source = 'pullup.io';
   }
 
   newsItem.save(function(err) {
