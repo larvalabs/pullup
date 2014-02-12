@@ -1,5 +1,6 @@
-PullUp
+PullUp [![Build Status](https://travis-ci.org/larvalabs/pullup.png?branch=master)](https://travis-ci.org/larvalabs/pullup)
 ======
+
 A website you join via pull request. See it live at http://pullup.io
 
 What would it be like if every user of a site had contributed some code? Let's find out! Right now the site is little more
