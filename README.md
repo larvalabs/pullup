@@ -1,6 +1,7 @@
 PullUp
 ======
 [![Code Climate](https://codeclimate.com/repos/52fba7f66956805f68002062/badges/b1a62e6c14008de1ff3c/gpa.png)](https://codeclimate.com/repos/52fba7f66956805f68002062/feed)
+
 A website you join via pull request. See it live at http://pullup.io
 
 What would it be like if every user of a site had contributed some code? Let's find out! Right now the site is little more
