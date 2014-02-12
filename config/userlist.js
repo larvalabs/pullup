@@ -6,7 +6,7 @@ module.exports = {
         'julbaxter',
         'eik3',
         'crandles',
-        'bobnisco',
+        'BobNisco',
         'jeromegn',
         'mattclaw',
         'crankeye',
