@@ -46,6 +46,7 @@ module.exports = {
         'qguv',
         'roryokane',
         'rtfeldman',
+        'ryanwi',
         'shedd',
         'singularperturbation',
         'sorpaas',
