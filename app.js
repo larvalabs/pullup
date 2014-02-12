@@ -151,6 +151,7 @@ app.get('/news/summarize', passportConf.isAuthenticated, newsController.summariz
 app.get('/news/source/:source', newsController.sourceNews);
 app.get('/news/:id', newsController.comments);
 app.post('/news/:id/comments', newsController.postComment);
+app.post('/news/:id/comments/:comment_id/delete', newsController.deleteComment);
 app.post('/news/:id', newsController.vote);
 app.get('/news/user/:id', newsController.userNews);
 

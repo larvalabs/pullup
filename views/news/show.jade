@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
+  div.news-item
     if !user
         .alert.alert-info
             i.fa.fa-cloud-upload
@@ -20,9 +21,9 @@ block content
         | submitted
         span.timeago(title="#{item.created}")= timeago(item.created)
         |  by
-        a(href='/news/user/' + item.poster.username)= item.poster.username
+        a(href='/news/user/' + item.poster.username, class='user')= item.poster.username
         |  from
-        a(href='/news/source/' + item.source)= item.source
+        a(href='/news/source/' + item.source, class='source')= item.source
     if user
         .row
           form(action=item._id + '/comments', method='POST')
@@ -31,10 +32,12 @@ block content
             input.btn.btn-primary(type='submit', value='Add Comment')
 
     each comment, index in comments
-      p.comment
+      div.comment
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
-        &nbsp;
         span.timeago(title="#{comment.created}")= timeago(comment.created)
+        if user.username == comment.poster.username
+            form(action="/news/" + item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
+              button(type="submit", class="delete btn btn-danger btn-xs", title="Delete")='X'
         blockquote.content= comment.contents
 
 

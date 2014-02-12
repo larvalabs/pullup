@@ -95,9 +95,16 @@ exports.comments = function (req, res, next) {
 
 exports.postComment = function (req, res, next) {
   req.assert('contents', 'Comment cannot be blank.').notEmpty();
-  req.assert('user', 'User must be logged in.').notEmpty();
 
   var errors = req.validationErrors();
+
+  if (!req.user) {
+    errors.push({
+      param: 'user',
+      msg: 'User must be logged in.',
+      value: undefined
+    });
+  }
 
   if (errors) {
     req.flash('errors', errors);
@@ -117,6 +124,32 @@ exports.postComment = function (req, res, next) {
     }
 
     req.flash('success', { msg  : 'Comment posted. Thanks!' });
+    res.redirect('/news/'+req.params.id);
+  });
+};
+
+exports.deleteComment = function (req, res, next) {
+  var errors = req.validationErrors();
+
+  if (!req.user) {
+    errors.push({
+      param: 'user',
+      msg: 'User must be logged in.',
+      value: undefined
+    });
+  }
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/news/'+req.params.id);
+  }
+
+  Comment
+  .findByIdAndRemove(req.params.comment_id)
+  .exec(function(err, comment) {
+    if (err) res.redirect('/news/' + req.params.id);
+
+    req.flash('success', { msg: 'Comment deleted.' });
     res.redirect('/news/'+req.params.id);
   });
 };
