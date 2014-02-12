@@ -42,6 +42,7 @@ module.exports = {
         'roryokane',
         'rtfeldman',
         'shedd',
+        'singularperturbation',
         'sorpaas',
         'sp1d3rx',
         'swelham',
