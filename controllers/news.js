@@ -23,10 +23,15 @@ exports.index = function(req, res, next) {
       if(err) return next(err);
 
       var counter = newsItems.length;
-
+      function render() {
+        res.render('news/index', {
+          title: 'Recent News',
+          items: newsItems
+        });
+      }
+      if(!newsItems.length) return render();
       _.each(newsItems, function (newsItem) {
         Comment.count({ item:newsItem._id, itemType: 'news' }).exec(function (err, count) {
-
           if (err) return next(err);
 
           if (counter>1) {
@@ -34,11 +39,7 @@ exports.index = function(req, res, next) {
             counter--;
           } else {
             newsItem.comment_count = count;
-
-            res.render('news/index', {
-              title: 'Recent News',
-              items: newsItems
-            });
+            render();
           }
         });
       });
