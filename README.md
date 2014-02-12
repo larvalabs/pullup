@@ -27,6 +27,7 @@ cd pullup
 
 # Install NPM dependencies
 npm install
+npm install -g gulp
 
 # Register a new application on GitHub (https://github.com/settings/applications) 
 # Now that you have your application setup you can set the following environment variables:
@@ -38,6 +39,10 @@ export GITHUB_SECRET='SECRET'
 Once those are set you can run the local development version:
 
     node app.js
+
+And perform build tasks and linting with:
+
+    gulp
 
 
 Lots more technical details [here](https://github.com/larvalabs/pullup/blob/master/hackathon-starter-readme.md).

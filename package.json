@@ -40,5 +40,10 @@
     "connect-mongo": "~0.4.0",
     "optimist": "latest",
     "timeago": "~0.1.0"
+  },
+  "devDependencies": {
+    "gulp": "~3.5.2",
+    "gulp-util": "~2.2.14",
+    "gulp-jshint": "~1.4.0"
   }
 }
