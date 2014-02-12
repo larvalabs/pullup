@@ -44,6 +44,7 @@ module.exports = {
         'markbao',
         'kalmi',
         'lablayers',
-        'dfjones'
+        'dfjones',
+        'mashurex'
     ]
 };
