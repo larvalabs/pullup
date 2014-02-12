@@ -9,6 +9,18 @@ block content
       a(href='/bookmarklet') bookmarklet.
 
     .form-group
+      .col-sm-7.col-sm-offset-3
+        .btn-group(data-toggle="buttons")
+          label.btn.btn-success.post-type-btn.post-type-url(class="#{posttype === 'self' ? '' : 'active'}")
+            input(type="radio", name="posttype", value="url")
+            | Create Link
+          label.btn.btn-success.post-type-btn(class="#{posttype === 'self' ? 'active' : ''}")
+            if (posttype === self)
+              input(type="radio", name="posttype", value="self")
+            else
+              input(type="radio", name="posttype", value="self", checked)
+            | Create Discussion
+    .form-group.form-group-url(style="#{posttype === 'self' ? 'display:none;' : ''}")
       label.col-sm-3.control-label(for='url') URL
       .col-sm-7
         if newsItem.url
@@ -22,7 +34,7 @@ block content
           input.form-control(type='text', name='title', id='title', placeholder='Title', value='#{newsItem.title}', autofocus)
         else
           input.form-control(type='text', name='title', id='title', placeholder='Title', value='#{newsItem.title}')
-    .form-group
+    .form-group.form-group-source(style="#{posttype === 'self' ? 'display:none;' : '' }")
       label.col-sm-3.control-label(for='source') Source
       .col-sm-7
         input.form-control(type='text', name='source', id='source', value='#{newsItem.source}')

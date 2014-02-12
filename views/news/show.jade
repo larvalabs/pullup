@@ -8,15 +8,14 @@ block content
             |  Make the site better and become a full member. See the <a href="/about">about page</a> for more details.
 
     .page-header
-        h4
+        h3
             a(href=item.url)= item.title
-            if item.summary
+            if item.summary && ! item.isSelfPost()
                 | &nbsp;
                 a(href="#", class="show-summary")
                     | ...
-                br
-                p(class='hidden summary')
-                    em= item.summary
+        h4
+          p(class="item-summary #{item.isSelfPost() ? '' : 'hidden'}")= item.summary
         | submitted
         span.timeago(title="#{item.created}")= timeago(item.created)
         |  by
