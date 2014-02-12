@@ -44,11 +44,14 @@ body {
 .navbar-inverse {
   border-bottom: 2px solid #139C82;
 }
+.navbar-inverse a {
+  text-shadow: 1px 1px 0px rgba(3, 85, 69, 0.2);
+}
 
 // News Table
 // -------------------------
 .news-table a:visited {
-  color: #bdcfcc;
+  color: #a6bfbb;
 }
 
 .news-table .upvote {
@@ -60,11 +63,11 @@ body {
 }
 
 .news-table a.show-summary {
-  color: #bdcfcc; 
+  color: #bdcfcc;
 }
 
 .news-table a.show-summary:visited {
-  color: #bdcfcc; 
+  color: #bdcfcc;
 }
 
 .news-table .summary {
@@ -103,7 +106,7 @@ body {
 
 .user-profile {
   @height: @line-height-computed * 3;
-  
+
   h1 {
     margin: 0;
     line-height: @height;
@@ -170,6 +173,11 @@ body {
 
 // Miscellaneous
 // -------------------------
+
+// text-shadows on info buttons to make the text a little easier to read
+.btn-info {
+  text-shadow: 1px 1px 0px #2D81B9;
+}
 
 // Extra space between font-awesome icons and text
 [class^="fa-"],
