@@ -344,7 +344,7 @@ exports.postNews = function(req, res, next) {
     source: req.body.source
   });
 
-  var posttype = req.body['posttype'];
+  var posttype = req.body.posttype;
 
   req.assert('title', 'Title cannot be blank.').notEmpty(); 
   if (posttype === 'self') {
