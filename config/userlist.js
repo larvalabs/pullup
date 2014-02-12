@@ -1,5 +1,6 @@
 module.exports = {
     users: [ // ADD YOUR USERNAME IN ITS ALPHABETICAL SLOT
+        'ryanwi',
         'barretts',
         'bluetidepro',
         'bobnisco',
