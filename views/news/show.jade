@@ -30,7 +30,7 @@ block content
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
         | &nbsp;
         span.timeago(title="#{comment.created}")= timeago(comment.created)
-        if user.username == comment.poster.username
+        if user && user.username == comment.poster.username
             form(action="/news/" + item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
               button(type="submit", class="delete btn btn-danger btn-xs", title="Delete")='X'
         blockquote.content= comment.contents

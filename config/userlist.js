@@ -8,6 +8,7 @@ module.exports = {
         'briansoule',
         'bwlang',
         'cgroner',
+        'chall8908',
         'cpdean',
         'crandles',
         'crankeye',
