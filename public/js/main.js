@@ -28,7 +28,7 @@ $(document).ready(function() {
     $(".show-summary").on('click', function(e) {
       e.preventDefault();
       $("p.item-summary").toggleClass('hidden');
-    })
+    });
   }
 
   if ($("label.post-type-btn").length) {
