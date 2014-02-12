@@ -32,7 +32,7 @@ block content
     each comment, index in comments
       p.comment
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
-         &nbsp;
+        | &nbsp;
         span.timeago(title="#{comment.created}")= timeago(comment.created)
         blockquote.content= comment.contents
 
