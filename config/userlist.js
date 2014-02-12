@@ -6,6 +6,7 @@ module.exports = {
         'briansoule',
         'bwlang',
         'cgroner',
+        'cpdean',
         'crandles',
         'crankeye',
         'd7p',

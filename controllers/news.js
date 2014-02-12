@@ -167,7 +167,7 @@ exports.sourceNews = function(req, res) {
       title: 'Recent news from ' + req.params.source,
       items: newsItems,
       filteredSource: req.params.source
-    })
+    });
   });
 };
 
@@ -253,11 +253,12 @@ function addVotesToNewsItem(newsItem, user, votes) {
  */
 
 exports.submitNews = function(req, res) {
+    var address;
 
   if (req.query.u) {
-    var address = req.query.u;
+    address = req.query.u;
   } else {
-    var address = "";
+    address = "";
   }
 
   var newsItem = {
