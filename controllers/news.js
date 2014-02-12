@@ -22,6 +22,13 @@ exports.index = function(req, res, next) {
 
       if(err) return next(err);
 
+      if (!newsItems.length) {
+        return res.render('news/index', {
+            title: 'Recent News',
+            items: newsItems
+          });
+      }
+
       var counter = newsItems.length;
 
       _.each(newsItems, function (newsItem) {
