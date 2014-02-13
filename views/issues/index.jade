@@ -12,7 +12,7 @@ block content
                 th
                 th Votes
                 th Title
-        tbody
+        tbody.news-table
             each issue, index in issues
                 tr
                     td
@@ -45,7 +45,7 @@ block content
                                     when 1
                                         small 1 comment
                                     default
-                                        small #{item.comment_count} comments
+                                        small #{issue.comments} comments
                         br
                         p(class='hidden summary')
                             em= issue.body
