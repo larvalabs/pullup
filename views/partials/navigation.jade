@@ -9,6 +9,8 @@
       a.navbar-brand(href='/') pullup
     .collapse.navbar-collapse
       ul.nav.navbar-nav
+        li(class=title=='Recent News'?'active':undefined)
+          a(href='/news/recent') Recent News
         if user
           li(class=title=='Submit News'?'active':undefined)
             a(href='/news/submit') Submit News

@@ -7,7 +7,12 @@ var Vote = require('../models/Vote');
 var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
+var gravity = 1.8;
 
+/**
+ * GET /news
+ * View top news
+ */
 exports.index = function(req, res, next) {
   NewsItem
   .find({})
@@ -24,7 +29,7 @@ exports.index = function(req, res, next) {
 
       if (!newsItems.length) {
         return res.render('news/index', {
-            title: 'Recent News',
+            title: 'Top News',
             items: newsItems
           });
       }
@@ -43,7 +48,7 @@ exports.index = function(req, res, next) {
             newsItem.comment_count = count;
 
             res.render('news/index', {
-              title: 'Recent News',
+              title: 'Top News',
               items: newsItems
             });
           }
@@ -52,6 +57,37 @@ exports.index = function(req, res, next) {
 
     });
 
+  });
+};
+
+/**
+ * GET /news/recent
+ * View latest news items
+ */
+ exports.recent = function(req, res, next) {
+  NewsItem
+  .find({})
+  .sort('-created')
+  .limit(30)
+  .populate('poster')
+  .exec(function(err, newsItems) {
+
+    if(err) return next(err);
+
+    getVotesForNewsItems(newsItems, req.user, function(err, newsItems) {
+      if (err) return callback(err);
+
+      var now = new Date();
+      newsItems = newsItems.map(function (item) {
+        calculateScore(item, now, gravity);
+        return item;
+      });
+
+      res.render('news/recent', {
+        title: 'Recent News',
+        items: newsItems
+      });
+    });
   });
 };
 
@@ -206,8 +242,6 @@ exports.sourceNews = function(req, res) {
 };
 
 function sortByScore(newsItems, user, callback) {
-  var gravity = 1.8;
-
   getVotesForNewsItems(newsItems, user, function(err, newsItems) {
     if (err) return callback(err);
 

@@ -1,0 +1,89 @@
+extends ../layout
+
+block content
+    include ../partials/joinsite
+
+    if !filteredUser
+        .page-header
+            h4
+              if filteredSource
+                | News from #{filteredSource}
+              else
+                | Recent News
+    else
+        .row.user-profile
+            .col-md-6
+                if userProfile
+                    h1
+                        if userProfile.picture
+                            img(src='#{userProfile.picture}')
+                        if userProfile.name
+                            | #{userProfile.name}
+            .col-md-6
+                dl.pull-right
+                    dt GitHub:
+                    dd
+                        a(href='http://github.com/#{filteredUser}', target='_blank') http://github.com/#{filteredUser}
+                    br
+                    if userProfile.location
+                        dt Location:
+                        dd= userProfile.location
+                        br
+                    if userProfile.website
+                        dt Website:
+                        dd
+                            a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
+        .page-header
+            h4 News Submitted
+
+    table.table.table-condensed
+        thead
+            tr
+                th.text-muted #
+                th
+                th Votes
+                th Title
+                if !filteredSource
+                    th Source
+        tbody.news-table
+            each item, index in items
+                tr
+                    td.text-muted= index + 1
+                    td
+                        if !item.votedFor
+                            form(action='/news/' + item._id, method='POST')
+                                input(type='hidden', name='amount', value='1')
+                                button(type='submit', class='upvote')
+                                    i.fa.fa-chevron-up
+
+                    td
+                        span.badge= item.votes
+                    td
+                        a(href=item.url)
+                            | #{item.title}
+                        if item.summary
+                            | &nbsp;
+                            a(href="#", class="show-summary")
+                                | ...
+                        br
+                        span
+                            small.submit-date(title="#{item.created}")= timeago(item.created)
+                            small #{' '}by#{' '}
+                            a(href='/news/user/' + item.poster.username)
+                                small #{item.poster.username}
+                            small #{' '}with#{' '}
+                            a(href='/news/' + item._id)
+                                case item.comment_count
+                                    when 0
+                                        small No comments
+                                    when 1
+                                        small 1 comment
+                                    default
+                                        small #{item.comment_count} comments
+                        br
+                        p(class='hidden summary')
+                            em= item.summary
+                    if !filteredSource
+                        td
+                            a(href='/news/source/' + item.source)
+                                | #{item.source}
