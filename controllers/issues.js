@@ -25,7 +25,7 @@ exports.index = function (req, res, next) {
 
       if(err) return next(err);
 
-      sortByScore(issues, req.user, function (err, issues) {
+      sortIssues(issues, req.user, function (err, issues) {
 
         if(err) return next(err);
 
@@ -128,7 +128,7 @@ function castFirstIssueVote(issue, author_username) {
         issue.poster = user;
 
         issue.save(function (err) {
-          return console.warn(err);
+          if(err) return console.warn(err);
         });
       });
 
@@ -136,8 +136,7 @@ function castFirstIssueVote(issue, author_username) {
   });
 }
 
-function sortByScore(issues, user, callback) {
-  var gravity = 1.8;
+function sortIssues(issues, user, callback) {
 
   addVotesToIssues(issues, user, function (err, issues) {
     if(err) return callback(err);
