@@ -165,12 +165,19 @@ exports.deleteComment = function (req, res, next) {
   });
 };
 
-exports.userNews = function(req, res) {
+exports.userNews = function(req, res, next) {
   console.log("Finding user news for id " + req.params.id);
 
   User
-  .find({'username': req.params.id})
-  .exec(function(err, users) {
+  .findOne({'username': req.params.id})
+  .exec(function(err, user) {
+
+    if(err) return next(err);
+
+    if(!user) {
+      req.flash('errors', { msg: "That user does not exist. "});
+      return res.redirect('/');
+    }
 
     async.parallel({
       newsItems: function(cb) {
@@ -214,12 +221,12 @@ exports.userNews = function(req, res) {
             } else {
               newsItem.comment_count = count;
               res.render('news/index', {
-                title: 'Posts by ' + users[0].username,
+                title: 'Posts by ' + user.username,
                 items: results.newsItems,
                 comments: results.comments,
-                filteredUser: users[0].username,
-                filteredUserWebsite: users[0].profile.website,
-                userProfile: users[0].profile
+                filteredUser: user.username,
+                filteredUserWebsite: user.profile.website,
+                userProfile: user.profile
               });
             }
           });
