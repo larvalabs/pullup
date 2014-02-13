@@ -32,7 +32,7 @@ exports.voteFor = function (type, root) {
         if (err.code === 11000) {
           req.flash('errors', { msg: 'You can only upvote an item once.' });
         }
-        console.log(err);
+        console.warn(err);
         return res.redirect(req.get('referrer') || root);
       }
 

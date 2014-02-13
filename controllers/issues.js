@@ -53,31 +53,32 @@ function getIssueIds(issues, callback) {
 
       // this issue has been created in our db already
       if(doc) {
-        console.log("issue exists");
         issue._id = doc._id;
-        return cb(null, issue);
-      }
-
-      // we need to create a new issue
-      doc = new Issue({
-        number: issue.number
-      });
-
-      doc.save(function (err, doc) {
-        if(err) return cb(err);
-        issue._id = doc._id;
-
         cb(null, issue);
-      });
 
-
-      // UPDATE VOTE AFTER SENDING BACK THE CALLBACK
-      // this doesn't need happen before a user gets the information back,
-      // it can happen in the background
-      
-      // if this doc has no poster, it's author was not a member the last time this check was run
-      if(!doc.poster) {
+        // UPDATE VOTE AFTER SENDING BACK THE CALLBACK
+        // this doesn't need happen before a user gets the information back,
+        // it can happen in the background
         castFirstIssueVote(doc, issue.user.login);
+
+      } else {
+
+        // we need to create a new issue
+        doc = new Issue({
+          number: issue.number
+        });
+
+        doc.save(function (err, doc) {
+          if(err) return cb(err);
+          issue._id = doc._id;
+
+          cb(null, issue);
+
+          // UPDATE VOTE AFTER SENDING BACK THE CALLBACK
+          // this doesn't need happen before a user gets the information back,
+          // it can happen in the background
+          castFirstIssueVote(doc, issue.user.login);
+        });
       }
 
     });
@@ -86,6 +87,9 @@ function getIssueIds(issues, callback) {
 
 // cast a vote for an issue if the author is a user of pullup
 function castFirstIssueVote(issue, author_username) {
+
+  // if this doc has no poster, it's author was not a member the last time this check was run
+  if(issue.poster) return;
 
   User.findOne({
     username: author_username

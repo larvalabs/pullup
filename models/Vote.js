@@ -14,7 +14,7 @@ var voteSchema = new mongoose.Schema({
     default: 'news'
   },
   voter: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
