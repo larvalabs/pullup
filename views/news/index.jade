@@ -34,60 +34,95 @@ block content
                         dd
                             a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
         .page-header
-            h4 News Submitted
+          ul.nav.nav-tabs
+            li.active
+              a(href='#news', data-toggle='tab')
+                h4 News Submitted
+            li
+              a(href='#comments', data-toggle='tab')
+                h4 Comments
 
-    table.table.table-condensed
-        thead
-            tr
-                th.text-muted #
-                th
-                th Votes
-                th Title
-                if !filteredSource
-                    th Source
-        tbody.news-table
-            each item, index in items
+    div.tab-content
+      div#news.tab-pane.fade.in.active
+        table.table.table-condensed
+            thead
                 tr
-                    td.text-muted= index + 1
-                    td
-                        if !item.votedFor
-                            form(action='/news/' + item._id, method='POST')
-                                input(type='hidden', name='amount', value='1')
-                                button(type='submit', class='upvote')
-                                    i.fa.fa-chevron-up
-
-                    td
-                        span.badge= item.votes
-                    td
-                        a(href=item.url)
-                            | #{item.title}
-                        if item.summary
-                            | &nbsp;
-                            a(href="#", class="show-summary")
-                                | ...
-                        br
-                        span
-                            small.submit-date(title="#{item.created}")= timeago(item.created)
-                            small #{' '}by#{' '}
-                            if item.poster
-                                a(href='/news/user/' + item.poster.username)
-                                    small #{item.poster.username}
-                            else
-                                span.text-muted
-                                    | [deleted]
-                            small #{' '}with#{' '}
-                            a(href='/news/' + item._id)
-                                case item.comment_count
-                                    when 0
-                                        small No comments
-                                    when 1
-                                        small 1 comment
-                                    default
-                                        small #{item.comment_count} comments
-                        br
-                        p(class='hidden summary')
-                            em= item.summary
+                    th.text-muted #
+                    th
+                    th Votes
+                    th Title
                     if !filteredSource
+                        th Source
+            tbody.news-table
+                each item, index in items
+                    tr
+                        td.text-muted= index + 1
                         td
-                            a(href='/news/source/' + item.source)
-                                | #{item.source}
+                            if !item.votedFor
+                                form(action='/news/' + item._id, method='POST')
+                                    input(type='hidden', name='amount', value='1')
+                                    button(type='submit', class='upvote')
+                                        i.fa.fa-chevron-up
+
+                        td
+                            span.badge= item.votes
+                        td
+                            a(href=item.url)
+                                | #{item.title}
+                            if item.summary
+                                | &nbsp;
+                                a(href="#", class="show-summary")
+                                    | ...
+                            br
+                            span
+                                small.submit-date(title="#{item.created}")= timeago(item.created)
+                                small #{' '}by#{' '}
+                                if item.poster
+                                    a(href='/news/user/' + item.poster.username)
+                                        small #{item.poster.username}
+                                else
+                                    span.text-muted
+                                        | [deleted]
+                                small #{' '}with#{' '}
+                                a(href='/news/' + item._id)
+                                    case item.comment_count
+                                        when 0
+                                            small No comments
+                                        when 1
+                                            small 1 comment
+                                        default
+                                            small #{item.comment_count} comments
+                            br
+                            p(class='hidden summary')
+                                em= item.summary
+                        if !filteredSource
+                            td
+                                a(href='/news/source/' + item.source)
+                                    | #{item.source}
+
+      if filteredUser
+        div#comments.tab-pane.fade
+            table.table.table-condensed
+                thead
+                    tr
+                        th.text-muted #
+                        th Comment
+                        th(width='40%') Parent
+                tbody.news-table
+                    each comment, index in comments
+                        tr
+                            td.text-muted= index + 1
+                            td.comment
+                                blockquote.content= comment.contents
+                                    if user && user.username == comment.poster.username
+                                        form(action="/news/" + comment.item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
+                                          button(type="submit", class="delete btn btn-danger btn-xs pull-right", title="Delete")='×'
+                                small.timeago(title="#{comment.created}")= timeago(comment.created)
+                            td.parent
+                                a(href=comment.newsItem.url)
+                                    | #{comment.newsItem.title}
+                                br
+                                span
+                                    small.submit-date(title="#{comment.newsItem.created}")= timeago(comment.newsItem.created)
+                                    a(href='/news/' + comment.newsItem._id, class='comments')
+                                        small comments
