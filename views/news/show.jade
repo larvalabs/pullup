@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
+  div.news-item
     include ../partials/joinsite
 
     .page-header
@@ -15,9 +16,9 @@ block content
         = 'submitted '
         span.timeago(title="#{item.created}")= timeago(item.created)
         = ' by '
-        a(href='/news/user/' + item.poster.username)= item.poster.username
+        a(href='/news/user/' + item.poster.username, class='user')= item.poster.username
         = ' from '
-        a(href='/news/source/' + item.source)= item.source
+        a(href='/news/source/' + item.source, class='source')= item.source
     if user
         .row
           form(action=item._id + '/comments', method='POST')
@@ -28,7 +29,6 @@ block content
     each comment, index in comments
       div.comment
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
-        | &nbsp;
         span.timeago(title="#{comment.created}")= timeago(comment.created)
         blockquote.content
             if user && user.username == comment.poster.username
