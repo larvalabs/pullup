@@ -22,6 +22,7 @@
     "express-validator": "~1.0.1",
     "fbgraph": "~0.2.8",
     "github-api": "~0.7.0",
+    "github": "~0.1",
     "jade": "~1.1.5",
     "lastfm": "~0.9.0",
     "less-middleware": "~0.1.15",
