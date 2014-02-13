@@ -8,8 +8,6 @@ exports.voteFor = function (type, root) {
 
   return function (req, res, next) {
 
-    var item_id;
-
     req.assert('amount', 'Items can only be upvoted.').equals('1');
     req.assert('id', 'Invalid item id.').notEmpty();
 
@@ -25,14 +23,8 @@ exports.voteFor = function (type, root) {
       return res.redirect('/signup');
     }
 
-    try {
-      item_id = new mongoose.Types.ObjectId(req.params.id);
-    } catch(e) {
-      item_id = req.params.id.toString();
-    }
-
     var vote = new Vote({
-      item: item_id,
+      item: castToObjectIdOrString(req.params.id),
       voter: req.user.id,
       amount: req.body.amount,
       itemType: type
@@ -53,6 +45,26 @@ exports.voteFor = function (type, root) {
   };
 
 };
+
+function castToObjectIdOrString(id) {
+  var item_id;
+
+  if(isNumber(id)) {
+    return id.toString();
+  }
+
+  try {
+    item_id = new mongoose.Types.ObjectId(id);
+  } catch(e) {
+    item_id = id.toString();
+  }
+
+  return item_id;
+}
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 // generic vote retrieval
 /**
@@ -135,7 +147,7 @@ exports.addVotesFor = function (type, idProperty, items, user, callback) {
   if(!wasArray) items = [items];
 
   votesController.retrieveVotesFor(type, items.map(function (item) {
-    return item[idProperty];
+    return castToObjectIdOrString(item[idProperty]);
   }), function (err, votes) {
 
     if(err) return callback(err);
