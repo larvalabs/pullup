@@ -21,17 +21,14 @@ exports.index = function(req, res, next) {
 
     if(err) return next(err);
 
-    sortByScore(newsItems, req.user, function (err, newsItems) {
+    addVotesAndCommentsToNewsItems(newsItems, req.user, function (err, newsItems) {
 
       if(err) return next(err);
 
-      addCommentsToNewsItems(newsItems, function (err, newsItems) {
-        res.render('news/index', {
-          title: 'Recent News',
-          items: newsItems
-        });
+      res.render('news/index', {
+        title: 'Recent News',
+        items: sortByScore(newsItems)
       });
-
     });
 
   });
@@ -157,18 +154,10 @@ exports.userNews = function(req, res, next) {
       return res.redirect('/');
     }
 
-    NewsItem
-    .find({'poster': user.id})
-    .sort('-created')
-    .limit(30)
-    .populate('poster')
-    .exec(function(err, newsItems) {
-      if(err) return next(err);
-
     async.parallel({
       newsItems: function(cb) {
         NewsItem
-        .find({'poster': users[0].id})
+        .find({'poster': user.id})
         .sort('-created')
         .limit(30)
         .populate('poster')
@@ -176,7 +165,7 @@ exports.userNews = function(req, res, next) {
       },
       comments: function(cb) {
         Comment
-        .find({'poster': users[0].id})
+        .find({'poster': user.id})
         .sort('-created')
         .limit(30)
         .populate('poster')
@@ -185,32 +174,25 @@ exports.userNews = function(req, res, next) {
     }, function (err, results) {
       if (err) return next(err);
 
-        async.parallel({
-          newsItems: function(cb) {
-            getVotesForNewsItems(results.newsItems, req.user, cb);
-          },
-          comments: function(cb) {
-            getNewsItemsForComments(results.comments, req.user, cb);
-          }
-        }, function(err, results) {
-          if (err) return next(err);
+      async.parallel({
+        newsItems: function(cb) {
+          addVotesAndCommentsToNewsItems(results.newsItems, req.user, cb);
+        },
+        comments: function(cb) {
+          getNewsItemsForComments(results.comments, req.user, cb);
+        }
+      }, function(err, results) {
+        if (err) return next(err);
 
-          addCommentsToNewsItems(results.newsItems, function (err, newsItems) {
-
-            if(err) return next(err);
-
-            res.render('news/index', {
-              title: 'Posts by ' + user.username,
-              items: newsItems,
-              comments: results.comments,
-              filteredUser: user.username,
-              filteredUserWebsite: user.profile.website,
-              userProfile: user.profile
-            });
-
-          });
-
+        res.render('news/index', {
+          title: 'Posts by ' + user.username,
+          items: results.newsItems,
+          comments: results.comments,
+          filteredUser: user.username,
+          filteredUserWebsite: user.profile.website,
+          userProfile: user.profile
         });
+
       });
 
     });
@@ -257,25 +239,33 @@ function addCommentsToNewsItems(items, callback) {
   }, callback);
 }
 
-function sortByScore(newsItems, user, callback) {
+function addVotesAndCommentsToNewsItems(items, user, callback) {
+
+  async.waterfall([
+    function (cb) {
+      addVotesToNewsItems(items, user, cb);
+    },
+    function (items, cb) {
+      addCommentsToNewsItems(items, cb);
+    }
+  ], callback);
+}
+
+function sortByScore(newsItems) {
   var gravity = 1.8;
+  var now = new Date();
 
-  addVotesToNewsItems(newsItems, user, function (err, newsItems) {
-    if (err) return callback(err);
-
-    var now = new Date();
-    newsItems = newsItems.map(function (item) {
-      calculateScore(item, now, gravity);
-      return item;
-    });
-
-    // sort with highest scores first
-    newsItems.sort(function (a,b) {
-      return b.score - a.score;
-    });
-
-    callback(null, newsItems);
+  newsItems.forEach(function (item) {
+    // calculate score modifies the item object
+    calculateScore(item, now, gravity);
   });
+
+  // sort with highest scores first
+  newsItems.sort(function (a,b) {
+    return b.score - a.score;
+  });
+
+  return newsItems;
 }
 
 function calculateScore(item, now, gravity) {
