@@ -39,6 +39,7 @@
     "paypal-rest-sdk": "~0.6.4",
     "connect-mongo": "~0.4.0",
     "optimist": "latest",
-    "timeago": "~0.1.0"
+    "timeago": "~0.1.0",
+    "marked": "~0.3.1"
   }
 }

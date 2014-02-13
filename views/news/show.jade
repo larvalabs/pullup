@@ -35,6 +35,6 @@ block content
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
         &nbsp;
         span.timeago(title="#{comment.created}")= timeago(comment.created)
-        blockquote.content= comment.contents
+        blockquote.content!= comment.contents
 
 
