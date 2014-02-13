@@ -44,15 +44,28 @@ exports.index = function (req, res, next) {
 function getIssueIds(issues, callback) {
   if(!issues || !issues.length) return callback(null, issues);
 
-  async.map(issues, function (issue, cb) {
-    Issue.findOne({
-      number: issue.number
-    })
-    .exec(function (err, doc) {
-      if(err) return cb(err);
+  Issue
+  .find({
+    number: {
+      $in: issues.map(function (issue) {
+        return issue.number;
+      })
+    }
+  })
+  .exec(function (err, docs) {
+    if(err) return callback(err);
 
-      // this issue has been created in our db already
+    var docsByNumber = {};
+
+    docs.forEach(function (doc) {
+      docsByNumber[doc.number] = doc;
+    });
+
+    async.map(issues, function (issue, cb) {
+      var doc = docsByNumber[issue.number];
+
       if(doc) {
+        // this issue has been created in our db already
         issue._id = doc._id;
         cb(null, issue);
 
@@ -62,7 +75,6 @@ function getIssueIds(issues, callback) {
         castFirstIssueVote(doc, issue.user.login);
 
       } else {
-
         // we need to create a new issue
         doc = new Issue({
           number: issue.number
@@ -80,9 +92,8 @@ function getIssueIds(issues, callback) {
           castFirstIssueVote(doc, issue.user.login);
         });
       }
-
-    });
-  }, callback);
+    }, callback);
+  });
 }
 
 // cast a vote for an issue if the author is a user of pullup
