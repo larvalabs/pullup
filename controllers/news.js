@@ -25,31 +25,10 @@ exports.index = function(req, res, next) {
 
       if(err) return next(err);
 
-      if (!newsItems.length) {
-        return res.render('news/index', {
-            title: 'Recent News',
-            items: newsItems
-          });
-      }
-
-      var counter = newsItems.length;
-
-      _.each(newsItems, function (newsItem) {
-        Comment.count({ item:newsItem._id, itemType: 'news' }).exec(function (err, count) {
-
-          if (err) return next(err);
-
-          if (counter>1) {
-            newsItem.comment_count = count;
-            counter--;
-          } else {
-            newsItem.comment_count = count;
-
-            res.render('news/index', {
-              title: 'Recent News',
-              items: newsItems
-            });
-          }
+      addCommentsToNewsItems(newsItems, function (err, newsItems) {
+        res.render('news/index', {
+          title: 'Recent News',
+          items: newsItems
         });
       });
 
@@ -216,44 +195,24 @@ exports.userNews = function(req, res, next) {
         }, function(err, results) {
           if (err) return next(err);
 
-          var newsItems = results.newsItems;
-
-          if(!newsItems.length) return done(err, newsItems);
-
-          async.map(newsItems, function (item, cb) {
-
-            Comment
-            .count({
-              item: item._id,
-              itemType: 'news'
-            })
-            .exec(function (err, count) {
-              if(err) return cb(err);
-
-              item.comment_count = count;
-
-              cb(null, item);
-            });
-
-          }, done);
-
-
-          function done(err, newsItems) {
+          addCommentsToNewsItems(results.newsItems, function (err, newsItems) {
 
             if(err) return next(err);
 
-              res.render('news/index', {
-                title: 'Posts by ' + user.username,
-                items: results.newsItems,
-                comments: results.comments,
-                filteredUser: user.username,
-                filteredUserWebsite: user.profile.website,
-                userProfile: user.profile
-              });
-          }
+            res.render('news/index', {
+              title: 'Posts by ' + user.username,
+              items: newsItems,
+              comments: results.comments,
+              filteredUser: user.username,
+              filteredUserWebsite: user.profile.website,
+              userProfile: user.profile
+            });
+
+          });
 
         });
       });
+
     });
   });
 };
@@ -272,6 +231,31 @@ exports.sourceNews = function(req, res) {
     });
   });
 };
+
+function addCommentsToNewsItems(items, callback) {
+
+  if(!items.length) return callback(null, items);
+
+  async.map(items, function (item, cb) {
+
+      Comment
+      .count({
+        item: item._id,
+        itemType: 'news'
+      })
+      .exec(function (err, count) {
+        if(err) return cb(err);
+
+        // convert to a plain object if necessary
+        item = typeof item.toObject === 'function' ? item.toObject() : item;
+
+        item.comment_count = count;
+
+        cb(null, item);
+      });
+
+  }, callback);
+}
 
 function sortByScore(newsItems, user, callback) {
   var gravity = 1.8;
