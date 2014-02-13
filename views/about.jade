@@ -8,10 +8,7 @@ block content
             span.fa.fa-download
             | Pull from GitHub
         | &nbsp;
-        a(class='twitter-share-button button btn btn-info btn-large', href='https://twitter.com/share',
-            data-url='http://pullup.io/',
-            data-text='Make the site better and become a full member. Join Pullup.io via pull request!' 
-            data-size='large', data-hashtags='pullup')
+        a(class='button btn btn-info btn-large', href='https://twitter.com/intent/tweet?text=Make%20the%20site%20better%20and%20become%20a%20full%20member.%20Join%20Pullup.io%20via%20pull%20request!&url=http://pullup.io')
             | Tweet this Page
 
     h3 FAQ
@@ -32,6 +29,3 @@ block content
             | . We figured everybody who's worked on a website knows JavaScript, so it’d be a good universal language for the site.
         dt Why did you make this?
         dd We wondered what a site would be like where every user had contributed some code. It should mean no spam, no content marketing, and hopefully a stronger feeling of community.
-
-script(type='text/javascript').
-    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
