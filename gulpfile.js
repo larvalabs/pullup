@@ -8,16 +8,16 @@ var paths = {
     tests: ['./test/*.js']
 };
 
-gulp.task('test', function () {
-    gulp.src(paths.scripts)
+gulp.task('jshint', function () {
+    return gulp.src(paths.scripts)
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
         .pipe(jshint.reporter('fail'));
+});
 
+gulp.task('test', ['jshint'], function () {
     return gulp.src(paths.tests)
         .pipe(mocha({reporter: 'spec'}));
 });
 
-gulp.task('default', function(){
-    gulp.start('test');
-});
+gulp.task('default', ['test']);
