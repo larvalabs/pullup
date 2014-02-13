@@ -49,6 +49,10 @@ exports.voteFor = function (type, root) {
 function castToObjectIdOrString(id) {
   var item_id;
 
+  if(id instanceof mongoose.Types.ObjectId) {
+    return id;
+  }
+
   if(isNumber(id)) {
     return id.toString();
   }
