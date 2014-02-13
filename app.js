@@ -29,6 +29,7 @@ var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 var newsController = require('./controllers/news');
+var issuesController = require('./controllers/issues');
 
 /**
  * API keys + Passport configuration.
@@ -154,6 +155,12 @@ app.post('/news/:id/comments', passportConf.isAuthenticated, newsController.post
 app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, newsController.deleteComment);
 app.post('/news/:id', newsController.vote);
 app.get('/news/user/:id', newsController.userNews);
+
+/**
+ * Issues Routes
+ */
+
+app.get('/issues', issuesController.index);
 
 /**
  * API Routes
