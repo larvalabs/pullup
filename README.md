@@ -41,6 +41,10 @@ Once those are set you can run the local development version:
 
     node app.js
 
+Or start the app with [foreman](https://github.com/ddollar/foreman):
+
+    foreman start -f Procfile.local
+
 And perform build tasks and linting with:
 
     gulp
