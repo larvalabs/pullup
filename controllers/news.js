@@ -178,12 +178,27 @@ exports.userNews = function(req, res) {
       getVotesForNewsItems(newsItems, req.user, function (err, newsItems) {
 
         if(err) return next(err);
-        res.render('news/index', {
-          title: 'News shared by ' + users[0].username,
-          items: newsItems,
-          filteredUser: users[0].username,
-          filteredUserWebsite: users[0].profile.website,
-            userProfile: users[0].profile
+		var counter = newsItems.length;
+
+        _.each(newsItems, function (newsItem) {
+          Comment.count({ item:newsItem._id, itemType: 'news' }).exec(function (err, count) {
+       
+            if (err) return next(err);
+       
+            if (counter>1) {
+              newsItem.comment_count = count;
+              counter--;
+            } else {
+              newsItem.comment_count = count;
+	          res.render('news/index', {
+	            title: 'News shared by ' + users[0].username,
+	            items: newsItems,
+	            filteredUser: users[0].username,
+	            filteredUserWebsite: users[0].profile.website,
+	              userProfile: users[0].profile
+	          });
+            }
+          });
         });
       });
     });
