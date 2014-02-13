@@ -9,6 +9,10 @@ var request = require('request');
 var async = require('async');
 var marked = require('marked');
 
+marked.setOptions({
+  sanitize: true
+});
+
 exports.index = function(req, res, next) {
   NewsItem
   .find({})
