@@ -11,7 +11,7 @@ var newsItemSchema = new mongoose.Schema({
 });
 
 newsItemSchema.methods.isSelfPost = function() {
-  return this.source === 'pullup.io';
+  return this.url === '/news/' + this._id;
 };
 
 var User = mongoose.model('User', userSchema);
