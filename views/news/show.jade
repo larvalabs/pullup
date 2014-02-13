@@ -11,7 +11,7 @@ block content
                 a(href="#", class="show-summary")
                     | ...
         h4
-          p(class="item-summary #{item.isSelfPost() ? '' : 'hidden'}")= item.summary
+          p(class="item-summary #{item.isSelfPost() ? '' : 'hidden'}")!= item.summary
         = 'submitted '
         span.timeago(title="#{item.created}")= timeago(item.created)
         = ' by '
