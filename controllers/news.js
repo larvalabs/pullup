@@ -23,6 +23,13 @@ exports.index = function(req, res, next) {
 
       if(err) return next(err);
 
+      if (!newsItems.length) {
+        return res.render('news/index', {
+            title: 'Recent News',
+            items: newsItems
+          });
+      }
+
       var counter = newsItems.length;
 
       _.each(newsItems, function (newsItem) {
@@ -106,6 +113,14 @@ exports.postComment = function (req, res, next) {
 
   var errors = req.validationErrors();
 
+  if (!req.user) {
+    errors.push({
+      param: 'user',
+      msg: 'User must be logged in.',
+      value: undefined
+    });
+  }
+
   if (errors) {
     req.flash('errors', errors);
     return res.redirect('/news/'+req.params.id);
@@ -124,6 +139,32 @@ exports.postComment = function (req, res, next) {
     }
 
     req.flash('success', { msg  : 'Comment posted. Thanks!' });
+    res.redirect('/news/'+req.params.id);
+  });
+};
+
+exports.deleteComment = function (req, res, next) {
+  var errors = req.validationErrors();
+
+  if (!req.user) {
+    errors.push({
+      param: 'user',
+      msg: 'User must be logged in.',
+      value: undefined
+    });
+  }
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/news/'+req.params.id);
+  }
+
+  Comment
+  .findByIdAndRemove(req.params.comment_id)
+  .exec(function(err, comment) {
+    if (err) res.redirect('/news/' + req.params.id);
+
+    req.flash('success', { msg: 'Comment deleted.' });
     res.redirect('/news/'+req.params.id);
   });
 };
@@ -167,7 +208,7 @@ exports.sourceNews = function(req, res) {
       title: 'Recent news from ' + req.params.source,
       items: newsItems,
       filteredSource: req.params.source
-    })
+    });
   });
 };
 
@@ -253,11 +294,12 @@ function addVotesToNewsItem(newsItem, user, votes) {
  */
 
 exports.submitNews = function(req, res) {
+    var address;
 
   if (req.query.u) {
-    var address = req.query.u;
+    address = req.query.u;
   } else {
-    var address = "";
+    address = "";
   }
 
   var newsItem = {
@@ -309,17 +351,29 @@ exports.postNews = function(req, res, next) {
     source: req.body.source
   });
 
-  req.assert('title', 'Title cannot be blank.').notEmpty();
-  req.assert('url', 'URL cannot be blank.').notEmpty();
+  var posttype = req.body.posttype;
 
+  req.assert('title', 'Title cannot be blank.').notEmpty(); 
+  if (posttype === 'self') {
+    req.assert('summary', 'Post summary cannot be blank.').notEmpty();
+  } else {
+    req.assert('url', 'URL cannot be blank.').notEmpty();
+  }
+ 
   var errors = req.validationErrors();
 
   if (errors) {
     req.flash('errors', errors);
     return res.render('news/submit', {
       newsItem: newsItem,
-      title: 'Submit News'
+      title: 'Submit News',
+      posttype: posttype
     });
+  }
+
+  if (posttype === 'self') {
+    newsItem.url = '/news/' + newsItem._id;
+    newsItem.source = 'pullup.io';
   }
 
   newsItem.save(function(err) {

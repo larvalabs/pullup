@@ -7,11 +7,17 @@ block content
         a(class='button btn btn-info btn-large', href='https://github.com/larvalabs/pullup')
             span.fa.fa-download
             | Pull from GitHub
+        | &nbsp;
+        a(class='twitter-share-button button btn btn-info btn-large', href='https://twitter.com/share',
+            data-url='http://pullup.io/',
+            data-text='Make the site better and become a full member. Join Pullup.io via pull request!' 
+            data-size='large', data-hashtags='pullup')
+            | Tweet this Page
 
     h3 FAQ
     dl.faq
         dt What does the site do?
-        dd Not much yet! So far it’s just a terrible and featureless clone of Hacker News, but it would be great if it ended up growing into something else.
+        dd Not much yet! So far it’s just a Hacker News clone, but it would be great if it ended up growing into something else.
         dt How exactly do I join?
         dd Add a feature, fix a bug, improve the design, whatever you like. Find the details on the <a href="/signup">signup page</a>.
         dt What feature should I add?
@@ -26,3 +32,6 @@ block content
             | . We figured everybody who's worked on a website knows JavaScript, so it’d be a good universal language for the site.
         dt Why did you make this?
         dd We wondered what a site would be like where every user had contributed some code. It should mean no spam, no content marketing, and hopefully a stronger feeling of community.
+
+script(type='text/javascript').
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');

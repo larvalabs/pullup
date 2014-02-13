@@ -10,6 +10,10 @@ var newsItemSchema = new mongoose.Schema({
   created: { type: Date, default: Date.now }
 });
 
+newsItemSchema.methods.isSelfPost = function() {
+  return this.source === 'pullup.io';
+};
+
 var User = mongoose.model('User', userSchema);
 
 module.exports = mongoose.model('NewsItem', newsItemSchema);

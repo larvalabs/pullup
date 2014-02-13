@@ -41,6 +41,9 @@ body {
   height: 30px;
   margin: -15px 15px -15px 0;
 }
+.navbar-inverse {
+  border-bottom: 2px solid #139C82;
+}
 
 // News Table
 // -------------------------
@@ -51,6 +54,9 @@ body {
 .news-table .upvote {
   border: none;
   background: none;
+  &:hover {
+    color: #18bc9c;
+  }
 }
 
 .news-table a.show-summary {
@@ -63,6 +69,33 @@ body {
 
 .news-table .summary {
   color: rgba(0, 0, 0, 0.65);
+}
+
+// News Item
+// -------------------------
+
+.news-item .page-header .user, .news-item .page-header .source {
+  margin: 0 5px;
+}
+
+.news-item .row {
+  margin: 0 0 10px;
+}
+
+.news-item .timeago {
+  margin: 0 5px;
+}
+
+.news-item .comment .delete-form {
+  display: inline;
+}
+
+.news-item .comment .delete {
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px;
+  width: 17px; height: 17px;
+  border-radius: 50%;
 }
 
 // User Profile
