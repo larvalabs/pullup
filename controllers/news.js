@@ -166,7 +166,6 @@ exports.deleteComment = function (req, res, next) {
 };
 
 exports.userNews = function(req, res, next) {
-  console.log("Finding user news for id " + req.params.id);
 
   User
   .findOne({'username': req.params.id})
@@ -178,6 +177,14 @@ exports.userNews = function(req, res, next) {
       req.flash('errors', { msg: "That user does not exist. "});
       return res.redirect('/');
     }
+
+    NewsItem
+    .find({'poster': user.id})
+    .sort('-created')
+    .limit(30)
+    .populate('poster')
+    .exec(function(err, newsItems) {
+      if(err) return next(err);
 
     async.parallel({
       newsItems: function(cb) {
@@ -199,27 +206,42 @@ exports.userNews = function(req, res, next) {
     }, function (err, results) {
       if (err) return next(err);
 
-      async.parallel({
-        newsItems: function(cb) {
-          getVotesForNewsItems(results.newsItems, req.user, cb);
-        },
-        comments: function(cb) {
-          getNewsItemsForComments(results.comments, req.user, cb);
-        }
-      }, function(err, results) {
-        if (err) return next(err);
+        async.parallel({
+          newsItems: function(cb) {
+            getVotesForNewsItems(results.newsItems, req.user, cb);
+          },
+          comments: function(cb) {
+            getNewsItemsForComments(results.comments, req.user, cb);
+          }
+        }, function(err, results) {
+          if (err) return next(err);
 
-        var counter = results.newsItems.length;
+          var newsItems = results.newsItems;
 
-        _.each(results.newsItems, function (newsItem) {
-          Comment.count({ item: newsItem._id, itemType: 'news' }).exec(function (err, count) {
-            if (err) return next(err);
-       
-            if (counter > 1) {
-              newsItem.comment_count = count;
-              counter--;
-            } else {
-              newsItem.comment_count = count;
+          if(!newsItems.length) return done(err, newsItems);
+
+          async.map(newsItems, function (item, cb) {
+
+            Comment
+            .count({
+              item: item._id,
+              itemType: 'news'
+            })
+            .exec(function (err, count) {
+              if(err) return cb(err);
+
+              item.comment_count = count;
+
+              cb(null, item);
+            });
+
+          }, done);
+
+
+          function done(err, newsItems) {
+
+            if(err) return next(err);
+
               res.render('news/index', {
                 title: 'Posts by ' + user.username,
                 items: results.newsItems,
@@ -228,8 +250,8 @@ exports.userNews = function(req, res, next) {
                 filteredUserWebsite: user.profile.website,
                 userProfile: user.profile
               });
-            }
-          });
+          }
+
         });
       });
     });
