@@ -30,6 +30,7 @@ var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 var newsController = require('./controllers/news');
 var issuesController = require('./controllers/issues');
+var votesController = require('./controllers/votes');
 
 /**
  * API keys + Passport configuration.
@@ -153,7 +154,7 @@ app.get('/news/source/:source', newsController.sourceNews);
 app.get('/news/:id', newsController.comments);
 app.post('/news/:id/comments', passportConf.isAuthenticated, newsController.postComment);
 app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, newsController.deleteComment);
-app.post('/news/:id', newsController.vote);
+app.post('/news/:id', votesController.voteFor('news', '/'));
 app.get('/news/user/:id', newsController.userNews);
 
 /**

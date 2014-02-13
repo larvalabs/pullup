@@ -406,7 +406,8 @@ exports.postNews = function(req, res, next) {
       var vote = new Vote({
         item: newsItem,
         voter: req.user.id,
-        amount: 1
+        amount: 1,
+        itemType: 'news'
       });
 
       vote.save(function (err) {
@@ -425,40 +426,4 @@ exports.postNews = function(req, res, next) {
  * Vote up a news item.
  * @param {number} amount Which direction and amount to vote up a news item (limited to +1 for now)
  */
-
-exports.vote = function (req, res, next) {
-
-  req.assert('amount', 'Items can only be upvoted.').equals('1');
-
-  var errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect(req.get('referrer') || '/');
-  }
-
-  if (!req.user) {
-    req.flash('errors', { msg: 'Only members can upvote news items.' });
-    return res.redirect('/signup');
-  }
-
-  var vote = new Vote({
-    item: req.params.id,
-    voter: req.user.id,
-    amount: req.body.amount
-  });
-
-  vote.save(function (err) {
-    if (err) {
-      if (err.code === 11000) {
-        req.flash('errors', { msg: 'You can only upvote an item once.' });
-      }
-      return res.redirect(req.get('referrer') || '/');
-    }
-
-    req.flash('success', { msg: 'News item upvoted. Awesome!' });
-    res.redirect(req.get('referrer') || '/');
-  });
-
-
-};
+// See votes.js
