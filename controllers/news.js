@@ -4,6 +4,8 @@ var _ = require('underscore');
 var User = require('../models/User');
 var NewsItem = require('../models/NewsItem');
 var Vote = require('../models/Vote');
+var votesController = require('./votes');
+var addVotesToNewsItems = votesController.addVotesFor('news');
 var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
@@ -70,7 +72,7 @@ exports.comments = function (req, res, next) {
 
     async.parallel({
       votes: function (cb) {
-        getVotesForNewsItem(newsItem, req.user, cb);
+        addVotesToNewsItems(newsItem, req.user, cb);
       },
       comments: function (cb) {
         Comment
@@ -175,7 +177,7 @@ exports.userNews = function(req, res) {
     .exec(function(err, newsItems) {
       if(err) return next(err);
 
-      getVotesForNewsItems(newsItems, req.user, function (err, newsItems) {
+      addVotesToNewsItems(newsItems, req.user, function (err, newsItems) {
 
         if(err) return next(err);
 		var counter = newsItems.length;
@@ -223,7 +225,7 @@ exports.sourceNews = function(req, res) {
 function sortByScore(newsItems, user, callback) {
   var gravity = 1.8;
 
-  getVotesForNewsItems(newsItems, user, function(err, newsItems) {
+  addVotesToNewsItems(newsItems, user, function (err, newsItems) {
     if (err) return callback(err);
 
     var now = new Date();
@@ -248,52 +250,6 @@ function calculateScore(item, now, gravity) {
   }
   var ageInHours = (now.getTime() - item.created.getTime()) / 3600000;
   item.score = votes / Math.pow(ageInHours + 2, gravity);
-}
-
-function getVotesForNewsItems(newsItems, user, callback) {
-  Vote
-  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) }, itemType: { $in: ['news', null] } })
-  .exec(function (err, votes) {
-
-    if(err) return callback(err);
-
-    newsItems = newsItems.map(function (item) {
-      return addVotesToNewsItem(item, user, votes);
-    });
-
-    callback(null, newsItems);
-  });
-}
-
-function getVotesForNewsItem(newsItem, user, callback) {
-  Vote
-  .find({ item: newsItem, itemType: { $in: ['news', null] } })
-  .exec(function (err, votes) {
-
-    if(err) return callback(err);
-
-    callback(null, addVotesToNewsItem(newsItem, user, votes));
-  });
-}
-
-function addVotesToNewsItem(newsItem, user, votes) {
-
-  newsItem = typeof newsItem.toObject === 'function' ? newsItem.toObject() : newsItem;
-
-  newsItem.votes = votes
-    .filter(function (vote) {
-      return vote.item.toString() === newsItem._id.toString();
-    }).reduce(function (prev, curr, i) {
-
-      // count this item as voted for if the logged in user has a vote tallied
-      if(user && user.id && curr.voter.toString() === user.id.toString()) {
-        newsItem.votedFor = true;
-      }
-
-      return prev + curr.amount;
-    }, 0);
-
-  return newsItem;
 }
 
 /**
@@ -406,7 +362,8 @@ exports.postNews = function(req, res, next) {
       var vote = new Vote({
         item: newsItem,
         voter: req.user.id,
-        amount: 1
+        amount: 1,
+        itemType: 'news'
       });
 
       vote.save(function (err) {
@@ -425,40 +382,4 @@ exports.postNews = function(req, res, next) {
  * Vote up a news item.
  * @param {number} amount Which direction and amount to vote up a news item (limited to +1 for now)
  */
-
-exports.vote = function (req, res, next) {
-
-  req.assert('amount', 'Items can only be upvoted.').equals('1');
-
-  var errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect(req.get('referrer') || '/');
-  }
-
-  if (!req.user) {
-    req.flash('errors', { msg: 'Only members can upvote news items.' });
-    return res.redirect('/signup');
-  }
-
-  var vote = new Vote({
-    item: req.params.id,
-    voter: req.user.id,
-    amount: req.body.amount
-  });
-
-  vote.save(function (err) {
-    if (err) {
-      if (err.code === 11000) {
-        req.flash('errors', { msg: 'You can only upvote an item once.' });
-      }
-      return res.redirect(req.get('referrer') || '/');
-    }
-
-    req.flash('success', { msg: 'News item upvoted. Awesome!' });
-    res.redirect(req.get('referrer') || '/');
-  });
-
-
-};
+// See votes.js

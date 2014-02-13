@@ -1,0 +1,51 @@
+extends ../layout
+
+block content
+    include ../partials/joinsite
+
+    .page-header
+        h4 Open Issues
+
+    table.table.table-condensed
+        thead
+            tr
+                th
+                th Votes
+                th Title
+        tbody.news-table
+            each issue, index in issues
+                tr
+                    td
+                        if !issue.votedFor
+                            form(action='/issues/' + issue._id, method='POST')
+                                input(type='hidden', name='amount', value='1')
+                                button(type='submit', class='upvote')
+                                    i.fa.fa-chevron-up
+
+                    td
+                        span.badge= issue.votes
+                    td
+                        a(href=issue.html_url)
+                            | #{issue.title}
+                        if issue.body
+                            | &nbsp;
+                            a(href="#", class="show-summary")
+                                | ...
+                        br
+                        span
+                            small.submit-date(title="#{issue.created_at}")= timeago(issue.created_at)
+                            small #{' '}by#{' '}
+                            a(href='/news/user/' + issue.user.login)
+                                small #{issue.user.login}
+                            small #{' '}with#{' '}
+                            a(href=issue.html_url)
+                                case issue.comments
+                                    when 0
+                                        small No comments
+                                    when 1
+                                        small 1 comment
+                                    default
+                                        small #{issue.comments} comments
+                        br
+                        p(class='hidden summary')
+                            em= issue.body
