@@ -28,6 +28,7 @@ module.exports = {
         'isaaczafuta',
         'jackcarter',
         'jeffawang',
+        'jensenbox',
         'jeromegn',
         'jmcelwain',
         'joewright',
