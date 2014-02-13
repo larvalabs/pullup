@@ -5,6 +5,9 @@ var issueSchema = new mongoose.Schema({
     type: Number,
     required: true,
     unique: true
+  },
+  poster: {
+    type: Schema.Types.ObjectId
   }
 });
 
