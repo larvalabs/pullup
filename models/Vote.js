@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
 
 var voteSchema = new mongoose.Schema({
   item: {
-    type: Schema.Types.Mixed,
+    type: Schema.Types.ObjectId,
     required: true
   },
   itemType: {

@@ -1,5 +1,3 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 var Vote = require('../models/Vote');
 var votesController = exports;
 
@@ -9,7 +7,6 @@ exports.voteFor = function (type, root) {
   return function (req, res, next) {
 
     req.assert('amount', 'Items can only be upvoted.').equals('1');
-    req.assert('id', 'Invalid item id.').notEmpty();
 
     var errors = req.validationErrors();
 
@@ -24,7 +21,7 @@ exports.voteFor = function (type, root) {
     }
 
     var vote = new Vote({
-      item: castToObjectIdOrString(req.params.id),
+      item: req.params.id,
       voter: req.user.id,
       amount: req.body.amount,
       itemType: type
@@ -45,30 +42,6 @@ exports.voteFor = function (type, root) {
   };
 
 };
-
-function castToObjectIdOrString(id) {
-  var item_id;
-
-  if(id instanceof mongoose.Types.ObjectId) {
-    return id;
-  }
-
-  if(isNumber(id)) {
-    return id.toString();
-  }
-
-  try {
-    item_id = new mongoose.Types.ObjectId(id);
-  } catch(e) {
-    item_id = id.toString();
-  }
-
-  return item_id;
-}
-
-function isNumber(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
 
 // generic vote retrieval
 /**
@@ -130,18 +103,17 @@ exports.addVotesToItem = function (item, item_id, user, votes) {
 /**
  * Add a `votes` property to an Array of Objects based on their type, `id` property, and the current user
  * @param {String}            type       Type of item. Should be `news`, `comment`, or `issue`
- * @param {String}            idProperty Property of the object that defines it's id. For mongoose docs, this is `_id`
  * @param {Array | Object}    items      Array of objects (or a single object) that votes should be added to. This converts mongoose objects into plain objects.
  * @param {User}              user       A user object with an `id` property
  * @param {Function}          callback   Function to be evaluated with an error as the first parameter, and the modified objects as the second
  */
-exports.addVotesFor = function (type, idProperty, items, user, callback) {
+exports.addVotesFor = function (type, items, user, callback) {
 
   var isArray;
 
-  if(arguments.length === 2) {
+  if(arguments.length === 1) {
     return function (items, user, callback) {
-      return votesController.addVotesFor(type, idProperty, items, user, callback);
+      return votesController.addVotesFor(type, items, user, callback);
     };
   }
 
@@ -150,15 +122,13 @@ exports.addVotesFor = function (type, idProperty, items, user, callback) {
   // make a non-array argument behave as an array for now to simplify our dealing with it
   if(!wasArray) items = [items];
 
-  votesController.retrieveVotesFor(type, items.map(function (item) {
-    return castToObjectIdOrString(item[idProperty]);
-  }), function (err, votes) {
+  votesController.retrieveVotesFor(type, items, function (err, votes) {
 
     if(err) return callback(err);
 
     // add the votes to the objects themselves
     items = items.map(function (item) {
-      return votesController.addVotesToItem(item, item[idProperty], user, votes);
+      return votesController.addVotesToItem(item, item._id, user, votes);
     });
 
     // convert back if it wasn't passed in as an array

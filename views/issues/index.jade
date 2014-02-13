@@ -17,7 +17,7 @@ block content
                 tr
                     td
                         if !issue.votedFor
-                            form(action='/issues/' + issue.number, method='POST')
+                            form(action='/issues/' + issue._id, method='POST')
                                 input(type='hidden', name='amount', value='1')
                                 button(type='submit', class='upvote')
                                     i.fa.fa-chevron-up
