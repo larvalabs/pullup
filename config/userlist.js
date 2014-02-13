@@ -32,6 +32,7 @@ module.exports = {
         'jeromegn',
         'jmcelwain',
         'joewright',
+        'josephwegner',
         'jphatton',
         'julbaxter',
         'kalmi',
@@ -67,7 +68,6 @@ module.exports = {
         'travishorn',
         'treygriffith',
         'utdemir',
-        'williamle8300',
-	'josephwegner'
+        'williamle8300'
     ]
 };
