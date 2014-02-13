@@ -8,7 +8,10 @@ exports.voteFor = function (type, root) {
 
   return function (req, res, next) {
 
+    var item_id;
+
     req.assert('amount', 'Items can only be upvoted.').equals('1');
+    req.assert('id', 'Invalid item id.').notEmpty();
 
     var errors = req.validationErrors();
 
@@ -22,32 +25,30 @@ exports.voteFor = function (type, root) {
       return res.redirect('/signup');
     }
 
+    try {
+      item_id = new mongoose.Types.ObjectId(req.params.id);
+    } catch(e) {
+      item_id = req.params.id.toString();
+    }
+
     var vote = new Vote({
+      item: item_id,
       voter: req.user.id,
       amount: req.body.amount,
       itemType: type
     });
-
-    // if possible, set an object id
-    try {
-      vote.set('item', req.params.id, Schema.Types.ObjectId);
-    } catch(e) {
-      // fall back to string (for github issues, for example)
-      vote.set('item', req.params.id, String);
-    } finally {
-      next(new Error("Invalid item id."));
-    }
 
     vote.save(function (err) {
       if (err) {
         if (err.code === 11000) {
           req.flash('errors', { msg: 'You can only upvote an item once.' });
         }
+        console.log(err);
         return res.redirect(req.get('referrer') || root);
       }
 
       req.flash('success', { msg: 'Item upvoted. Awesome!' });
-      res.redirect(req.get('referrer') || '/');
+      res.redirect(req.get('referrer') || root);
     });
   };
 
