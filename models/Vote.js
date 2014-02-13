@@ -4,13 +4,13 @@ var mongoose = require('mongoose'),
 
 var voteSchema = new mongoose.Schema({
   item: {
-    type: Schema.Types.ObjectId,
+    type: Schema.Types.Mixed,
     required: true
   },
   itemType: {
     type: String,
     required: true,
-    enum: ['news', 'comment'],
+    enum: ['news', 'comment', 'issue'],
     default: 'news'
   },
   voter: {
