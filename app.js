@@ -12,6 +12,7 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var argv = require('optimist').argv;
 var timeago = require('timeago');
+var _ = require('underscore');
 
 /**
  * Create Express server.
@@ -81,6 +82,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(req, res, next) {
   res.locals.user = req.user;
+
+  if (!_.isObject(req.session.flash) || !Object.keys(req.session.flash).length) {
+    req.session.windowscrolly = 0;
+  }
+  if (req.body.windowscrolly) req.session.windowscrolly = req.body.windowscrolly;
+  res.locals.windowscrolly = req.session.windowscrolly;
   
   res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'none';");
   

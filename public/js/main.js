@@ -61,4 +61,10 @@ $(document).ready(function() {
     });
   }());
 
+  $('form').submit(function(ev) {
+    $(this).append(
+      '<input type="hidden" name="windowscrolly" value="' + window.scrollY + '">'
+    );
+  });
+  window.scrollTo(0, $('input[name="windowscrollto"]').val() || 0);
 });
