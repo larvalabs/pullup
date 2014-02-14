@@ -27,7 +27,7 @@ body {
 }
 
 #flash {
-  margin-left: auto; margin-right: auto; padding-right: @grid-gutter-width;
+  margin: 0 auto; padding-right: @grid-gutter-width;
   position: fixed; z-index: 1000;
 
   @media (min-width: @screen-sm-min) {
@@ -39,6 +39,8 @@ body {
   @media (min-width: @screen-lg-min) {
     width: @container-lg;
   }
+
+  .alert { margin-bottom: 0; }
 }
 
 #footer {

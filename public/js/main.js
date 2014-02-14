@@ -149,6 +149,25 @@ $(document).ready(function() {
     });
   }
 
+  var scrollDebouncer,
+      $flash = $('#flash'), $pageHeader = $('.page-header:first'),
+      initPageHeaderTopMargin = parseFloat($pageHeader.css('margin-top')),
+      positionFlash = function() {
+        var flashPosition = window.scrollY <= 0 ? 'static' : 'fixed',
+            pageHeaderTopMargin = initPageHeaderTopMargin + (window.scrollY <= 0 ? 0 : $flash.height());
+
+        $flash.css('position', flashPosition);
+        $pageHeader.css('margin-top', pageHeaderTopMargin + 'px');
+        scrollDebouncer = null;
+      },
+      onWindowScroll = function(ev) {
+        if (scrollDebouncer) { clearTimeout(scrollDebouncer); } else { positionFlash(); }
+        if (window.scrollY <= 0) { positionFlash(); } else { scrollDebouncer = setTimeout(positionFlash, 50); }
+      };
+
+  $(window).scroll(onWindowScroll);
+  $flash.find('.alert .close').click(function(ev) { setTimeout(positionFlash, 1) });
   window.scrollTo(0, $('input[name="windowscrollto"]').val() || 0);
+  positionFlash();
 
 });
