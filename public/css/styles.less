@@ -78,6 +78,14 @@ body {
   color: rgba(0, 0, 0, 0.65);
 }
 
+.news-table .parent .comments {
+  margin: 0 0 0 5px;
+}
+
+.news-table .delete {
+  margin: 0 5px 0 0;
+}
+
 // News Item
 // -------------------------
 
@@ -89,21 +97,24 @@ body {
   margin: 0 5px;
 }
 
-.news-item .comment .delete-form {
+.comment .delete-form {
   display: inline;
 }
 
-.news-item .comment .delete {
+.comment .delete {
   font-size: 12px;
   line-height: 0.9;
   padding: 2px;
   width: 17px; height: 17px;
+  position: relative; bottom: 2px;
   border-radius: 50%;
 }
 
 .comment .content {
   background-color: #f6f7f8;
 }
+
+#comments blockquote { margin-bottom: 0; }
 
 // User Profile
 // -------------------------
@@ -130,6 +141,9 @@ body {
     }
     dd { display: inline; }
   }
+}
+.user-profile + .page-header {
+  padding-bottom: 0;
 }
 
 // Social Buttons
