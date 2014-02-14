@@ -6,6 +6,7 @@ var NewsItem = require('../models/NewsItem');
 var Vote = require('../models/Vote');
 var votesController = require('./votes');
 var addVotesToNewsItems = votesController.addVotesFor('news');
+var addVotesToItem = votesController.addVotesToItem;
 var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
@@ -165,40 +166,61 @@ exports.deleteComment = function (req, res, next) {
 };
 
 exports.userNews = function(req, res) {
-    console.log("Finding user news for id " + req.params.id);
+  console.log("Finding user news for id " + req.params.id);
+
   User
   .find({'username': req.params.id})
   .exec(function(err, users) {
-    NewsItem
-    .find({'poster': users[0].id})
-    .sort('-created')
-    .limit(30)
-    .populate('poster')
-    .exec(function(err, newsItems) {
-      if(err) return next(err);
 
-      addVotesToNewsItems(newsItems, req.user, function (err, newsItems) {
+    async.parallel({
+      newsItems: function(cb) {
+        NewsItem
+        .find({'poster': users[0].id})
+        .sort('-created')
+        .limit(30)
+        .populate('poster')
+        .exec(cb);
+      },
+      comments: function(cb) {
+        Comment
+        .find({'poster': users[0].id})
+        .sort('-created')
+        .limit(30)
+        .populate('poster')
+        .exec(cb);
+      }
+    }, function (err, results) {
+      if (err) return next(err);
 
-        if(err) return next(err);
-		var counter = newsItems.length;
+      async.parallel({
+        newsItems: function(cb) {
+          getVotesForNewsItems(results.newsItems, req.user, cb);
+        },
+        comments: function(cb) {
+          getNewsItemsForComments(results.comments, req.user, cb);
+        }
+      }, function(err, results) {
+        if (err) return next(err);
 
-        _.each(newsItems, function (newsItem) {
-          Comment.count({ item:newsItem._id, itemType: 'news' }).exec(function (err, count) {
-       
+        var counter = results.newsItems.length;
+
+        _.each(results.newsItems, function (newsItem) {
+          Comment.count({ item: newsItem._id, itemType: 'news' }).exec(function (err, count) {
             if (err) return next(err);
        
-            if (counter>1) {
+            if (counter > 1) {
               newsItem.comment_count = count;
               counter--;
             } else {
               newsItem.comment_count = count;
-	          res.render('news/index', {
-	            title: 'News shared by ' + users[0].username,
-	            items: newsItems,
-	            filteredUser: users[0].username,
-	            filteredUserWebsite: users[0].profile.website,
-	              userProfile: users[0].profile
-	          });
+              res.render('news/index', {
+                title: 'Posts by ' + users[0].username,
+                items: results.newsItems,
+                comments: results.comments,
+                filteredUser: users[0].username,
+                filteredUserWebsite: users[0].profile.website,
+                userProfile: users[0].profile
+              });
             }
           });
         });
@@ -250,6 +272,40 @@ function calculateScore(item, now, gravity) {
   }
   var ageInHours = (now.getTime() - item.created.getTime()) / 3600000;
   item.score = votes / Math.pow(ageInHours + 2, gravity);
+}
+
+function getNewsItemsForComments(comments, user, callback) {
+  NewsItem
+  .find({ _id: { $in: comments.map(function(comment) { return comment.item; }) } })
+  .exec(function (err, newsItems) {
+    if (err) return callback(err);
+
+    comments = comments.map(function(comment) {
+      var newsItem = newsItems.filter(function(newsItem) {
+            return comment.item.toString() === newsItem._id.toString();
+          })[0],
+          commentClone = JSON.parse(JSON.stringify(comment));
+      commentClone.newsItem = newsItem;
+      return commentClone;
+    });
+
+    callback(null, comments);
+  });
+}
+
+function getVotesForNewsItems(newsItems, user, callback) {
+  Vote
+  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) }, itemType: { $in: ['news', null] } })
+  .exec(function (err, votes) {
+
+    if(err) return callback(err);
+
+    newsItems = newsItems.map(function (item) {
+      return addVotesToItem(item, item._id, user, votes);
+    });
+
+    callback(null, newsItems);
+  });
 }
 
 /**
