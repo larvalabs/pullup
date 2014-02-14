@@ -13,14 +13,20 @@ var async = require('async');
 
 exports.index = function(req, res, next) {
 
+  var page = typeof req.params.page !== 'undefined' ? req.params.page : 1;
+  page = isNaN(page) ? 1 : Number(page);
+  page = page < 1 ? 1 : page;
+
   getNewsItems({}, req.user, function (err, newsItems) {
     if(err) return next(err);
 
     res.render('news/index', {
       title: 'Recent News',
-      items: sortByScore(newsItems)
+      items: sortByScore(newsItems),
+      page: page,
+      newsItemsPerPage: newsItemsPerPage
     });
-  });
+  }, page);
 };
 
 /**
@@ -192,11 +198,13 @@ exports.sourceNews = function(req, res, next) {
   });
 };
 
-function getNewsItems(query, user, callback) {
+function getNewsItems(query, user, callback, page) {
+  page = typeof page !== 'undefined' ? page: 1;
   NewsItem
   .find(query)
   .sort('-created')
-  .limit(30)
+  .skip((page-1)*newsItemsPerPage)
+  .limit(newsItemsPerPage)
   .populate('poster')
   .exec(function (err, newsItems) {
 

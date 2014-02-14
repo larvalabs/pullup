@@ -9,7 +9,7 @@ block content
               if filteredSource
                 | News from #{filteredSource}
               else
-                | Top News
+                | Top News - Page #{page}
     else
         .row.user-profile
             .col-md-6
@@ -132,3 +132,8 @@ block content
                                                 small 1 comment
                                             default
                                                 small #{comment.newsItem.comment_count} comments
+
+    if page > 1
+        a(href='/news/page/'+(Number(page)-1), class='btn btn-default')='Previous Page'
+    if items.length === newsItemsPerPage
+        a(href='/news/page/'+(Number(page)+1), class='btn btn-default pull-right')='Next Page'
