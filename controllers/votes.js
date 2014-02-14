@@ -11,13 +11,15 @@ exports.voteFor = function (type, root) {
     var errors = req.validationErrors();
 
     if (errors) {
-      req.flash('errors', errors);
-      return res.redirect(req.get('referrer') || root);
+      return res.send({
+        messages: errors
+      });
     }
 
     if (!req.user) {
-      req.flash('errors', { msg: 'Only members can upvote items.' });
-      return res.redirect('/signup');
+      return res.send({
+        messages: [{ msg: 'Only members can upvote items.' }]
+      });
     }
 
     var vote = new Vote({
@@ -29,15 +31,22 @@ exports.voteFor = function (type, root) {
 
     vote.save(function (err) {
       if (err) {
+        var errors = [];
+
         if (err.code === 11000) {
-          req.flash('errors', { msg: 'You can only upvote an item once.' });
+          errors.push({ msg: 'You can only upvote an item once.' });
         }
         console.warn(err);
-        return res.redirect(req.get('referrer') || root);
+
+        return res.send({
+          messages: errors,
+        });
       }
 
-      req.flash('success', { msg: 'Item upvoted. Awesome!' });
-      res.redirect(req.get('referrer') || root);
+      return res.send({
+        messages: [{ msg: 'Item upvoted. Awesome!' }],
+        success: true
+      });
     });
   };
 
