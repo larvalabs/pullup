@@ -179,7 +179,7 @@ exports.userNews = function(req, res, next) {
           addVotesAndCommentsToNewsItems(results.newsItems, req.user, cb);
         },
         comments: function(cb) {
-          getNewsItemsForComments(results.comments, req.user, cb);
+          getNewsItemsForComments(results.comments, cb);
         }
       }, function(err, results) {
         if (err) return next(err);
@@ -220,21 +220,21 @@ function addCommentsToNewsItems(items, callback) {
 
   async.map(items, function (item, cb) {
 
-      Comment
-      .count({
-        item: item._id,
-        itemType: 'news'
-      })
-      .exec(function (err, count) {
-        if(err) return cb(err);
+    Comment
+    .count({
+      item: item._id,
+      itemType: 'news'
+    })
+    .exec(function (err, count) {
+      if(err) return cb(err);
 
-        // convert to a plain object if necessary
-        item = typeof item.toObject === 'function' ? item.toObject() : item;
+      // convert to a plain object if necessary
+      item = typeof item.toObject === 'function' ? item.toObject() : item;
 
-        item.comment_count = count;
+      item.comment_count = count;
 
-        cb(null, item);
-      });
+      cb(null, item);
+    });
 
   }, callback);
 }
@@ -277,37 +277,35 @@ function calculateScore(item, now, gravity) {
   item.score = votes / Math.pow(ageInHours + 2, gravity);
 }
 
-function getNewsItemsForComments(comments, user, callback) {
+function getNewsItemsForComments(comments, callback) {
   NewsItem
-  .find({ _id: { $in: comments.map(function(comment) { return comment.item; }) } })
+  .find({
+    _id: {
+      $in: comments.map(function(comment) {
+        return comment.item;
+      })
+    }
+  })
   .exec(function (err, newsItems) {
     if (err) return callback(err);
 
-    comments = comments.map(function(comment) {
-      var newsItem = newsItems.filter(function(newsItem) {
-            return comment.item.toString() === newsItem._id.toString();
-          })[0],
-          commentClone = JSON.parse(JSON.stringify(comment));
-      commentClone.newsItem = newsItem;
-      return commentClone;
+    var newsItemsById = {};
+
+    newsItems.forEach(function (newsItem) {
+      newsItemsById[newsItem._id.toString()] = newsItem; 
+    });
+
+    comments = comments.map(function (comment) {
+      var newsItem = newsItemsById[comment.item.toString()];
+
+      comment = typeof comment.toObject === 'function' ? comment.toObject() : comment;
+
+      comment.newsItem = newsItem;
+
+      return comment;
     });
 
     callback(null, comments);
-  });
-}
-
-function getVotesForNewsItems(newsItems, user, callback) {
-  Vote
-  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) }, itemType: { $in: ['news', null] } })
-  .exec(function (err, votes) {
-
-    if(err) return callback(err);
-
-    newsItems = newsItems.map(function (item) {
-      return addVotesToItem(item, item._id, user, votes);
-    });
-
-    callback(null, newsItems);
   });
 }
 
