@@ -13,8 +13,7 @@ var async = require('async');
 
 exports.index = function(req, res, next) {
 
-  var page = typeof req.params.page !== 'undefined' ? req.params.page : 1;
-  page = isNaN(page) ? 1 : Number(page);
+  var page = isNaN(page) ? 1 : Number(page);
   page = page < 1 ? 1 : page;
 
   getNewsItems({}, req.user, function (err, newsItems) {
