@@ -59,6 +59,8 @@ var day = (hour * 24);
 var week = (day * 7);
 var month = (day * 30);
 
+newsItemsPerPage = 30;
+
 app.locals.cacheBuster = Date.now();
 app.set('port', process.env.PORT || argv.p || 3000);
 app.set('views', path.join(__dirname, 'views'));
