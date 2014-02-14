@@ -9,15 +9,15 @@ var paths = {
 };
 
 gulp.task('jshint', function () {
-    return gulp.src(paths.scripts)
+    gulp.src(paths.scripts)
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
         .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('test', ['jshint'], function () {
-    return gulp.src(paths.tests)
+gulp.task('test', function () {
+    gulp.src(paths.tests)
         .pipe(mocha({reporter: 'spec'}));
 });
 
-gulp.task('default', ['test']);
+gulp.task('default', ['jshint', 'test']);
