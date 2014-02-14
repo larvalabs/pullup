@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
-var runSequence = require('run-sequence');
 
 var paths = {
     scripts: ['./*.js', './config/*.js', 'controllers/*.js', 'models/*.js', 'public/js/*.js', '!public/js/lib/**/*.js', 'test/*.js'],
