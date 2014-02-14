@@ -277,7 +277,7 @@ function getNewsItemsForComments(comments, user, callback) {
     var newsItemsById = {};
 
     newsItems.forEach(function (newsItem) {
-      newsItemsById[newsItem._id.toString()] = newsItem; 
+      newsItemsById[newsItem._id.toString()] = newsItem;
     });
 
     comments = comments.map(function (comment) {
@@ -365,7 +365,7 @@ exports.postNews = function(req, res, next) {
   } else {
     req.assert('url', 'URL cannot be blank.').notEmpty();
   }
- 
+
   var errors = req.validationErrors();
 
   if (errors) {

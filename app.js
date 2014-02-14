@@ -90,11 +90,8 @@ app.use(function(req, res, next) {
   }
   if (req.body.windowscrolly) req.session.windowscrolly = req.body.windowscrolly;
   res.locals.windowscrolly = req.session.windowscrolly;
-  
   res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'none';");
-  
   res.setHeader("X-Frame-Options", "DENY");
-  
   next();
 });
 app.use(flash());
