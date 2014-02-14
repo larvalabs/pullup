@@ -152,16 +152,16 @@ exports.deleteComment = function (req, res, next) {
 
   if (errors) {
     req.flash('errors', errors);
-    return res.redirect('/news/'+req.params.id);
+    return res.redirect('back');
   }
 
   Comment
   .findByIdAndRemove(req.params.comment_id)
   .exec(function(err, comment) {
-    if (err) res.redirect('/news/' + req.params.id);
+    if (err) res.redirect('back');
 
     req.flash('success', { msg: 'Comment deleted.' });
-    res.redirect('/news/'+req.params.id);
+    res.redirect('back');
   });
 };
 

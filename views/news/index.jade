@@ -115,7 +115,7 @@ block content
                             td.comment
                                 blockquote.content= comment.contents
                                     if user && user.username == comment.poster.username
-                                        form(action="/news/" + comment.item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
+                                        form(action="/news/" + comment.newsItem._id + "/comments/" + comment._id + "/delete", method='POST', class="delete-form")
                                           button(type="submit", class="delete btn btn-danger btn-xs pull-right", title="Delete")='×'
                                 small.timeago(title="#{comment.created}")= timeago(comment.created)
                             td.parent
