@@ -12,25 +12,14 @@ var request = require('request');
 var async = require('async');
 
 exports.index = function(req, res, next) {
-  NewsItem
-  .find({})
-  .sort('-created')
-  .limit(30)
-  .populate('poster')
-  .exec(function(err, newsItems) {
 
+  getNewsItems({}, req.user, function (err, newsItems) {
     if(err) return next(err);
 
-    addVotesAndCommentsToNewsItems(newsItems, req.user, function (err, newsItems) {
-
-      if(err) return next(err);
-
-      res.render('news/index', {
-        title: 'Recent News',
-        items: sortByScore(newsItems)
-      });
+    res.render('news/index', {
+      title: 'Recent News',
+      items: sortByScore(newsItems)
     });
-
   });
 };
 
@@ -156,56 +145,45 @@ exports.userNews = function(req, res, next) {
 
     async.parallel({
       newsItems: function(cb) {
-        NewsItem
-        .find({'poster': user.id})
-        .sort('-created')
-        .limit(30)
-        .populate('poster')
-        .exec(cb);
+        getNewsItems({'poster': user.id}, req.user, cb);
       },
       comments: function(cb) {
-        Comment
-        .find({'poster': user.id})
-        .sort('-created')
-        .limit(30)
-        .populate('poster')
-        .exec(cb);
+
+        async.waterfall([
+          function (cb) {
+            Comment
+            .find({'poster': user.id})
+            .sort('-created')
+            .limit(30)
+            .populate('poster')
+            .exec(cb);
+          },
+          function (comments, cb) {
+            getNewsItemsForComments(comments, req.user, cb);
+          }
+        ], cb);
+
       }
     }, function (err, results) {
       if (err) return next(err);
 
-      async.parallel({
-        newsItems: function(cb) {
-          addVotesAndCommentsToNewsItems(results.newsItems, req.user, cb);
-        },
-        comments: function(cb) {
-          getNewsItemsForComments(results.comments, cb);
-        }
-      }, function(err, results) {
-        if (err) return next(err);
-
-        res.render('news/index', {
-          title: 'Posts by ' + user.username,
-          items: results.newsItems,
-          comments: results.comments,
-          filteredUser: user.username,
-          filteredUserWebsite: user.profile.website,
-          userProfile: user.profile
-        });
-
+      res.render('news/index', {
+        title: 'Posts by ' + user.username,
+        items: results.newsItems,
+        comments: results.comments,
+        filteredUser: user.username,
+        filteredUserWebsite: user.profile.website,
+        userProfile: user.profile
       });
 
     });
   });
 };
 
-exports.sourceNews = function(req, res) {
-  NewsItem
-  .find({'source': req.params.source})
-  .sort('-created')
-  .limit(30)
-  .populate('poster')
-  .exec(function(err, newsItems) {
+exports.sourceNews = function(req, res, next) {
+  getNewsItems({'source': req.params.source}, req.user, function (err, newsItems) {
+    if(err) return next(err);
+
     res.render('news/index', {
       title: 'Recent news from ' + req.params.source,
       items: newsItems,
@@ -214,7 +192,33 @@ exports.sourceNews = function(req, res) {
   });
 };
 
-function addCommentsToNewsItems(items, callback) {
+function getNewsItems(query, user, callback) {
+  NewsItem
+  .find(query)
+  .sort('-created')
+  .limit(30)
+  .populate('poster')
+  .exec(function (err, newsItems) {
+
+    if(err) return callback(err);
+
+    addVotesAndCommentCountToNewsItems(newsItems, user, callback);
+  });
+}
+
+function addVotesAndCommentCountToNewsItems(items, user, callback) {
+
+  async.waterfall([
+    function (cb) {
+      addVotesToNewsItems(items, user, cb);
+    },
+    function (items, cb) {
+      addCommentCountToNewsItems(items, cb);
+    }
+  ], callback);
+}
+
+function addCommentCountToNewsItems(items, callback) {
 
   if(!items.length) return callback(null, items);
 
@@ -237,18 +241,6 @@ function addCommentsToNewsItems(items, callback) {
     });
 
   }, callback);
-}
-
-function addVotesAndCommentsToNewsItems(items, user, callback) {
-
-  async.waterfall([
-    function (cb) {
-      addVotesToNewsItems(items, user, cb);
-    },
-    function (items, cb) {
-      addCommentsToNewsItems(items, cb);
-    }
-  ], callback);
 }
 
 function sortByScore(newsItems) {
@@ -277,17 +269,10 @@ function calculateScore(item, now, gravity) {
   item.score = votes / Math.pow(ageInHours + 2, gravity);
 }
 
-function getNewsItemsForComments(comments, callback) {
-  NewsItem
-  .find({
-    _id: {
-      $in: comments.map(function(comment) {
-        return comment.item;
-      })
-    }
-  })
-  .exec(function (err, newsItems) {
-    if (err) return callback(err);
+function getNewsItemsForComments(comments, user, callback) {
+
+  getNewsItems({ _id: { $in: comments.map(function (comment) { return comment.item; }) } }, user, function (err, newsItems) {
+    if(err) return callback(err);
 
     var newsItemsById = {};
 
