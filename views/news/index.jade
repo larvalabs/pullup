@@ -59,7 +59,7 @@ block content
                         td.text-muted= index + 1
                         td
                             if !item.votedFor
-                                form(action='/news/' + item._id, method='POST')
+                                form(action='/news/' + item._id, method='POST', class='upvote-form')
                                     input(type='hidden', name='amount', value='1')
                                     button(type='submit', class='upvote')
                                         i.fa.fa-chevron-up

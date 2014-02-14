@@ -1,3 +1,61 @@
+var FlashBuilder = function (type, messages) {
+  function createFlashContainer () {
+    var container = $('<div></div>')
+      .addClass('alert animated fadeIn alert-dismissable')
+      .html(createDismissButton());
+ 
+      switch(type) {
+        case 'success':
+          container.addClass('alert-success');
+          break;
+        case 'info':
+          container.addClass('alert-info');
+          break;
+        case 'error':
+          container.addClass('alert-danger');
+          break;
+      }
+
+      return container;
+  }
+
+  function createDismissButton () {
+    return $('<button></button>')
+      .attr('type', 'button')
+      .attr('data-dismiss', 'alert')
+      .attr('aria-hidden', true)
+      .addClass('close')
+      .text('x');
+  }
+
+  function createMessage (message) {
+    return $('<div></div>')
+      .text(message);
+  }
+
+  function clearFlash () {
+    $('#flash').empty();
+  }
+
+  function buildMessage () {
+    if (messages && messages.length > 0) {
+      clearFlash();
+
+      var container = createFlashContainer(type);
+
+      messages.forEach(function (message) {
+        container.append(createMessage(message.msg));
+      });
+
+      $('#flash').append(container);
+    }
+  }
+
+  return {
+    build: buildMessage
+  };
+};
+
 $(document).ready(function() {
 
   if ($("#url").length > 0) {
@@ -66,5 +124,31 @@ $(document).ready(function() {
       '<input type="hidden" name="windowscrolly" value="' + window.scrollY + '">'
     );
   });
+
+  if ($('form.upvote-form').length > 0) {
+    $('.upvote-form').on('submit', function (e) {
+      var form = $(this);
+
+      $.post(form.attr('action'), form.serialize())
+        .done(function (data) {
+          if (data.messages) {
+            var builder = new FlashBuilder(data.success ? 'success' : 'error', data.messages);
+
+            builder.build();
+          }
+
+          if (data.success) {
+            $('button.upvote', form).remove();
+          }
+        })
+        .fail(function (data) {
+          var builder = new FlashBuilder('error', [{ msg: 'Something went wrong!'}]);
+        });
+
+      e.preventDefault();
+    });
+  }
+
   window.scrollTo(0, $('input[name="windowscrollto"]').val() || 0);
+
 });
