@@ -15,9 +15,11 @@ gulp.task('jshint', function () {
         .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('test', function () {
+gulp.task('mocha-tests', function () {
     gulp.src(paths.tests)
         .pipe(mocha({reporter: 'spec'}));
 });
 
-gulp.task('default', ['jshint', 'test']);
+gulp.task('test', ['jshint', 'mocha-tests']);
+gulp.task('default', ['test']);
+  
