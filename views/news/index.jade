@@ -125,4 +125,10 @@ block content
                                 span
                                     small.submit-date(title="#{comment.newsItem.created}")= timeago(comment.newsItem.created)
                                     a(href='/news/' + comment.newsItem._id, class='comments')
-                                        small comments
+                                        case comment.newsItem.comment_count
+                                            when 0
+                                                small No comments
+                                            when 1
+                                                small 1 comment
+                                            default
+                                                small #{comment.newsItem.comment_count} comments

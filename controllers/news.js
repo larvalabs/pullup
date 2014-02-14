@@ -12,49 +12,14 @@ var request = require('request');
 var async = require('async');
 
 exports.index = function(req, res, next) {
-  NewsItem
-  .find({})
-  .sort('-created')
-  .limit(30)
-  .populate('poster')
-  .exec(function(err, newsItems) {
 
+  getNewsItems({}, req.user, function (err, newsItems) {
     if(err) return next(err);
 
-    sortByScore(newsItems, req.user, function (err, newsItems) {
-
-      if(err) return next(err);
-
-      if (!newsItems.length) {
-        return res.render('news/index', {
-            title: 'Recent News',
-            items: newsItems
-          });
-      }
-
-      var counter = newsItems.length;
-
-      _.each(newsItems, function (newsItem) {
-        Comment.count({ item:newsItem._id, itemType: 'news' }).exec(function (err, count) {
-
-          if (err) return next(err);
-
-          if (counter>1) {
-            newsItem.comment_count = count;
-            counter--;
-          } else {
-            newsItem.comment_count = count;
-
-            res.render('news/index', {
-              title: 'Recent News',
-              items: newsItems
-            });
-          }
-        });
-      });
-
+    res.render('news/index', {
+      title: 'Recent News',
+      items: sortByScore(newsItems)
     });
-
   });
 };
 
@@ -165,77 +130,60 @@ exports.deleteComment = function (req, res, next) {
   });
 };
 
-exports.userNews = function(req, res) {
-  console.log("Finding user news for id " + req.params.id);
+exports.userNews = function(req, res, next) {
 
   User
-  .find({'username': req.params.id})
-  .exec(function(err, users) {
+  .findOne({'username': req.params.id})
+  .exec(function(err, user) {
+
+    if(err) return next(err);
+
+    if(!user) {
+      req.flash('errors', { msg: "That user does not exist. "});
+      return res.redirect('/');
+    }
 
     async.parallel({
       newsItems: function(cb) {
-        NewsItem
-        .find({'poster': users[0].id})
-        .sort('-created')
-        .limit(30)
-        .populate('poster')
-        .exec(cb);
+        getNewsItems({'poster': user.id}, req.user, cb);
       },
       comments: function(cb) {
-        Comment
-        .find({'poster': users[0].id})
-        .sort('-created')
-        .limit(30)
-        .populate('poster')
-        .exec(cb);
+
+        async.waterfall([
+          function (cb) {
+            Comment
+            .find({'poster': user.id})
+            .sort('-created')
+            .limit(30)
+            .populate('poster')
+            .exec(cb);
+          },
+          function (comments, cb) {
+            getNewsItemsForComments(comments, req.user, cb);
+          }
+        ], cb);
+
       }
     }, function (err, results) {
       if (err) return next(err);
 
-      async.parallel({
-        newsItems: function(cb) {
-          getVotesForNewsItems(results.newsItems, req.user, cb);
-        },
-        comments: function(cb) {
-          getNewsItemsForComments(results.comments, req.user, cb);
-        }
-      }, function(err, results) {
-        if (err) return next(err);
-
-        var counter = results.newsItems.length;
-
-        _.each(results.newsItems, function (newsItem) {
-          Comment.count({ item: newsItem._id, itemType: 'news' }).exec(function (err, count) {
-            if (err) return next(err);
-       
-            if (counter > 1) {
-              newsItem.comment_count = count;
-              counter--;
-            } else {
-              newsItem.comment_count = count;
-              res.render('news/index', {
-                title: 'Posts by ' + users[0].username,
-                items: results.newsItems,
-                comments: results.comments,
-                filteredUser: users[0].username,
-                filteredUserWebsite: users[0].profile.website,
-                userProfile: users[0].profile
-              });
-            }
-          });
-        });
+      res.render('news/index', {
+        title: 'Posts by ' + user.username,
+        items: results.newsItems,
+        comments: results.comments,
+        filteredUser: user.username,
+        filteredUserWebsite: user.profile.website,
+        userProfile: user.profile
       });
+
     });
   });
 };
 
-exports.sourceNews = function(req, res) {
-  NewsItem
-  .find({'source': req.params.source})
-  .sort('-created')
-  .limit(30)
-  .populate('poster')
-  .exec(function(err, newsItems) {
+exports.sourceNews = function(req, res, next) {
+  getNewsItems({'source': req.params.source}, req.user, function (err, newsItems) {
+    if(err) return next(err);
+
     res.render('news/index', {
       title: 'Recent news from ' + req.params.source,
       items: newsItems,
@@ -244,25 +192,72 @@ exports.sourceNews = function(req, res) {
   });
 };
 
-function sortByScore(newsItems, user, callback) {
-  var gravity = 1.8;
+function getNewsItems(query, user, callback) {
+  NewsItem
+  .find(query)
+  .sort('-created')
+  .limit(30)
+  .populate('poster')
+  .exec(function (err, newsItems) {
 
-  addVotesToNewsItems(newsItems, user, function (err, newsItems) {
-    if (err) return callback(err);
+    if(err) return callback(err);
 
-    var now = new Date();
-    newsItems = newsItems.map(function (item) {
-      calculateScore(item, now, gravity);
-      return item;
-    });
-
-    // sort with highest scores first
-    newsItems.sort(function (a,b) {
-      return b.score - a.score;
-    });
-
-    callback(null, newsItems);
+    addVotesAndCommentCountToNewsItems(newsItems, user, callback);
   });
+}
+
+function addVotesAndCommentCountToNewsItems(items, user, callback) {
+
+  async.waterfall([
+    function (cb) {
+      addVotesToNewsItems(items, user, cb);
+    },
+    function (items, cb) {
+      addCommentCountToNewsItems(items, cb);
+    }
+  ], callback);
+}
+
+function addCommentCountToNewsItems(items, callback) {
+
+  if(!items.length) return callback(null, items);
+
+  async.map(items, function (item, cb) {
+
+    Comment
+    .count({
+      item: item._id,
+      itemType: 'news'
+    })
+    .exec(function (err, count) {
+      if(err) return cb(err);
+
+      // convert to a plain object if necessary
+      item = typeof item.toObject === 'function' ? item.toObject() : item;
+
+      item.comment_count = count;
+
+      cb(null, item);
+    });
+
+  }, callback);
+}
+
+function sortByScore(newsItems) {
+  var gravity = 1.8;
+  var now = new Date();
+
+  newsItems.forEach(function (item) {
+    // calculate score modifies the item object
+    calculateScore(item, now, gravity);
+  });
+
+  // sort with highest scores first
+  newsItems.sort(function (a,b) {
+    return b.score - a.score;
+  });
+
+  return newsItems;
 }
 
 function calculateScore(item, now, gravity) {
@@ -275,36 +270,27 @@ function calculateScore(item, now, gravity) {
 }
 
 function getNewsItemsForComments(comments, user, callback) {
-  NewsItem
-  .find({ _id: { $in: comments.map(function(comment) { return comment.item; }) } })
-  .exec(function (err, newsItems) {
-    if (err) return callback(err);
 
-    comments = comments.map(function(comment) {
-      var newsItem = newsItems.filter(function(newsItem) {
-            return comment.item.toString() === newsItem._id.toString();
-          })[0],
-          commentClone = JSON.parse(JSON.stringify(comment));
-      commentClone.newsItem = newsItem;
-      return commentClone;
+  getNewsItems({ _id: { $in: comments.map(function (comment) { return comment.item; }) } }, user, function (err, newsItems) {
+    if(err) return callback(err);
+
+    var newsItemsById = {};
+
+    newsItems.forEach(function (newsItem) {
+      newsItemsById[newsItem._id.toString()] = newsItem; 
+    });
+
+    comments = comments.map(function (comment) {
+      var newsItem = newsItemsById[comment.item.toString()];
+
+      comment = typeof comment.toObject === 'function' ? comment.toObject() : comment;
+
+      comment.newsItem = newsItem;
+
+      return comment;
     });
 
     callback(null, comments);
-  });
-}
-
-function getVotesForNewsItems(newsItems, user, callback) {
-  Vote
-  .find({ item: { $in: newsItems.map(function (item) { return item.id; }) }, itemType: { $in: ['news', null] } })
-  .exec(function (err, votes) {
-
-    if(err) return callback(err);
-
-    newsItems = newsItems.map(function (item) {
-      return addVotesToItem(item, item._id, user, votes);
-    });
-
-    callback(null, newsItems);
   });
 }
 
