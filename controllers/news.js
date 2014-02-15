@@ -46,6 +46,10 @@ exports.comments = function (req, res, next) {
   .exec(function (err, newsItem) {
 
     if(err) return next(err);
+    if (!newsItem) {
+      req.flash('errors', { msg: 'News item not found.' });
+      return res.redirect('/news');
+    }
 
     async.parallel({
       votes: function (cb) {
