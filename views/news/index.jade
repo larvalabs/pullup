@@ -84,7 +84,7 @@ block content
                                     span.text-muted
                                         | [deleted]
                                 small #{' '}with#{' '}
-                                a(href='/news/' + item._id)
+                                a(class="comment-link", id="comment_"+item._id, href='/news/' + item._id)
                                     case item.comment_count
                                         when 0
                                             small no comments
