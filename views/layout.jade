@@ -14,7 +14,6 @@ html
 
     script(src='/js/lib/jquery-2.1.0.min.js?v=#{cacheBuster}')
     script(src='/js/lib/bootstrap.min.js?v=#{cacheBuster}')
-    script(src='/js/main.js?v=#{cacheBuster}')
   body
     #wrap
       include partials/navigation
@@ -23,3 +22,4 @@ html
         include partials/flash
         block content
     include partials/footer
+    script(src='/js/main.js?v=#{cacheBuster}')
