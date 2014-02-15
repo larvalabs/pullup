@@ -14,8 +14,6 @@ var argv = require('optimist').argv;
 var timeago = require('timeago');
 var _ = require('underscore');
 
-var Storage = require('dom-storage');
-
 /**
  * Create Express server.
  */
