@@ -38,13 +38,13 @@
             $('#title').val(response.title);
      
           if ( typeof response.source !== 'undefined' )
-			      $('#source').val(response.source);
+            $('#source').val(response.source);
           else
             $('#source').val(url);
       
           if ( typeof response.summary !== 'undefined' )
-			      $('#summary').val(response.summary.join(' '));
-		    }
+            $('#summary').val(response.summary.join(' '));
+        }
       });
     });
 
