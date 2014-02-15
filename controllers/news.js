@@ -214,8 +214,32 @@ function addVotesAndCommentCountToNewsItems(items, user, callback) {
     },
     function (items, cb) {
       addCommentCountToNewsItems(items, cb);
+    },
+    function (items, cb) {
+        addLatestCommentTimeForNewsItems(items,cb);
     }
   ], callback);
+}
+
+function addLatestCommentTimeForNewsItems(items,callback) {
+
+     if(!items.length) return callback(null, items);
+
+     async.map(items, function(item, cb) {
+        Comment.find({"item": item._id}).sort({"created":-1}).limit(1).exec(function(err, doc) {
+
+            if(err) return cb(err);
+
+            var comments = doc[0];
+
+            if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
+                item.latestCommentTime = comments.created; 
+            } 
+            
+            cb(null,item);
+        }); 
+
+    }, callback);
 }
 
 function addCommentCountToNewsItems(items, callback) {
