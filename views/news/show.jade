@@ -1,4 +1,5 @@
 extends ../layout
+include ../mixins/delete
 
 block content
   div.news-item
@@ -11,6 +12,7 @@ block content
                 | &nbsp;
                 a(href="#", class="show-summary")
                     | ...
+            +delete(item.poster, '/news/' + item._id + '/delete')
         h4
           div(class="item-summary #{item.isSelfPost() ? '' : 'hidden'}")!= item.summary
         = 'submitted '
@@ -31,7 +33,5 @@ block content
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
         span.timeago(title="#{comment.created}")= timeago(comment.created)
         blockquote.content
-            if user && user.username == comment.poster.username
-                form(action="/news/" + item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
-                  button(type="submit", class="delete btn btn-danger btn-xs pull-right", title="Delete") ×
+            +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
             != comment.contents

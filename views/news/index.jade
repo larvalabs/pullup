@@ -1,4 +1,5 @@
 extends ../layout
+include ../mixins/delete
 
 block content
     include ../partials/joinsite
@@ -73,6 +74,7 @@ block content
                                 | &nbsp;
                                 a(href="#", class="show-summary")
                                     | ...
+                            +delete(item.poster, '/news/' + item._id + '/delete')
                             br
                             span
                                 small.submit-date(title="#{item.created}")= timeago(item.created)
@@ -114,9 +116,7 @@ block content
                             td.text-muted= index + 1
                             td.comment
                                 blockquote.content= comment.contents
-                                    if user && user.username == comment.poster.username
-                                        form(action="/news/" + comment.newsItem._id + "/comments/" + comment._id + "/delete", method='POST', class="delete-form")
-                                          button(type="submit", class="delete btn btn-danger btn-xs pull-right", title="Delete")='×'
+                                    +delete(comment.poster, '/news/' + comment.newsItem._id + '/comments/' + comment._id + '/delete')
                                 small.timeago(title="#{comment.created}")= timeago(comment.created)
                             td.parent
                                 a(href=comment.newsItem.url)
