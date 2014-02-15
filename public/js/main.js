@@ -149,6 +149,19 @@ $(document).ready(function() {
     });
   }
 
+  /*
+   * If the user has installed pullup.io to their home screen, we want
+   * links to open up within the web app, instead of pushing out to safari
+  */
+  if(window.navigator.standalone) {
+    $(document).on('click', 'a', function(e) {
+      if($(this).attr('href').indexOf("http") !== 0) {
+        e.preventDefault();
+        window.location = $(this).attr('href');
+      }
+    });
+  }
+
   var scrollDebouncer,
       $flash = $('#flash'), $pageHeader = $('.page-header:first'),
       initPageHeaderTopMargin = parseFloat($pageHeader.css('margin-top')),
