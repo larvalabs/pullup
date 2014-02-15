@@ -56,7 +56,22 @@ var FlashBuilder = function (type, messages) {
   };
 };
 
+function setLatestCommentTimes(){
+
+}
+
+
+
 $(document).ready(function() {
+  
+  var pullupDataStore = {};
+  
+  if(sessionStorage.getItem("pullupDataStore") === null){
+      sessionStorage.setItem("pullupDataStore", JSON.stringify(pullupDataStore));
+  }
+  else{
+      pullupDataStore = JSON.parse(sessionStorage.getItem("pullupDataStore"));
+  }
 
   if ($("#url").length > 0) {
     $("#title").on('focus', function() {
