@@ -166,7 +166,7 @@ $(document).ready(function() {
       };
 
   $(window).scroll(onWindowScroll);
-  $flash.find('.alert .close').click(function(ev) { setTimeout(positionFlash, 1) });
+  $flash.find('.alert .close').click(function(ev) { setTimeout(positionFlash, 1); });
   window.scrollTo(0, $('input[name="windowscrollto"]').val() || 0);
   positionFlash();
 
