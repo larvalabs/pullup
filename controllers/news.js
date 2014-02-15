@@ -226,14 +226,16 @@ function addLatestCommentTimeForNewsItems(items,callback) {
      if(!items.length) return callback(null, items);
 
      async.map(items, function(item, cb) {
-        Comment.find({"item": item._id}).sort({"created":-1}).limit(1).exec(function(err, doc) {
+        
+		Comment.find({"item": item._id}).sort({"created":-1}).limit(1).exec(function(err, doc) {
 
             if(err) return cb(err);
 
             var comments = doc[0];
 
             if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
-                item.latestCommentTime = comments.created; 
+                item.latestCommentAt = comments.created; 
+				item.latestCommentBy = comments.poster;
             } 
             
             cb(null,item);
