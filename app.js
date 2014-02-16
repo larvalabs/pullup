@@ -59,6 +59,8 @@ var day = (hour * 24);
 var week = (day * 7);
 var month = (day * 30);
 
+newsItemsPerPage = 30;
+
 app.locals.cacheBuster = Date.now();
 app.set('port', process.env.PORT || argv.p || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -88,11 +90,8 @@ app.use(function(req, res, next) {
   }
   if (req.body.windowscrolly) req.session.windowscrolly = req.body.windowscrolly;
   res.locals.windowscrolly = req.session.windowscrolly;
-  
   res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'none';");
-  
   res.setHeader("X-Frame-Options", "DENY");
-  
   next();
 });
 app.use(flash());
@@ -152,6 +151,7 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
  */
 
 app.get('/news', newsController.index);
+app.get('/news/page/:page', newsController.index);
 app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews);
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 
