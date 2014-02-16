@@ -43,9 +43,44 @@ body {
   .alert { margin-bottom: 0; }
 }
 
+// Footer
+// -------------------------
 #footer {
   height: 110px;
   padding-top: 15px;
+}
+#mobile-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid #139C82;
+  background-color: white;
+
+  div {
+    height: 100%;
+  }
+
+  .footer-tab {
+    text-align: center;
+    color: #a6bfbb;
+    font-size: 12px;
+    padding: 10px 0;
+
+    &.active, &:active {
+      color: #139C82;
+      text-decoration: none;
+    }
+
+    i {
+      position: relative;
+      top: 5px;
+      font-size: 20px;
+      display: block;
+      padding-bottom: 5px;
+      margin-right: 0;
+    }
+  }
 }
 
 // Navbar

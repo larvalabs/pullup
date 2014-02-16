@@ -1,4 +1,4 @@
-#footer
+#footer.hidden-xs
   .container.text-center
     div
       strong pullup
@@ -9,5 +9,26 @@
       a(href='/bookmarklet') Bookmarklet
       |  ·
       a(href='https://github.com/larvalabs/pullup')  GitHub Project
+
+#mobile-footer.visible-xs
+    .container
+      .row
+        a.col-xs-4.footer-tab(href='/', class=title=='Recent News'?'active':undefined)
+          i.fa.fa-list
+          ='News'
+        a.col-xs-4.footer-tab(href='/issues', class=title=='Open Issues'?'active':undefined)
+          i.fa.fa-exclamation
+          ='Issues'
+        if !user
+          a.col-xs-4.footer-tab(href='/login', class=title=='Login'?'active':undefined)
+            i.fa.fa-sign-in
+            ='Login'
+        else
+          a.col-xs-4.footer-tab(href='/news/submit', class=title=='Submit News'?'active':undefined)
+            i.fa.fa-plus-square-o
+            ='Submit'
+
+
+
 
 input(type='hidden', name='windowscrollto', value=windowscrolly)
