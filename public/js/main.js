@@ -139,6 +139,9 @@ $(document).ready(function() {
 
           if (data.success) {
             $('button.upvote', form).remove();
+
+            var voteElement = $('.vote-count', form.closest('tr'));
+            voteElement.text(parseInt(voteElement.text()) + 1);
           }
         })
         .fail(function (data) {
