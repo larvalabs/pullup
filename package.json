@@ -44,7 +44,8 @@
     "connect-mongo": "~0.4.0",
     "optimist": "latest",
     "timeago": "~0.1.0",
-    "xmldom": "~0.1.19"
+    "xmldom": "~0.1.19",
+    "marked": "~0.3.1"
   },
   "devDependencies": {
     "gulp": "~3.5.2",
@@ -52,6 +53,7 @@
     "gulp-jshint": "~1.4.0",
     "gulp-mocha": "~0.4.1",
     "mocha": "~1.17.1",
-    "should": "~3.1.2"
+    "should": "~3.1.2",
+    "marked": "~0.3.1"
   }
 }

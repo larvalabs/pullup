@@ -10,6 +10,11 @@ var addVotesToItem = votesController.addVotesToItem;
 var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
+var marked = require('marked');
+
+marked.setOptions({
+  sanitize: true
+});
 
 exports.index = function(req, res, next) {
 
@@ -52,6 +57,12 @@ exports.comments = function (req, res, next) {
     }, function (err, results) {
 
       if(err) return next(err);
+
+      _.each(results.comments, function (comment,i,l) {
+        comment.contents = marked(comment.contents);
+      });
+
+      newsItem.summary = marked(newsItem.summary);
 
       res.render('news/show', {
         title: newsItem.title,

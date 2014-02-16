@@ -12,7 +12,7 @@ block content
                 a(href="#", class="show-summary")
                     | ...
         h4
-          p(class="item-summary #{item.isSelfPost() ? '' : 'hidden'}")= item.summary
+          div(class="item-summary #{item.isSelfPost() ? '' : 'hidden'}")!= item.summary
         = 'submitted '
         span.timeago(title="#{item.created}")= timeago(item.created)
         = ' by '
@@ -34,4 +34,4 @@ block content
             if user && user.username == comment.poster.username
                 form(action="/news/" + item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
                   button(type="submit", class="delete btn btn-danger btn-xs pull-right", title="Delete") ×
-            = comment.contents
+            != comment.contents
