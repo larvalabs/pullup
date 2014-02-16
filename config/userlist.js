@@ -70,6 +70,7 @@ module.exports = {
         'travishorn',
         'treygriffith',
         'utdemir',
-        'williamle8300'
+        'williamle8300',
+        'willurd'
     ]
 };
