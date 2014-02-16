@@ -10,17 +10,28 @@ var addVotesToItem = votesController.addVotesToItem;
 var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
+var marked = require('marked');
+
+marked.setOptions({
+  sanitize: true
+});
 
 exports.index = function(req, res, next) {
+
+  var page = typeof req.params.page !== 'undefined' ? req.params.page : 1;
+  page = isNaN(page) ? 1 : Number(page);
+  page = page < 1 ? 1 : page;
 
   getNewsItems({}, req.user, function (err, newsItems) {
     if(err) return next(err);
 
     res.render('news/index', {
       title: 'Recent News',
-      items: sortByScore(newsItems)
+      items: sortByScore(newsItems),
+      page: page,
+      newsItemsPerPage: newsItemsPerPage
     });
-  });
+  }, page);
 };
 
 /**
@@ -52,6 +63,12 @@ exports.comments = function (req, res, next) {
     }, function (err, results) {
 
       if(err) return next(err);
+
+      _.each(results.comments, function (comment,i,l) {
+        comment.contents = marked(comment.contents);
+      });
+
+      newsItem.summary = marked(newsItem.summary);
 
       res.render('news/show', {
         title: newsItem.title,
@@ -192,11 +209,13 @@ exports.sourceNews = function(req, res, next) {
   });
 };
 
-function getNewsItems(query, user, callback) {
+function getNewsItems(query, user, callback, page) {
+  page = typeof page !== 'undefined' ? page: 1;
   NewsItem
   .find(query)
   .sort('-created')
-  .limit(30)
+  .skip((page-1)*newsItemsPerPage)
+  .limit(newsItemsPerPage)
   .populate('poster')
   .exec(function (err, newsItems) {
 
@@ -277,7 +296,7 @@ function getNewsItemsForComments(comments, user, callback) {
     var newsItemsById = {};
 
     newsItems.forEach(function (newsItem) {
-      newsItemsById[newsItem._id.toString()] = newsItem; 
+      newsItemsById[newsItem._id.toString()] = newsItem;
     });
 
     comments = comments.map(function (comment) {
@@ -365,7 +384,7 @@ exports.postNews = function(req, res, next) {
   } else {
     req.assert('url', 'URL cannot be blank.').notEmpty();
   }
- 
+
   var errors = req.validationErrors();
 
   if (errors) {

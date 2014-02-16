@@ -18,7 +18,9 @@ Summary:
 Development Setup
 ---------------
 
-Prerequisites: node and mongo.
+Prerequisites: [Node.js](http://nodejs.org/) and [MongoDB](http://mongodb.org/).
+
+First, [register a new developer application on GitHub](https://github.com/settings/applications/new). Set the **Homepage URL** to your development server (example: `http://localhost:3000`) and set your **Authorization callback URL** to `http://localhost:3000/auth/github/callback`. Take note of the **Client ID** and **Client Secret**, as you will need them in the next steps.
 
 ```bash
 # Fetch only the latest commits.
@@ -30,11 +32,15 @@ cd pullup
 npm install
 npm install -g gulp
 
-# Register a new application on GitHub (https://github.com/settings/applications)
-# Now that you have your application setup you can set the following environment variables:
+# Set the following environment variables:
 
 export GITHUB_CLIENTID='CLIENTID'
 export GITHUB_SECRET='SECRET'
+
+# Or, on Windows...
+
+SET GITHUB_CLIENTID=CLIENTID
+SET GITHUB_SECRET=SECRET
 ```
 
 Once those are set you can run the local development version:

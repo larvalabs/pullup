@@ -9,7 +9,7 @@ block content
               if filteredSource
                 | News from #{filteredSource}
               else
-                | Top News
+                | Top News - Page #{page}
     else
         .row.user-profile
             .col-md-6
@@ -65,7 +65,7 @@ block content
                                         i.fa.fa-chevron-up
 
                         td
-                            span.badge= item.votes
+                            span.badge.vote-count= item.votes
                         td
                             a(href=item.url)
                                 | #{item.title}
@@ -100,7 +100,7 @@ block content
                                 a(href='/news/source/' + item.source)
                                     | #{item.source}
 
-      if filteredUser
+    if filteredUser
         div#comments.tab-pane.fade
             table.table.table-condensed
                 thead
@@ -132,3 +132,8 @@ block content
                                                 small 1 comment
                                             default
                                                 small #{comment.newsItem.comment_count} comments
+
+    if page > 1
+        a(href='/news/page/'+(page-1), class='btn btn-sm btn-default')='Previous Page'
+    if items.length === newsItemsPerPage
+        a(href='/news/page/'+(page+1), class='btn btn-sm btn-default pull-right')='Next Page'
