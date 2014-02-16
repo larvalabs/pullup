@@ -49,6 +49,7 @@ module.exports = {
         'michaelnovakjr',
         'mreinhardt',
         'msied',
+        'omphalosskeptic',
         'pents90',
         'pksjce',
         'qguv',
