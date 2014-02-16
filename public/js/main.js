@@ -3,7 +3,7 @@ var FlashBuilder = function (type, messages) {
     var container = $('<div></div>')
       .addClass('alert animated fadeIn alert-dismissable')
       .html(createDismissButton());
- 
+
       switch(type) {
         case 'success':
           container.addClass('alert-success');
@@ -66,16 +66,16 @@ $(document).ready(function() {
       if(typeof response.title !== "undefined"){
 			$("#title").val(response.title);
       }
-     
+
       if(typeof response.source !== "undefined"){
 			$("#source").val(response.source);
       }
       else $("#source").val(url);
-      
+
       if(typeof response.summary !== "undefined"){
 			$("#summary").val(response.summary.join(" "));
       }
-        
+
 		}
       });
     });
@@ -166,7 +166,7 @@ $(document).ready(function() {
       };
 
   $(window).scroll(onWindowScroll);
-  $flash.find('.alert .close').click(function(ev) { setTimeout(positionFlash, 1) });
+  $flash.find('.alert .close').click(function(ev) { setTimeout(positionFlash, 1); });
   window.scrollTo(0, $('input[name="windowscrollto"]').val() || 0);
   positionFlash();
 
