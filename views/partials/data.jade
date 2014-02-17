@@ -1,0 +1,11 @@
+
+// 
+  Make data in pullup object available on the client.
+  Passing variables to the client through data-* attributes prevents
+  us from having to use inline scripts.
+
+div#pullup-global-js-object
+  each val, index in pullup
+    div(id=index, class='property' data-val=val)
+
+script(src='/js/globals.js') 
