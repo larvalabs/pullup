@@ -229,8 +229,7 @@ exports.userNews = function(req, res, next) {
         comments: results.comments,
         filteredUser: user.username,
         filteredUserWebsite: user.profile.website,
-        userProfile: user.profile,
-        ajaxGetUserGithubDataUrl: null
+        userProfile: user.profile
       });
 
     });
