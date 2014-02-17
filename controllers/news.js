@@ -160,23 +160,24 @@ exports.deleteComment = function (req, res, next) {
  *      contributions should be retrieved
  */
 exports.ajaxGetUserGithubData = function(req, res, next) {
-  constants.DEBUG && console.log ('ajaxGetUserGithubData');
+  if (constants.DEBUG) console.log ('ajaxGetUserGithubData');
   User
   .findOne({'username': req.params.id})
   .exec(function(err, user) {
 
     if(err || !user) {
       res.send ('failure');
+      return;
     }
 
     githubContributors.getContributors({
       onError: function() {
-        constants.DEBUG && console.log ('failure');
+        if (constants.DEBUG) console.log ('failure');
         res.send('failure');
       },
       onSuccess: function(data) {
-        constants.DEBUG && console.log (data);
-        constants.DEBUG && console.log ('success');
+        if (constants.DEBUG) console.log (data);
+        if (constants.DEBUG) console.log ('success');
         var contributions = 
           githubContributors.getContributions(user.username, data);
         res.send ({contributions: contributions});
