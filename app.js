@@ -1,4 +1,4 @@
-/**
+/**:
  * Module dependencies.
  */
 
@@ -174,7 +174,7 @@ app.get('/news/ajaxGetUserGithubData/:id', newsController.ajaxGetUserGithubData)
  * Issues Routes
  */
 
-app.post('/issues', issuesController.index);
+app.get('/issues', issuesController.index);
 app.post('/issues/:id', votesController.voteFor('issue', '/issues'));
 
 /**
