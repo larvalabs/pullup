@@ -89,7 +89,7 @@ exports.show = function (req, res, next) {
         comment.contents = marked(comment.contents);
       });
 
-      res.render('news/show', {
+      res.render('issues/show', {
         title: issue.title,
         item: issue,
         comments: results.comments

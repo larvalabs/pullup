@@ -169,6 +169,7 @@ app.get('/news/user/:id', newsController.userNews);
  */
 
 app.get('/issues', issuesController.index);
+app.get('/issues/:id', issuesController.show);
 app.post('/issues/:id', votesController.voteFor('issue', '/issues'));
 
 /**

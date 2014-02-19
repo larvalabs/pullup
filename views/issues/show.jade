@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  div.news-item
+    include ../partials/joinsite
+
+    .page-header
+        h3
+            a(href=item.url)= item.title
+        h4
+          div(class="item-summary")!= item.body
+        = 'submitted '
+        span.timeago(title="#{item.created_at}")= timeago(item.created_at)
+        = ' by '
+        a(href='/news/user/' + item.user.login, class='user')= item.user.login
+
+        a(href=issue.html_url).btn.btn-primary
+            | Add Comment
+
+    each comment, index in comments
+      div.comment
+        a(href='/news/user/' + comment.poster.username)= comment.poster.username
+        span.timeago(title="#{comment.created}")= timeago(comment.created)
+        blockquote.content
+            if user && user.username == comment.poster.username
+                form(action="/news/" + item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
+                  button(type="submit", class="delete btn btn-danger btn-xs pull-right", title="Delete") ×
+            != comment.contents
