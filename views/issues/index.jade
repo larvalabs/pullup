@@ -25,7 +25,7 @@ block content
                     td
                         span.badge= issue.votes
                     td
-                        a(href=issue.html_url)
+                        a(href='/issues/' + issue._id)
                             | #{issue.title}
                         if issue.body
                             | &nbsp;
@@ -38,7 +38,7 @@ block content
                             a(href='/news/user/' + issue.user.login)
                                 small #{issue.user.login}
                             small #{' '}with#{' '}
-                            a(href=issue.html_url)
+                            a(href='/issues/' + issue._id)
                                 case issue.comments
                                     when 0
                                         small no comments
