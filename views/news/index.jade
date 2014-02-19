@@ -5,11 +5,10 @@ block content
 
     if !filteredUser
         .page-header
-            h4
-              if filteredSource
-                | News from #{filteredSource}
-              else
-                | Top News - Page #{page}
+            h4= title
+                if page > 1
+                    small
+                        |  · Page #{page}
     else
         .row.user-profile
             .col-md-6
@@ -134,6 +133,6 @@ block content
                                                 small #{comment.newsItem.comment_count} comments
 
     if page > 1
-        a(href='/news/page/'+(page-1), class='btn btn-sm btn-default')='Previous Page'
+        a(href=(page-1), class='btn btn-sm btn-default')='Previous Page'
     if items.length === newsItemsPerPage
-        a(href='/news/page/'+(page+1), class='btn btn-sm btn-default pull-right')='Next Page'
+        a(href= (filteredSource ? '/news/source/' + filteredSource : '/news') + '/page/' + (page+1), class='btn btn-sm btn-default pull-right')='Next Page'

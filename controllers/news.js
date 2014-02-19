@@ -12,6 +12,12 @@ var request = require('request');
 var async = require('async');
 var marked = require('marked');
 
+/**
+ * News Item config
+ */
+var newsItemsPerPage = 30;
+var maxPages = 30;
+
 marked.setOptions({
   sanitize: true
 });
@@ -22,16 +28,20 @@ exports.index = function(req, res, next) {
   page = isNaN(page) ? 1 : Number(page);
   page = page < 1 ? 1 : page;
 
-  getNewsItems({}, req.user, function (err, newsItems) {
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
+  getNewsItems({}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
     res.render('news/index', {
-      title: 'Recent News',
-      items: sortByScore(newsItems),
+      title: 'Top News',
+      items: newsItems,
       page: page,
+      archive: page > maxPages,
       newsItemsPerPage: newsItemsPerPage
     });
-  }, page);
+  }, sortByScore);
 };
 
 /**
@@ -198,30 +208,84 @@ exports.userNews = function(req, res, next) {
 };
 
 exports.sourceNews = function(req, res, next) {
-  getNewsItems({'source': req.params.source}, req.user, function (err, newsItems) {
+  var page = typeof req.params.page !== 'undefined' ? req.params.page : 1;
+  page = isNaN(page) ? 1 : Number(page);
+  page = page < 1 ? 1 : page;
+
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
+  getNewsItems({'source': req.params.source}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
     res.render('news/index', {
       title: 'Recent news from ' + req.params.source,
       items: newsItems,
+      page: page,
+      newsItemsPerPage: newsItemsPerPage,
       filteredSource: req.params.source
     });
   });
 };
 
-function getNewsItems(query, user, callback, page) {
-  page = typeof page !== 'undefined' ? page: 1;
+function getNewsItems(query, page, user, callback, sort) {
+
+  var skip,
+    limit;
+
+  // `page` is an optional argument
+  if(arguments.length < 5 && typeof user === 'function') {
+    sort = callback;
+    callback = user;
+    user = page;
+    page = 1;
+  }
+
+  // default to page 1, there is no page 0
+  page = page || 1;
+
+  // beyond the maximum number of pages, we don't use any custom sorts
+  if(page > maxPages) {
+    sort = null;
+  }
+
+  
+  if(!sort) {
+    // default sort is by `created`, so we can use `skip` and `limit` on the Mongo query
+    skip = (page - 1) * newsItemsPerPage;
+    limit = newsItemsPerPage;
+  } else {
+    // custom sort function, so we have to fetch all of the pages worth of items,
+    // then sort and slice in the application
+    skip = 0;
+    limit = newsItemsPerPage * maxPages;
+  }
+
   NewsItem
   .find(query)
   .sort('-created')
-  .skip((page-1)*newsItemsPerPage)
-  .limit(newsItemsPerPage)
+  .skip(skip)
+  .limit(limit)
   .populate('poster')
   .exec(function (err, newsItems) {
 
     if(err) return callback(err);
 
-    addVotesAndCommentCountToNewsItems(newsItems, user, callback);
+    addVotesAndCommentCountToNewsItems(newsItems, user, function (err, newsItems) {
+
+      if(err) return callback(err);
+
+      // no further sort necessary
+      if(!sort) return callback(null, newsItems);
+
+      var skip = (page - 1) * newsItemsPerPage;
+      var limit = newsItemsPerPage;
+
+      newsItems = sort(newsItems).slice(skip, skip + limit);
+
+      callback(null, newsItems);
+
+    });
   });
 }
 
