@@ -135,4 +135,4 @@ block content
     if page > 1
         a(href=(page-1), class='btn btn-sm btn-default')='Previous Page'
     if items.length === newsItemsPerPage
-        a(href= (page > 1 ? '' : 'page/') + (page+1), class='btn btn-sm btn-default pull-right')='Next Page'
+        a(href= (filteredSource ? '/news/source/' + filteredSource : '/news') + '/page/' + (page+1), class='btn btn-sm btn-default pull-right')='Next Page'
