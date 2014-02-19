@@ -7,14 +7,14 @@ block content
     .page-header
         h3
             a(href=item.url)= item.title
-        h4
-          div(class="item-summary")!= item.body
         = 'submitted '
         span.timeago(title="#{item.created_at}")= timeago(item.created_at)
         = ' by '
         a(href='/news/user/' + item.user.login, class='user')= item.user.login
-
-        a(href=issue.html_url).btn.btn-primary
+        h4
+          div(class="item-summary")!= item.body
+    .row
+        a(href=item.html_url).btn.btn-primary
             | Add Comment
 
     each comment, index in comments
