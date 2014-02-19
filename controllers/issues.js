@@ -8,6 +8,10 @@ var addVotesToIssues = votesController.addVotesFor('issue');
 var github = new GitHubApi({
   version: "3.0.0"
 });
+var githubDetails = {
+  user: 'larvalabs',
+  repo: 'pullup'
+};
 
 /**
  * GET /issues
@@ -15,8 +19,8 @@ var github = new GitHubApi({
  */
 exports.index = function (req, res, next) {
   github.issues.repoIssues({
-    user: 'larvalabs',
-    repo: 'pullup',
+    user: githubDetails.user,
+    repo: githubDetails.repo,
     state: 'open'
   }, function (err, issues) {
     if(err) return next(err);
@@ -34,6 +38,61 @@ exports.index = function (req, res, next) {
           issues: issues
         });
 
+      });
+
+    });
+  });
+};
+
+/**
+ * GET /issues/:id
+ * View this issue and related comments
+ */
+exports.show = function (req, res, next) {
+
+  Issue
+  .findById(req.params.id)
+  .exec(function (err, issueDoc) {
+
+    if(err) return next(err);
+
+    async.parallel({
+      votes: function (cb) {
+        addVotesToIssues(issueDoc, req.user, cb);
+      },
+      issue: function (cb) {
+        github.issues.getRepoIssue({
+          user: githubDetails.user,
+          repo: githubDetails.repo,
+          number: issueDoc.number
+        }, cb);
+      },
+      comments: function (cb) {
+        github.issues.getComments({
+          user: githubDetails.user,
+          repo: githubDetails.repo,
+          number: issueDoc.number,
+          per_page: 100
+        }, cb);
+      }
+    }, function (err, results) {
+
+      if(err) return next(err);
+
+      var issue = results.issue;
+
+      issue._id = issueDoc._id;
+      issue.votes = issueDoc.votes;
+      issue.body = marked(issue.body);
+
+      _.each(results.comments, function (comment,i,l) {
+        comment.contents = marked(comment.contents);
+      });
+
+      res.render('news/show', {
+        title: issue.title,
+        item: issue,
+        comments: results.comments
       });
 
     });
