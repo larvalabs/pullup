@@ -11,6 +11,9 @@ var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
 var marked = require('marked');
+var http = require('http');
+var githubContributors = require('../components/GithubContributors');
+var constants = require('../constants');
 
 marked.setOptions({
   sanitize: true
@@ -182,6 +185,42 @@ exports.deleteComment = function (req, res, next) {
 
     req.flash('success', { msg: 'Comment deleted.' });
     res.redirect('back');
+  });
+};
+
+/**
+ * GET /ajaxGetUserGithubDataUrl/:id
+ * Called via AJAX. 
+ * Responds with 'failure' or the number of GitHub contributions of
+ * the specified user.
+ * GET paramaters
+ *  id - the username of the user for whom the number of GitHub 
+ *      contributions should be retrieved
+ */
+exports.ajaxGetUserGithubData = function(req, res, next) {
+  if (constants.DEBUG) console.log ('ajaxGetUserGithubData');
+  User
+  .findOne({'username': req.params.id})
+  .exec(function(err, user) {
+
+    if(err || !user) {
+      res.send ('failure');
+      return;
+    }
+
+    githubContributors.getContributors({
+      onError: function() {
+        if (constants.DEBUG) console.log ('failure');
+        res.send('failure');
+      },
+      onSuccess: function(data) {
+        if (constants.DEBUG) console.log (data);
+        if (constants.DEBUG) console.log ('success');
+        var contributions = 
+          githubContributors.getContributions(user.username, data);
+        res.send ({contributions: contributions});
+      }
+    });
   });
 };
 

@@ -52,6 +52,7 @@ module.exports = {
         'msied',
         'naturalethic',
         'omphalosskeptic',
+        'parenparen',
         'pents90',
         'pksjce',
         'qguv',
