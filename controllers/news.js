@@ -46,6 +46,10 @@ exports.comments = function (req, res, next) {
   .exec(function (err, newsItem) {
 
     if(err) return next(err);
+    if (!newsItem) {
+      req.flash('errors', { msg: 'News item not found.' });
+      return res.redirect('/news');
+    }
 
     async.parallel({
       votes: function (cb) {
@@ -77,6 +81,40 @@ exports.comments = function (req, res, next) {
       });
     });
 
+  });
+};
+
+exports.deleteNewsItemAndComments = function (req, res, next) {
+  var errors = req.validationErrors();
+
+  if (!req.user) {
+    errors.push({
+      param: 'user',
+      msg: 'User must be logged in.',
+      value: undefined
+    });
+  }
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('back');
+  }
+
+  async.parallel({
+    newsItem: function(cb) {
+      NewsItem
+      .findByIdAndRemove(req.params.id)
+      .exec(cb);
+    },
+    comments: function(cb) {
+      Comment
+      .remove({item: req.params.id}, cb);
+    }
+  }, function (err, results) {
+    if (err) res.redirect('back');
+
+    req.flash('success', { msg: 'News item and comments deleted.' });
+    res.redirect('/news');
   });
 };
 

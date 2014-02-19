@@ -43,8 +43,11 @@ body {
   .alert { margin-bottom: 0; }
 }
 
+.page-header { position: relative; }
+
 // Footer
 // -------------------------
+
 #footer {
   height: 75px;
   padding-top: 15px;
@@ -82,6 +85,22 @@ body {
     }
   }
 }
+
+// Global Elements
+// -------------------------
+
+.delete-form { display: inline; }
+.delete {
+  font-size: 12px;
+  line-height: 0.9;
+  padding: 2px;
+  width: 16px; height: 16px;
+  position: absolute; top: 6px; right: 2px;
+  border-radius: 50%;
+}
+
+.modal { font-size: @font-size-base; }
+.modal .modal-footer button { margin: 0 0 0 10px; }
 
 // Navbar
 // -------------------------
@@ -124,6 +143,10 @@ body {
 
 // News Table
 // -------------------------
+
+.news-table td {
+  position: relative;
+}
 
 .news-table a:visited {
   color: #a6bfbb;
