@@ -28,6 +28,9 @@ exports.index = function(req, res, next) {
   page = isNaN(page) ? 1 : Number(page);
   page = page < 1 ? 1 : page;
 
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
   getNewsItems({}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
@@ -205,12 +208,21 @@ exports.userNews = function(req, res, next) {
 };
 
 exports.sourceNews = function(req, res, next) {
-  getNewsItems({'source': req.params.source}, req.user, function (err, newsItems) {
+  var page = typeof req.params.page !== 'undefined' ? req.params.page : 1;
+  page = isNaN(page) ? 1 : Number(page);
+  page = page < 1 ? 1 : page;
+
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
+  getNewsItems({'source': req.params.source}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
     res.render('news/index', {
       title: 'Recent news from ' + req.params.source,
       items: newsItems,
+      page: page,
+      newsItemsPerPage: newsItemsPerPage,
       filteredSource: req.params.source
     });
   });

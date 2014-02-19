@@ -156,6 +156,7 @@ app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 app.get('/news/summarize', passportConf.isAuthenticated, newsController.summarize);
 
 app.get('/news/source/:source', newsController.sourceNews);
+app.get('/news/source/:source/page/:page', newsController.sourceNews);
 app.get('/news/:id', newsController.comments);
 app.post('/news/:id/comments', passportConf.isAuthenticated, newsController.postComment);
 app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, newsController.deleteComment);
