@@ -13,10 +13,9 @@ var _ = require('underscore');
 
 function findUserIndex(username) {
   var userIndex = -1;
-  var expr = new RegExp('^' + username + '$', 'i');
 
   userlist.users.some(function(name, index) {
-    if (name.match(expr)) {
+    if (name.toLowerCase() === username.toLowerCase()) {
       userIndex = index;
       return true;
     }
