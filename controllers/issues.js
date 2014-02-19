@@ -10,38 +10,13 @@ var github = new GitHubApi({
   version: "3.0.0"
 });
 
-function githubToken(user) {
-  if(!user || !user.tokens || !user.tokens.length) return false;
-
-  for(var i=0; i<user.tokens.length; i++) {
-    if(!user.tokens[i]) continue;
-    if(user.tokens[i].kind === 'github') return user.tokens[i].accessToken;
-  }
-
-  return false;
-}
-
 /**
  * GET /issues
  * View all open issues in the project
  */
 exports.index = function (req, res, next) {
-  var token = githubToken(req.user);
 
-  if(token) {
-    // authenticate using the logged in user
-    github.authenticate({
-      type: 'oauth',
-      token: token
-    });
-  } else {
-    // authenticate using the app's credentials
-    github.authenticate({
-        type: "oauth",
-        key: githubSecrets.clientID,
-        secret: githubSecrets.clientSecret
-    });
-  }
+  githubAuth(req.user);
 
   github.issues.repoIssues({
     user: 'larvalabs',
@@ -177,4 +152,34 @@ function sortIssues(issues, user, callback) {
 
     callback(null, issues);
   });
+}
+
+function githubToken(user) {
+  if(!user || !user.tokens || !user.tokens.length) return false;
+
+  for(var i=0; i<user.tokens.length; i++) {
+    if(!user.tokens[i]) continue;
+    if(user.tokens[i].kind === 'github') return user.tokens[i].accessToken;
+  }
+
+  return false;
+}
+
+function githubAuth(user) {
+  var token = githubToken(user);
+
+  if(token) {
+    // authenticate using the logged in user
+    github.authenticate({
+      type: 'oauth',
+      token: token
+    });
+  } else {
+    // authenticate using the app's credentials
+    github.authenticate({
+        type: "oauth",
+        key: githubSecrets.clientID,
+        secret: githubSecrets.clientSecret
+    });
+  }
 }
