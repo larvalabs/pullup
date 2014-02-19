@@ -5,11 +5,10 @@ block content
 
     if !filteredUser
         .page-header
-            h4
-              if filteredSource
-                | News from #{filteredSource}
-              else
-                | Top News - Page #{page}
+            h4= title
+                if page > 1
+                    small
+                        |  · Page #{page}
     else
         .row.user-profile
             .col-md-6

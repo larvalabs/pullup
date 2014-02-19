@@ -32,7 +32,7 @@ exports.index = function(req, res, next) {
     if(err) return next(err);
 
     res.render('news/index', {
-      title: 'Recent News',
+      title: 'Top News',
       items: newsItems,
       page: page,
       archive: page > maxPages,
