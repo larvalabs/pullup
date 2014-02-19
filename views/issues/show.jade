@@ -19,10 +19,7 @@ block content
 
     each comment, index in comments
       div.comment
-        a(href='/news/user/' + comment.poster.username)= comment.poster.username
-        span.timeago(title="#{comment.created}")= timeago(comment.created)
+        a(href='/news/user/' + comment.user.login)= comment.user.login
+        span.timeago(title="#{comment.created_at}")= timeago(comment.created_at)
         blockquote.content
-            if user && user.username == comment.poster.username
-                form(action="/news/" + item.id + "/comments/" + comment.id + "/delete", method='POST', class="delete-form")
-                  button(type="submit", class="delete btn btn-danger btn-xs pull-right", title="Delete") ×
-            != comment.contents
+            != comment.body

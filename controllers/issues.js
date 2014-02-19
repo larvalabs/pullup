@@ -88,7 +88,7 @@ exports.show = function (req, res, next) {
       issue.body = marked(issue.body);
 
       _.each(results.comments, function (comment,i,l) {
-        comment.contents = marked(comment.contents);
+        comment.body = marked(comment.body);
       });
 
       res.render('issues/show', {
