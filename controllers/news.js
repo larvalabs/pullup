@@ -348,21 +348,23 @@ function getNewsItems(query, page, user, callback, sort) {
 
     if(err) return callback(err);
 
-    addVotesAndCommentDataToNewsItems(newsItems, user, function (err, newsItems) {
+    // no further sort necessary, just add metadata
+    if(!sort) return addVotesAndCommentDataToNewsItems(newsItems, user, callback);
 
+    // the only custom sort we use uses votes, so fetch those prior to sorting
+    addVotesToNewsItems(newsItems, user, function (err, newsItems) {
       if(err) return callback(err);
 
-      // no further sort necessary
-      if(!sort) return callback(null, newsItems);
-
+      // skip and limit is calculated the same way as for the mongo query
       var skip = (page - 1) * newsItemsPerPage;
       var limit = newsItemsPerPage;
 
       newsItems = sort(newsItems).slice(skip, skip + limit);
 
-      callback(null, newsItems);
-
+      // now add comment data to the reduced set
+      addCommentDataToNewsItems(newsItems, callback);
     });
+
   });
 }
 
