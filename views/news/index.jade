@@ -103,9 +103,8 @@ block content
                                         small #{item.comment_count}
                                         small.hidden-xs comments
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
-                        br
-                        if item.comment_count > 0
-                            small.hidden-xs last comment #{timeago(item.latestCommentAt)}
+                            if item.comment_count > 0
+                                small.hidden-xs(title="#{item.latestCommentAt}") last comment #{timeago(item.latestCommentAt)}
                         p(class='hidden summary')
                             em= item.summary
                     if !filteredSource
@@ -143,6 +142,8 @@ block content
                                             small 1 comment
                                         default
                                             small #{comment.newsItem.comment_count} comments
+                                if comment.newsItem.comment_count > 0
+                                    small.hidden-xs.text-muted(title="#{comment.newsItem.latestCommentAt}")  (last comment #{timeago(comment.newsItem.latestCommentAt)})
 
     if page > 1
         a(href=(page-1), class='btn btn-sm btn-default')='Previous Page'
