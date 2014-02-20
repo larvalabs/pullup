@@ -37,6 +37,9 @@ block content
                     if userProfile.website
                         dt Website:
                         dd
+                            if (!userProfile.website.match(/^http[s]?:\/\//))
+                                - userProfile.website = 'http://' + userProfile.website
+                              
                             a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
         .page-header
           ul.nav.nav-tabs
