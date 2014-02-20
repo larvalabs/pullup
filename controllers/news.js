@@ -348,7 +348,7 @@ function getNewsItems(query, page, user, callback, sort) {
 
     if(err) return callback(err);
 
-    addVotesAndCommentCountToNewsItems(newsItems, user, function (err, newsItems) {
+    addVotesAndCommentDataToNewsItems(newsItems, user, function (err, newsItems) {
 
       if(err) return callback(err);
 
@@ -366,13 +366,24 @@ function getNewsItems(query, page, user, callback, sort) {
   });
 }
 
-function addVotesAndCommentCountToNewsItems(items, user, callback) {
+/**
+ * All-in-one function for adding metadata to news items
+ */
+function addVotesAndCommentDataToNewsItems(items, user, callback) {
 
   async.waterfall([
     function (cb) {
       addVotesToNewsItems(items, user, cb);
     },
     function (items, cb) {
+      addCommentDataToNewsItems(items, cb);
+    }
+  ], callback);
+}
+
+function addCommentDataToNewsItems(items, callback) {
+  async.waterfall([
+    function (cb) {
       addCommentCountToNewsItems(items, cb);
     },
     function (items, cb) {
