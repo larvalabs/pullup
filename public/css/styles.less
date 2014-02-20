@@ -141,43 +141,135 @@ body {
   margin-top: 42px;
 }
 
-// News Table
+// News & Issues Table
 // -------------------------
 
-.news-table td {
-  position: relative;
-}
+#news, #issues, #user-comments {
+  ul {
+    padding: 0;
+    list-style-type: none;
 
-.news-table a:visited {
-  color: #a6bfbb;
-}
+    li {
+      padding: 3px 0;
 
-.news-table .upvote {
-  border: none;
-  background: none;
-  &:hover {
-    color: #18bc9c;
+      &.headers {
+        border-bottom: 2px solid #ecf0f1;
+        font-weight: bold;
+      }
+
+      &.news-item {
+        border-bottom: 1px solid #ecf0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        a:visited {
+          color: #a6bfbb;
+        }
+
+        a.show-summary {
+          color: #bdcfcc;
+
+          &:visited {
+            color: #bdcfcc;
+          }
+        }
+
+        .summary {
+          color: rgba(0, 0, 0, 0.65);
+        }
+
+        .parent {
+          .comments {
+            margin: 0 0 0 5px;
+          }
+        }
+
+        .delete {
+          margin: 0 5px 0 0;
+        }
+
+        .upvote-form {
+          display: inline-block;
+          position: relative;
+          left: 50%;
+          margin-left: -15px;
+
+          .upvote {
+            border: none;
+            background: none;
+            &:hover {
+              color: #18bc9c;
+            }
+          }
+        }
+      }
+    }
+    @media (max-width: @screen-sm-min) {
+      li.news-item {
+        position: relative;
+        padding: 0;
+        min-height: 6em;
+
+        .title {
+          small {
+            padding-right: 7%;
+          }
+        }
+
+        .vote-count-wrapper {
+          position: absolute;
+          left: 0;
+          top: 50%;
+          height: 50%;
+          background: #ccc;
+          text-align: center;
+
+          .vote-count {
+            position: relative;
+            top: 10px;
+          }
+        }
+
+        .poster {
+          float: right;
+        }
+
+
+        .comment-count {
+          small {
+            padding-right: 3px;
+            color: #18bc9c;
+          }
+          i {
+            color: #18bc9c;
+          }
+        }
+
+        .upvote-wrapper {
+          position: absolute;
+          left: 0;
+          height: 50%;
+          background: #ccc;
+
+          .upvote-form {
+            position: absolute;
+            margin-left: -6px;
+            bottom: 10px;
+
+            button {
+              padding: 0;
+
+              .fa {
+                margin-right: 0;
+              }
+            }
+          }
+        }
+      }
+    }
   }
-}
-
-.news-table a.show-summary {
-  color: #bdcfcc;
-}
-
-.news-table a.show-summary:visited {
-  color: #bdcfcc;
-}
-
-.news-table .summary {
-  color: rgba(0, 0, 0, 0.65);
-}
-
-.news-table .parent .comments {
-  margin: 0 0 0 5px;
-}
-
-.news-table .delete {
-  margin: 0 5px 0 0;
 }
 
 // News Item
