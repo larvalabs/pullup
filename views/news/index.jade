@@ -97,14 +97,14 @@ block content
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
                                     when 1
                                         small 1
-                                        small.hidden-xs comment
+                                        small.hidden-xs  comment
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
                                     default
                                         small #{item.comment_count}
-                                        small.hidden-xs comments
+                                        small.hidden-xs  comments
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
                             if item.comment_count > 0
-                                small.hidden-xs(title="#{item.latestCommentAt}") last comment #{timeago(item.latestCommentAt)}
+                                small.hidden-xs.text-muted(title="#{item.latestCommentAt}")  (last comment #{timeago(item.latestCommentAt)})
                         p(class='hidden summary')
                             em= item.summary
                     if !filteredSource

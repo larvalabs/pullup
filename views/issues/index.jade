@@ -36,7 +36,7 @@ block content
                                 small #{issue.user.login}
                             small.hidden-xs #{' '}with#{' '}
                             br.visible-xs
-                            a.comment-count(href='/issues/' + issue._id)
+                            a.comment-count(href='/issues/' + issue._id + "?last_comment=#{issue.updated_at}")
                                 case issue.comments
                                     when 0
                                         small.hidden-xs no comments
@@ -44,59 +44,14 @@ block content
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
                                     when 1
                                         small 1
-                                        small.hidden-xs comment
+                                        small.hidden-xs  comment
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
                                     default
                                         small #{issue.comments}
-                                        small.hidden-xs comments
+                                        small.hidden-xs  comments
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
-                        br
-                        p(class='hidden summary')
-                            em= issue.body
-        
-
-    table.table.table-condensed
-        thead
-            tr
-                th
-                th Votes
-                th Title
-        tbody.news-table
-            each issue, index in issues
-                tr
-                    td
-                        if !issue.votedFor
-                            form(action='/issues/' + issue._id, method='POST', class='upvote-form')
-                                input(type='hidden', name='amount', value='1')
-                                button(type='submit', class='upvote')
-                                    i.fa.fa-chevron-up
-
-                    td
-                        span.badge= issue.votes
-                    td
-                        a(href='/issues/' + issue._id)
-                            | #{issue.title}
-                        if issue.body
-                            | &nbsp;
-                            a(href="#", class="show-summary")
-                                | ...
-                        br
-                        span
-                            small.submit-date(title="#{issue.created_at}")= timeago(issue.created_at)
-                            small #{' '}by#{' '}
-                            a(href='/news/user/' + issue.user.login)
-                                small #{issue.user.login}
-                            small #{' '}with#{' '}
-                            a(href='/issues/' + issue._id + "?last_comment=#{issue.updated_at}")
-                                case issue.comments
-                                    when 0
-                                        small no comments
-                                    when 1
-                                        small 1 comment
-                                    default
-                                        small #{issue.comments} comments
                             if issue.comments > 0
-                                small.text-muted(title="#{issue.updated_at}")  (last comment #{timeago(issue.updated_at)})
+                                small.hidden-xs.text-muted(title="#{issue.updated_at}")  (last comment #{timeago(issue.updated_at)})
                         br
                         p(class='hidden summary')
                             em= issue.body
