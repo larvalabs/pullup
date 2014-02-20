@@ -1,0 +1,16 @@
+mixin delete(owner, url)
+  - var modalId = url.replace(/\//g, "")
+  if user && user.username == owner.username
+    button(type='button', data-toggle='modal', data-target='##{modalId}' class='delete btn btn-danger btn-xs pull-right', title='Delete') ×
+    div.modal.fade(id=modalId)
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h4.modal-title Confirm Delete
+          div.modal-body
+            p Are you sure you want to permanently delete this item?
+          div.modal-footer
+            button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+            form(action=url, method='POST', class='delete-form')
+              button.btn.btn-danger(type='submit') Delete

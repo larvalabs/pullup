@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+  div.news-item
+    include ../partials/joinsite
+
+    .page-header
+        h3
+            a(href=item.url)= item.title
+        = 'submitted '
+        span.timeago(title="#{item.created_at}")= timeago(item.created_at)
+        = ' by '
+        a(href='/news/user/' + item.user.login, class='user')= item.user.login
+        h4
+          div(class="item-summary")!= item.body
+    .row
+        a(href=item.html_url).btn.btn-primary
+            | Add Comment
+
+    each comment, index in comments
+      div.comment
+        a(href='/news/user/' + comment.user.login)= comment.user.login
+        span.timeago(title="#{comment.created_at}")= timeago(comment.created_at)
+        blockquote.content
+            != comment.body

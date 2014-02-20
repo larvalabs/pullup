@@ -59,8 +59,6 @@ var day = (hour * 24);
 var week = (day * 7);
 var month = (day * 30);
 
-newsItemsPerPage = 30;
-
 app.locals.cacheBuster = Date.now();
 app.set('port', process.env.PORT || argv.p || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -83,7 +81,12 @@ app.use(express.session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(req, res, next) {
-  res.locals.user = req.user;
+  res.locals({
+    user: req.user,
+    pullup: { // global client-side JS object
+      baseUrl: req.protocol + '://' + req.get('host')
+    }
+  });
 
   if (!_.isObject(req.session.flash) || !Object.keys(req.session.flash).length) {
     req.session.windowscrolly = 0;
@@ -158,17 +161,21 @@ app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 app.get('/news/summarize', passportConf.isAuthenticated, newsController.summarize);
 
 app.get('/news/source/:source', newsController.sourceNews);
+app.get('/news/source/:source/page/:page', newsController.sourceNews);
 app.get('/news/:id', newsController.comments);
+app.post('/news/:id/delete', newsController.deleteNewsItemAndComments);
 app.post('/news/:id/comments', passportConf.isAuthenticated, newsController.postComment);
 app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, newsController.deleteComment);
 app.post('/news/:id', votesController.voteFor('news', '/'));
 app.get('/news/user/:id', newsController.userNews);
+app.get('/news/ajaxGetUserGithubData/:id', newsController.ajaxGetUserGithubData);
 
 /**
  * Issues Routes
  */
 
 app.get('/issues', issuesController.index);
+app.get('/issues/:id', issuesController.show);
 app.post('/issues/:id', votesController.voteFor('issue', '/issues'));
 
 /**

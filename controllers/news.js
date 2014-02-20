@@ -11,6 +11,15 @@ var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
 var marked = require('marked');
+var http = require('http');
+var githubContributors = require('../components/GithubContributors');
+var constants = require('../constants');
+
+/**
+ * News Item config
+ */
+var newsItemsPerPage = 30;
+var maxPages = 30;
 
 marked.setOptions({
   sanitize: true
@@ -22,16 +31,20 @@ exports.index = function(req, res, next) {
   page = isNaN(page) ? 1 : Number(page);
   page = page < 1 ? 1 : page;
 
-  getNewsItems({}, req.user, function (err, newsItems) {
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
+  getNewsItems({}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
     res.render('news/index', {
-      title: 'Recent News',
-      items: sortByScore(newsItems),
+      title: 'Top News',
+      items: newsItems,
       page: page,
+      archive: page > maxPages,
       newsItemsPerPage: newsItemsPerPage
     });
-  }, page);
+  }, sortByScore);
 };
 
 /**
@@ -46,6 +59,10 @@ exports.comments = function (req, res, next) {
   .exec(function (err, newsItem) {
 
     if(err) return next(err);
+    if (!newsItem) {
+      req.flash('errors', { msg: 'News item not found.' });
+      return res.redirect('/news');
+    }
 
     async.parallel({
       votes: function (cb) {
@@ -77,6 +94,40 @@ exports.comments = function (req, res, next) {
       });
     });
 
+  });
+};
+
+exports.deleteNewsItemAndComments = function (req, res, next) {
+  var errors = req.validationErrors();
+
+  if (!req.user) {
+    errors.push({
+      param: 'user',
+      msg: 'User must be logged in.',
+      value: undefined
+    });
+  }
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('back');
+  }
+
+  async.parallel({
+    newsItem: function(cb) {
+      NewsItem
+      .findByIdAndRemove(req.params.id)
+      .exec(cb);
+    },
+    comments: function(cb) {
+      Comment
+      .remove({item: req.params.id}, cb);
+    }
+  }, function (err, results) {
+    if (err) res.redirect('back');
+
+    req.flash('success', { msg: 'News item and comments deleted.' });
+    res.redirect('/news');
   });
 };
 
@@ -147,6 +198,42 @@ exports.deleteComment = function (req, res, next) {
   });
 };
 
+/**
+ * GET /ajaxGetUserGithubDataUrl/:id
+ * Called via AJAX. 
+ * Responds with 'failure' or the number of GitHub contributions of
+ * the specified user.
+ * GET paramaters
+ *  id - the username of the user for whom the number of GitHub 
+ *      contributions should be retrieved
+ */
+exports.ajaxGetUserGithubData = function(req, res, next) {
+  if (constants.DEBUG) console.log ('ajaxGetUserGithubData');
+  User
+  .findOne({'username': req.params.id})
+  .exec(function(err, user) {
+
+    if(err || !user) {
+      res.send ('failure');
+      return;
+    }
+
+    githubContributors.getContributors({
+      onError: function() {
+        if (constants.DEBUG) console.log ('failure');
+        res.send('failure');
+      },
+      onSuccess: function(data) {
+        if (constants.DEBUG) console.log (data);
+        if (constants.DEBUG) console.log ('success');
+        var contributions = 
+          githubContributors.getContributions(user.username, data);
+        res.send ({contributions: contributions});
+      }
+    });
+  });
+};
+
 exports.userNews = function(req, res, next) {
 
   User
@@ -198,30 +285,84 @@ exports.userNews = function(req, res, next) {
 };
 
 exports.sourceNews = function(req, res, next) {
-  getNewsItems({'source': req.params.source}, req.user, function (err, newsItems) {
+  var page = typeof req.params.page !== 'undefined' ? req.params.page : 1;
+  page = isNaN(page) ? 1 : Number(page);
+  page = page < 1 ? 1 : page;
+
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
+  getNewsItems({'source': req.params.source}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
     res.render('news/index', {
       title: 'Recent news from ' + req.params.source,
       items: newsItems,
+      page: page,
+      newsItemsPerPage: newsItemsPerPage,
       filteredSource: req.params.source
     });
   });
 };
 
-function getNewsItems(query, user, callback, page) {
-  page = typeof page !== 'undefined' ? page: 1;
+function getNewsItems(query, page, user, callback, sort) {
+
+  var skip,
+    limit;
+
+  // `page` is an optional argument
+  if(arguments.length < 5 && typeof user === 'function') {
+    sort = callback;
+    callback = user;
+    user = page;
+    page = 1;
+  }
+
+  // default to page 1, there is no page 0
+  page = page || 1;
+
+  // beyond the maximum number of pages, we don't use any custom sorts
+  if(page > maxPages) {
+    sort = null;
+  }
+
+  
+  if(!sort) {
+    // default sort is by `created`, so we can use `skip` and `limit` on the Mongo query
+    skip = (page - 1) * newsItemsPerPage;
+    limit = newsItemsPerPage;
+  } else {
+    // custom sort function, so we have to fetch all of the pages worth of items,
+    // then sort and slice in the application
+    skip = 0;
+    limit = newsItemsPerPage * maxPages;
+  }
+
   NewsItem
   .find(query)
   .sort('-created')
-  .skip((page-1)*newsItemsPerPage)
-  .limit(newsItemsPerPage)
+  .skip(skip)
+  .limit(limit)
   .populate('poster')
   .exec(function (err, newsItems) {
 
     if(err) return callback(err);
 
-    addVotesAndCommentCountToNewsItems(newsItems, user, callback);
+    addVotesAndCommentCountToNewsItems(newsItems, user, function (err, newsItems) {
+
+      if(err) return callback(err);
+
+      // no further sort necessary
+      if(!sort) return callback(null, newsItems);
+
+      var skip = (page - 1) * newsItemsPerPage;
+      var limit = newsItemsPerPage;
+
+      newsItems = sort(newsItems).slice(skip, skip + limit);
+
+      callback(null, newsItems);
+
+    });
   });
 }
 
@@ -233,8 +374,34 @@ function addVotesAndCommentCountToNewsItems(items, user, callback) {
     },
     function (items, cb) {
       addCommentCountToNewsItems(items, cb);
+    },
+    function (items, cb) {
+        addLatestCommentTimeForNewsItems(items,cb);
     }
   ], callback);
+}
+
+function addLatestCommentTimeForNewsItems(items,callback) {
+
+     if(!items.length) return callback(null, items);
+
+     async.map(items, function(item, cb) {
+        
+		Comment.find({"item": item._id}).sort({"created":-1}).limit(1).exec(function(err, doc) {
+
+            if(err) return cb(err);
+
+            var comments = doc[0];
+
+            if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
+                item.latestCommentAt = comments.created; 
+				item.latestCommentBy = comments.poster;
+            } 
+            
+            cb(null,item);
+        }); 
+
+    }, callback);
 }
 
 function addCommentCountToNewsItems(items, callback) {

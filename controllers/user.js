@@ -66,6 +66,7 @@ exports.getSignup = function(req, res) {
  */
 
 exports.getAccount = function(req, res) {
+  console.log (res.locals.user);
   res.render('account/profile', {
     title: 'Account Management'
   });
