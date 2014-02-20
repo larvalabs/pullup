@@ -6,7 +6,7 @@ block content
 
     .page-header
         h3
-            a(href=item.url)= item.title
+            a(href=item.html_url)= item.title
         = 'submitted '
         span.timeago(title="#{item.created_at}")= timeago(item.created_at)
         = ' by '
