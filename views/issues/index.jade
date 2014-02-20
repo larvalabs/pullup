@@ -87,7 +87,7 @@ block content
                             a(href='/news/user/' + issue.user.login)
                                 small #{issue.user.login}
                             small #{' '}with#{' '}
-                            a(href='/issues/' + issue._id)
+                            a(href='/issues/' + issue._id + "?last_comment=#{issue.updated_at}")
                                 case issue.comments
                                     when 0
                                         small no comments
@@ -95,6 +95,8 @@ block content
                                         small 1 comment
                                     default
                                         small #{issue.comments} comments
+                            if issue.comments > 0
+                                small.text-muted(title="#{issue.updated_at}")  (last comment #{timeago(issue.updated_at)})
                         br
                         p(class='hidden summary')
                             em= issue.body
