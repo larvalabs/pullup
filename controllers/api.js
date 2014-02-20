@@ -12,6 +12,11 @@ var foursquare = require('node-foursquare')({ secrets: secrets.foursquare });
 var Github = require('github-api');
 var Twit = require('twit');
 var paypal = require('paypal-rest-sdk');
+var marked = require('marked');
+
+marked.setOptions({
+  sanitize: true
+});
 
 /**
  * GET /api
@@ -58,6 +63,24 @@ exports.getFoursquare = function(req, res, next) {
     });
   });
 };
+
+exports.getMarkdown = function(req, res) {
+  if (!req.user) {
+    return res.send({
+      messages: [{ msg: 'Only members can upvote items.' }]
+    });
+  }
+
+  if(!req.body.source) {
+    return res.send({
+      messages: [{ msg: "You didn't send any markdown."}]
+    });
+  }
+
+  return res.send({
+    result: marked(req.body.source)
+  });
+}
 
 /**
  * GET /api/tumblr
