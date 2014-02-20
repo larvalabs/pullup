@@ -79,12 +79,13 @@ block content
                             small.submit-date(title="#{item.created}")= timeago(item.created)
                             small.hidden-xs #{' '}by#{' '}
                             if item.poster
-                                a(href='/news/user/' + item.poster.username)
+                                a.poster(href='/news/user/' + item.poster.username)
                                     small #{item.poster.username}
                             else
                                 span.text-muted
                                     | [deleted]
                             small.hidden-xs #{' '}with#{' '}
+                            br.visible-xs
                             a.comment-count(href='/news/' + item._id)
                                 case item.comment_count
                                     when 0

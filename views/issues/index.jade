@@ -6,6 +6,55 @@ block content
     .page-header
         h4 Open Issues
 
+    div#issues.tab-pane.fade.in.active
+        ul
+            li.row.headers.hidden-xs
+                div.col-sm-1.col-sm-offset-1 Votes
+                div.col-sm-10 Title
+            each issue, index in issues
+                li.row.news-item
+                    div.col-xs-2.col-sm-1.upvote-wrapper
+                        if !issue.votedFor
+                            form(action='/issues/' + issue._id, method='POST', class='upvote-form')
+                                input(type='hidden', name='amount', value='1')
+                                button(type='submit', class='upvote')
+                                    i.fa.fa-chevron-up
+                    div.col-xs-2.col-xs-pull-2.col-sm-1.col-sm-pull-0.vote-count-wrapper
+                        span.badge.vote-count= issue.votes
+                    div.col-xs-10.col-xs-push-2.col-sm-6.col-sm-push-0.col-lg-7.title
+                        a(href='/issues/' + issue._id)
+                            | #{issue.title}
+                        if issue.body
+                            | &nbsp;
+                            a(href="#", class="show-summary")
+                                | ...
+                        br
+                        span
+                            small.submit-date(title="#{issue.created_at}")= timeago(issue.created_at)
+                            small.hidden-xs #{' '}by#{' '}
+                            a.poster(href='/news/user/' + issue.user.login)
+                                small #{issue.user.login}
+                            small.hidden-xs #{' '}with#{' '}
+                            br.visible-xs
+                            a.comment-count(href='/issues/' + issue._id)
+                                case issue.comments
+                                    when 0
+                                        small.hidden-xs no comments
+                                        small.hidden-sm.hidden-md.hidden-lg 0
+                                        i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
+                                    when 1
+                                        small 1
+                                        small.hidden-xs comment
+                                        i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
+                                    default
+                                        small #{issue.comment_count}
+                                        small.hidden-xs comments
+                                        i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
+                        br
+                        p(class='hidden summary')
+                            em= issue.body
+        
+
     table.table.table-condensed
         thead
             tr
