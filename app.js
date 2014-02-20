@@ -83,6 +83,7 @@ app.use(passport.session());
 app.use(function(req, res, next) {
   res.locals({
     user: req.user,
+    cookies: req.cookies,
     pullup: { // global client-side JS object
       baseUrl: req.protocol + '://' + req.get('host')
     }
