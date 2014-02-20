@@ -376,32 +376,42 @@ function addVotesAndCommentCountToNewsItems(items, user, callback) {
       addCommentCountToNewsItems(items, cb);
     },
     function (items, cb) {
-        addLatestCommentTimeForNewsItems(items,cb);
+      addLatestCommentTimeForNewsItems(items, cb);
     }
   ], callback);
 }
 
-function addLatestCommentTimeForNewsItems(items,callback) {
+function addLatestCommentTimeForNewsItems(items, callback) {
 
-     if(!items.length) return callback(null, items);
+  if(!items.length) return callback(null, items);
 
-     async.map(items, function(item, cb) {
-        
-		Comment.find({"item": item._id}).sort({"created":-1}).limit(1).exec(function(err, doc) {
+  async.map(items, function(item, cb) {
 
-            if(err) return cb(err);
+    Comment
+    .find({
+      item: item._id
+    })
+    .sort({
+      created: -1
+    })
+    .limit(1)
+    .exec(function(err, doc) {
 
-            var comments = doc[0];
+      if(err) return cb(err);
 
-            if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
-                item.latestCommentAt = comments.created; 
+      if(!doc || !doc.length) return cb(null, item);
+
+      var comments = doc[0];
+
+      if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
+        item.latestCommentAt = comments.created; 
 				item.latestCommentBy = comments.poster;
-            } 
+      } 
             
-            cb(null,item);
-        }); 
+      cb(null, item);
+    }); 
 
-    }, callback);
+  }, callback);
 }
 
 function addCommentCountToNewsItems(items, callback) {
