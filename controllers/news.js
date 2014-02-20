@@ -53,6 +53,11 @@ exports.index = function(req, res, next) {
  */
 exports.comments = function (req, res, next) {
 
+  // redirect to the plain portion of the url
+  if(req.query.last_comment) {
+    return res.redirect(urlWithoutQueryParam(req.originalUrl, 'last_comment'));
+  }
+
   NewsItem
   .findById(req.params.id)
   .populate('poster')
@@ -96,6 +101,24 @@ exports.comments = function (req, res, next) {
 
   });
 };
+
+function urlWithoutQueryParam(originalUrl, paramName) {
+    var queryStart = originalUrl.indexOf('?'),
+      queryString = originalUrl.slice(queryStart + 1),
+      urlWithoutQueryString = originalUrl.slice(0, queryStart),
+      params = queryString.split('&');
+
+    params = params.filter(function (param) {
+      return param.indexOf(paramName) !== 0;
+    });
+
+    if(!params.length) {
+      return urlWithoutQueryString;
+    }
+
+    return urlWithoutQueryString + '?' + params.join('&');
+}
+
 
 exports.deleteNewsItemAndComments = function (req, res, next) {
   var errors = req.validationErrors();
@@ -348,60 +371,85 @@ function getNewsItems(query, page, user, callback, sort) {
 
     if(err) return callback(err);
 
-    addVotesAndCommentCountToNewsItems(newsItems, user, function (err, newsItems) {
+    // no further sort necessary, just add metadata
+    if(!sort) return addVotesAndCommentDataToNewsItems(newsItems, user, callback);
 
+    // the only custom sort we use uses votes, so fetch those prior to sorting
+    addVotesToNewsItems(newsItems, user, function (err, newsItems) {
       if(err) return callback(err);
 
-      // no further sort necessary
-      if(!sort) return callback(null, newsItems);
-
+      // skip and limit is calculated the same way as for the mongo query
       var skip = (page - 1) * newsItemsPerPage;
       var limit = newsItemsPerPage;
 
       newsItems = sort(newsItems).slice(skip, skip + limit);
 
-      callback(null, newsItems);
-
+      // now add comment data to the reduced set
+      addCommentDataToNewsItems(newsItems, callback);
     });
+
   });
 }
 
-function addVotesAndCommentCountToNewsItems(items, user, callback) {
+/**
+ * All-in-one function for adding metadata to news items
+ */
+function addVotesAndCommentDataToNewsItems(items, user, callback) {
 
   async.waterfall([
     function (cb) {
       addVotesToNewsItems(items, user, cb);
     },
     function (items, cb) {
-      addCommentCountToNewsItems(items, cb);
-    },
-    function (items, cb) {
-        addLatestCommentTimeForNewsItems(items,cb);
+      addCommentDataToNewsItems(items, cb);
     }
   ], callback);
 }
 
-function addLatestCommentTimeForNewsItems(items,callback) {
+function addCommentDataToNewsItems(items, callback) {
+  async.waterfall([
+    function (cb) {
+      addCommentCountToNewsItems(items, cb);
+    },
+    function (items, cb) {
+      addLatestCommentTimeForNewsItems(items, cb);
+    }
+  ], callback);
+}
 
-     if(!items.length) return callback(null, items);
+function addLatestCommentTimeForNewsItems(items, callback) {
 
-     async.map(items, function(item, cb) {
-        
-		Comment.find({"item": item._id}).sort({"created":-1}).limit(1).exec(function(err, doc) {
+  if(!items.length) return callback(null, items);
 
-            if(err) return cb(err);
+  async.map(items, function(item, cb) {
 
-            var comments = doc[0];
+    Comment
+    .find({
+      item: item._id
+    })
+    .sort({
+      created: -1
+    })
+    .limit(1)
+    .exec(function(err, doc) {
 
-            if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
-                item.latestCommentAt = comments.created; 
+      if(err) return cb(err);
+
+      if(!doc || !doc.length) return cb(null, item);
+
+      var comments = doc[0];
+
+      if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
+        // convert to a plain object if necessary
+        item = typeof item.toObject === 'function' ? item.toObject() : item;
+        item.latestCommentAt = comments.created;
 				item.latestCommentBy = comments.poster;
-            } 
+      } 
             
-            cb(null,item);
-        }); 
+      cb(null, item);
+    }); 
 
-    }, callback);
+  }, callback);
 }
 
 function addCommentCountToNewsItems(items, callback) {

@@ -89,23 +89,22 @@ block content
                                     | [deleted]
                             small.hidden-xs #{' '}with#{' '}
                             br.visible-xs
-                            a.comment-count(href='/news/' + item._id)
+                            a.comment-count(href='/news/' + item._id + (item.latestCommentAt ? "?last_comment=#{item.latestCommentAt}" : ""))
                                 case item.comment_count
                                     when 0
-                                        small.hidden-xs no comments
+                                        small.hidden-xs  no comments
                                         small.hidden-sm.hidden-md.hidden-lg 0
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
                                     when 1
                                         small 1
-                                        small.hidden-xs comment
+                                        small.hidden-xs  comment
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
                                     default
                                         small #{item.comment_count}
-                                        small.hidden-xs comments
+                                        small.hidden-xs  comments
                                         i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
-                        br
-                        if item.comment_count > 0
-                            small.hidden-xs last comment #{timeago(item.latestCommentAt)}
+                            if item.comment_count > 0
+                                small.hidden-xs.text-muted(title="#{item.latestCommentAt}")  (last comment #{timeago(item.latestCommentAt)})
                         p(class='hidden summary')
                             em= item.summary
                     if !filteredSource
@@ -115,34 +114,42 @@ block content
       if filteredUser
         div#user-comments.tab-pane.fade
           ul
+            li.row.headers.hidden-xs
+                div.col-sm-1.text-muted #
+                div.col-sm-7 Comment
+                div.col-sm-4 Parent
             each comment, index in comments
-                li.row.headers.hidden-xs
-                    div.col-sm-1.text-muted #
-                    div.col-sm-7 Comment
-                    div.col-sm-4 Parent
-                each item, index in items
-                    li.row.news-item
-                        div.col-sm-1
-                            span.hidden-xs.text-muted= index + 1
-                            if !item.votedFor
-                        div.col-sm-7
-                            blockquote.content= comment.contents
-                                +delete(comment.poster, '/news/' + comment.newsItem._id + '/comments/' + comment._id + '/delete')
+                li.row.news-item
+                    div.col-sm-1.hidden-xs
+                        span.hidden-xs.text-muted= index + 1
+                    div.col-sm-7
+                        .visible-xs
                             small.timeago(title="#{comment.created}")= timeago(comment.created)
-                        div.col-sm-4.hidden-xs
-                            a(href=comment.newsItem.url)
-                                | #{comment.newsItem.title}
+                            small  on 
+                            a(href=comment.newsItem.url)= comment.newsItem.title
+                            a(href='/news/' + comment.newsItem._id + (comment.newsItem.latestCommentAt ? "?last_comment=#{comment.newsItem.latestCommentAt}" : ""), class='comments')
+                                small  #{comment.newsItem.comment_count} 
+                                i.fa.fa-comment-o
+                        blockquote.content= comment.contents
+                            +delete(comment.poster, '/news/' + comment.newsItem._id + '/comments/' + comment._id + '/delete')
+                        small.timeago.hidden-xs(title="#{comment.created}")= timeago(comment.created)
+                    div.col-sm-4.hidden-xs
+                        a(href=comment.newsItem.url)
+                            | #{comment.newsItem.title}
+                        br
+                        span
+                            small.submit-date(title="#{comment.newsItem.created}")= timeago(comment.newsItem.created)
                             br
-                            span
-                                small.submit-date(title="#{comment.newsItem.created}")= timeago(comment.newsItem.created)
-                                a(href='/news/' + comment.newsItem._id, class='comments')
-                                    case comment.newsItem.comment_count
-                                        when 0
-                                            small no comments
-                                        when 1
-                                            small 1 comment
-                                        default
-                                            small #{comment.newsItem.comment_count} comments
+                            a(href='/news/' + comment.newsItem._id + (comment.newsItem.latestCommentAt ? "?last_comment=#{comment.newsItem.latestCommentAt}" : ""), class='comments')
+                                case comment.newsItem.comment_count
+                                    when 0
+                                        small  no comments
+                                    when 1
+                                        small  1 comment
+                                    default
+                                        small  #{comment.newsItem.comment_count} comments
+                            if comment.newsItem.comment_count > 0
+                                small.hidden-xs.text-muted(title="#{comment.newsItem.latestCommentAt}")  (last comment #{timeago(comment.newsItem.latestCommentAt)})
 
     if page > 1
         a(href=(page-1), class='btn btn-sm btn-default')='Previous Page'
