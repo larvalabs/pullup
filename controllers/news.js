@@ -404,7 +404,9 @@ function addLatestCommentTimeForNewsItems(items, callback) {
       var comments = doc[0];
 
       if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
-        item.latestCommentAt = comments.created; 
+        // convert to a plain object if necessary
+        item = typeof item.toObject === 'function' ? item.toObject() : item;
+        item.latestCommentAt = comments.created;
 				item.latestCommentBy = comments.poster;
       } 
             
