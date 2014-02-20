@@ -58,6 +58,12 @@ var FlashBuilder = function (type, messages) {
 
 $(document).ready(function() {
 
+  if ($("button.alert-joinsite").length > 0) {
+    $("button.alert-joinsite").click(function () {
+      document.cookie = "skip_alert=true; path=/";
+    });
+  }
+
   if ($("#url").length > 0) {
     $("#title").on('focus', function() {
       var url = $("#url").val();
