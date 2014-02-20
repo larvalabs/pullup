@@ -44,7 +44,7 @@ block content
               a(href='#news', data-toggle='tab')
                 h4 News Submitted
             li
-              a(href='#comments', data-toggle='tab')
+              a(href='#user-comments', data-toggle='tab')
                 h4 Comments
 
     div.tab-content
@@ -110,35 +110,36 @@ block content
                             a(href='/news/source/' + item.source)
                                 | #{item.source}
       if filteredUser
-        div#comments.tab-pane.fade
-            table.table.table-condensed
-                thead
-                    tr
-                        th.text-muted #
-                        th Comment
-                        th(width='40%') Parent
-                tbody.news-table
-                    each comment, index in comments
-                        tr
-                            td.text-muted= index + 1
-                            td.comment
-                                blockquote.content= comment.contents
-                                    +delete(comment.poster, '/news/' + comment.newsItem._id + '/comments/' + comment._id + '/delete')
-                                small.timeago(title="#{comment.created}")= timeago(comment.created)
-                            td.parent
-                                a(href=comment.newsItem.url)
-                                    | #{comment.newsItem.title}
-                                br
-                                span
-                                    small.submit-date(title="#{comment.newsItem.created}")= timeago(comment.newsItem.created)
-                                    a(href='/news/' + comment.newsItem._id, class='comments')
-                                        case comment.newsItem.comment_count
-                                            when 0
-                                                small no comments
-                                            when 1
-                                                small 1 comment
-                                            default
-                                                small #{comment.newsItem.comment_count} comments
+        div#user-comments.tab-pane.fade
+          ul
+            each comment, index in comments
+                li.row.headers.hidden-xs
+                    div.col-sm-1.text-muted #
+                    div.col-sm-7 Comment
+                    div.col-sm-4 Parent
+                each item, index in items
+                    li.row.news-item
+                        div.col-sm-1
+                            span.hidden-xs.text-muted= index + 1
+                            if !item.votedFor
+                        div.col-sm-7
+                            blockquote.content= comment.contents
+                                +delete(comment.poster, '/news/' + comment.newsItem._id + '/comments/' + comment._id + '/delete')
+                            small.timeago(title="#{comment.created}")= timeago(comment.created)
+                        div.col-sm-4.hidden-xs
+                            a(href=comment.newsItem.url)
+                                | #{comment.newsItem.title}
+                            br
+                            span
+                                small.submit-date(title="#{comment.newsItem.created}")= timeago(comment.newsItem.created)
+                                a(href='/news/' + comment.newsItem._id, class='comments')
+                                    case comment.newsItem.comment_count
+                                        when 0
+                                            small no comments
+                                        when 1
+                                            small 1 comment
+                                        default
+                                            small #{comment.newsItem.comment_count} comments
 
     if page > 1
         a(href=(page-1), class='btn btn-sm btn-default')='Previous Page'
