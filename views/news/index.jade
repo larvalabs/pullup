@@ -155,3 +155,6 @@ block content
         a(href=(page-1), class='btn btn-sm btn-default')='Previous Page'
     if items.length === newsItemsPerPage
         a(href= (filteredSource ? '/news/source/' + filteredSource : '/news') + '/page/' + (page+1), class='btn btn-sm btn-default pull-right')='Next Page'
+    
+    div(id='filtered-user' data-val=filteredUser)
+    script(src='/js/newsIndex.js?v#{cacheBuster}')
