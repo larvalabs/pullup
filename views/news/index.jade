@@ -89,7 +89,7 @@ block content
                                     | [deleted]
                             small.hidden-xs #{' '}with#{' '}
                             br.visible-xs
-                            a.comment-count(href='/news/' + item._id)
+                            a.comment-count(href='/news/' + item._id + (item.latestCommentAt ? "?last_comment=#{item.latestCommentAt}" : ""))
                                 case item.comment_count
                                     when 0
                                         small.hidden-xs no comments
@@ -134,7 +134,7 @@ block content
                             br
                             span
                                 small.submit-date(title="#{comment.newsItem.created}")= timeago(comment.newsItem.created)
-                                a(href='/news/' + comment.newsItem._id, class='comments')
+                                a(href='/news/' + comment.newsItem._id + (comment.newsItem.latestCommentAt ? "?last_comment=#{comment.newsItem.latestCommentAt}" : ""), class='comments')
                                     case comment.newsItem.comment_count
                                         when 0
                                             small no comments

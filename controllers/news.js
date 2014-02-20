@@ -53,6 +53,11 @@ exports.index = function(req, res, next) {
  */
 exports.comments = function (req, res, next) {
 
+  // redirect to the plain portion of the url
+  if(req.query.last_comment) {
+    return res.redirect(urlWithoutQueryParam(req.originalUrl, 'last_comment'));
+  }
+
   NewsItem
   .findById(req.params.id)
   .populate('poster')
@@ -96,6 +101,24 @@ exports.comments = function (req, res, next) {
 
   });
 };
+
+function urlWithoutQueryParam(originalUrl, paramName) {
+    var queryStart = originalUrl.indexOf('?'),
+      queryString = originalUrl.slice(queryStart + 1),
+      urlWithoutQueryString = originalUrl.slice(0, queryStart),
+      params = queryString.split('&');
+
+    params = params.filter(function (param) {
+      return param.indexOf(paramName) !== 0;
+    });
+
+    if(!params.length) {
+      return urlWithoutQueryString;
+    }
+
+    return urlWithoutQueryString + '?' + params.join('&');
+}
+
 
 exports.deleteNewsItemAndComments = function (req, res, next) {
   var errors = req.validationErrors();
