@@ -185,13 +185,13 @@ exports.postComment = function (req, res, next) {
     itemType: 'news'
   });
 
-  comment.save(function(err) {
+  comment.save(function(err, comment) {
     if (err) {
       return res.redirect('/news/'+req.params.id);
     }
 
     req.flash('success', { msg  : 'Comment posted. Thanks!' });
-    res.redirect('/news/'+req.params.id);
+    res.redirect('/news/'+comment.item+'?last_comment='+comment.created);
   });
 };
 
