@@ -34,10 +34,16 @@ exports.index = function(req, res, next) {
   // don't use a `/page/1` url
   if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
 
+  var view = 'news/index';
+  if (req.route.path === '/rss') {
+    view = 'rss';
+    res.set('Content-Type', 'text/xml; charset=utf-8');
+  }
+
   getNewsItems({}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
-    res.render('news/index', {
+    res.render(view, {
       title: 'Top News',
       items: newsItems,
       page: page,
