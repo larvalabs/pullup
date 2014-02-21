@@ -128,6 +128,7 @@ app.get('/logout', userController.logout);
  * Static Page Routes
  */
 
+app.get('/', homeController.index);
 app.get('/about', homeController.about);
 app.get('/bookmarklet', homeController.bookmarklet);
 app.get('/signup', homeController.signup);
@@ -142,8 +143,6 @@ app.post('/contact', contactController.postContact);
 /**
  * User Account Routes
  */
-
-app.get('/', newsController.index);
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);

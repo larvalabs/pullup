@@ -39,6 +39,7 @@ exports.index = function(req, res, next) {
 
     res.render('news/index', {
       title: 'Top News',
+      tab: 'news',
       items: newsItems,
       page: page,
       archive: page > maxPages,
@@ -94,6 +95,7 @@ exports.comments = function (req, res, next) {
 
       res.render('news/show', {
         title: newsItem.title,
+        tab: 'news',
         item: newsItem,
         comments: results.comments
       });
@@ -296,6 +298,7 @@ exports.userNews = function(req, res, next) {
 
       res.render('news/index', {
         title: 'Posts by ' + user.username,
+        tab: 'news',
         items: results.newsItems,
         comments: results.comments,
         filteredUser: user.username,
@@ -320,6 +323,7 @@ exports.sourceNews = function(req, res, next) {
 
     res.render('news/index', {
       title: 'Recent news from ' + req.params.source,
+      tab: 'news',
       items: newsItems,
       page: page,
       newsItemsPerPage: newsItemsPerPage,
@@ -550,6 +554,7 @@ exports.submitNews = function(req, res) {
   };
 
   res.render('news/submit', {
+    tab: 'news',
     newsItem: newsItem,
     title: 'Submit News'
   });
@@ -607,6 +612,7 @@ exports.postNews = function(req, res, next) {
     return res.render('news/submit', {
       newsItem: newsItem,
       title: 'Submit News',
+      tab: 'news',
       posttype: posttype
     });
   }

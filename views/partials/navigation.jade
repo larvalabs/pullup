@@ -9,9 +9,8 @@
       a.navbar-brand(href='/') pullup
     .collapse.navbar-collapse
       ul.nav.navbar-nav
-        if user
-          li.hidden-xs(class=title=='Submit News'?'active':undefined)
-            a(href='/news/submit') Submit News
+        li.hidden-xs(class=tab=='news'?'active':undefined)
+          a(href='/news') News
         li.hidden-xs(class=title=='Open Issues'?'active':undefined)
           a(href='/issues') Issues
         li(class=title=='About'?'active':undefined)
