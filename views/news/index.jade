@@ -11,6 +11,8 @@ block content
                 if page > 1
                     small
                         |  · Page #{page}
+                if user
+                    a.btn.btn-primary.btn-sm.pull-right(href='/news/submit') Submit News
     else
         .row.user-profile
             .col-lg-6
