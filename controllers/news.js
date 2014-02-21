@@ -385,7 +385,7 @@ function getNewsItems(query, page, user, callback, sort) {
       newsItems = sort(newsItems).slice(skip, skip + limit);
 
       // now add comment data to the reduced set
-      addCommentDataToNewsItems(newsItems, callback);
+      addCommentDataToNewsItems(newsItems, user, callback);
     });
 
   });
@@ -401,32 +401,40 @@ function addVotesAndCommentDataToNewsItems(items, user, callback) {
       addVotesToNewsItems(items, user, cb);
     },
     function (items, cb) {
-      addCommentDataToNewsItems(items, cb);
+      addCommentDataToNewsItems(items, user, cb);
     }
   ], callback);
 }
 
-function addCommentDataToNewsItems(items, callback) {
+function addCommentDataToNewsItems(items, user, callback) {
   async.waterfall([
     function (cb) {
       addCommentCountToNewsItems(items, cb);
     },
     function (items, cb) {
-      addLatestCommentTimeForNewsItems(items, cb);
+      addLatestCommentTimeForNewsItems(items, user, cb);
     }
   ], callback);
 }
 
-function addLatestCommentTimeForNewsItems(items, callback) {
+function addLatestCommentTimeForNewsItems(items, user, callback) {
 
   if(!items.length) return callback(null, items);
 
   async.map(items, function(item, cb) {
 
-    Comment
-    .find({
+    var find = {
       item: item._id
-    })
+    };
+
+    if(user) {
+      find.poster = {
+        $ne: user._id
+      };
+    }
+
+    Comment
+    .find(find)
     .sort({
       created: -1
     })
