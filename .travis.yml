@@ -1,5 +1,12 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
 before_script:
-  - npm install gulp -g
+- npm install gulp -g
+deploy:
+  provider: heroku
+  api_key:
+    secure: IHdSmZV7sQoEm/QXAUFspEXc8ROYV1ojeBFCfucp0SbtcyPiZ7wMcw0iqEXOzkXdcj9MDpvl1zOEDiS+bKZUw5QszO7IJ7REvMwRaezMTt8nyS2H/E52kg8qqydJA7Mpu366Onxz1qFKk9LzdEZ6LXw8lCN+sXFbcxvR2WgOQaY=
+  app: pullup
+  on:
+    repo: larvalabs/pullup
