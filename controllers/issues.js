@@ -41,7 +41,8 @@ exports.index = function (req, res, next) {
 
         res.render('issues/index', {
           title: 'Open Issues',
-          issues: issues
+          tab: 'issues',
+          issues: issues,
         });
 
       });
@@ -97,6 +98,7 @@ exports.show = function (req, res, next) {
 
       res.render('issues/show', {
         title: issue.title,
+        tab: 'issues',
         item: issue,
         comments: results.comments
       });
