@@ -1,0 +1,19 @@
+doctype xml
+rss(version="2.0")
+  channel
+    title pullup.io
+    description= 'It’s a site you join via pull request. Other than that, it’s up to you.'
+    link= 'http://pullup.io'
+    if items.length
+      lastBuildDate= new Date(items[0].created).toUTCString()
+      each item, index in items
+        item
+          title= item.title
+          description
+            | #{item.summary}
+            br
+            a(href='/news/#{item._id}')
+              | Comments
+          link= item.url
+          guid= item.url
+          pubDate= item.created
