@@ -146,7 +146,7 @@ $(document).ready(function() {
           if (data.success) {
             $('button.upvote', form).remove();
 
-            var voteElement = $('.vote-count', form.closest('tr'));
+            var voteElement = $('.vote-count', form.closest('.news-item'));
             voteElement.text(parseInt(voteElement.text()) + 1);
           }
         })
