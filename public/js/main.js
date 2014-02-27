@@ -171,8 +171,10 @@ $(document).ready(function() {
             source: $(this).find("textarea").val()
           },
           success: function(msg) {
-            console.log($content, msg.result);
             $content.html(msg.result);
+          },
+          error: function(msg) {
+            $content.html("There was an error retrieving your markdown...");
           }
         });
       }

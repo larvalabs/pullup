@@ -15,7 +15,8 @@ var paypal = require('paypal-rest-sdk');
 var marked = require('marked');
 
 marked.setOptions({
-  sanitize: true
+  sanitize: true,
+  silent: true
 });
 
 /**
