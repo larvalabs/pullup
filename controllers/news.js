@@ -10,20 +10,16 @@ var addVotesToItem = votesController.addVotesToItem;
 var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
-var marked = require('marked');
 var http = require('http');
 var githubContributors = require('../components/GithubContributors');
 var constants = require('../constants');
+var markdownParser = require('../components/MarkdownParser');
 
 /**
  * News Item config
  */
 var newsItemsPerPage = 30;
 var maxPages = 30;
-
-marked.setOptions({
-  sanitize: true
-});
 
 exports.index = function(req, res, next) {
 
@@ -34,11 +30,18 @@ exports.index = function(req, res, next) {
   // don't use a `/page/1` url
   if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
 
+  var view = 'news/index';
+  if (req.route.path === '/rss') {
+    view = 'rss';
+    res.set('Content-Type', 'text/xml; charset=utf-8');
+  }
+
   getNewsItems({}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
-    res.render('news/index', {
+    res.render(view, {
       title: 'Top News',
+      tab: 'news',
       items: newsItems,
       page: page,
       archive: page > maxPages,
@@ -52,6 +55,11 @@ exports.index = function(req, res, next) {
  * View comments on a news item
  */
 exports.comments = function (req, res, next) {
+
+  // redirect to the plain portion of the url
+  if(req.query.last_comment) {
+    return res.redirect(urlWithoutQueryParam(req.originalUrl, 'last_comment'));
+  }
 
   NewsItem
   .findById(req.params.id)
@@ -82,13 +90,14 @@ exports.comments = function (req, res, next) {
       if(err) return next(err);
 
       _.each(results.comments, function (comment,i,l) {
-        comment.contents = marked(comment.contents);
+        comment.contents = markdownParser(comment.contents);
       });
 
-      newsItem.summary = marked(newsItem.summary);
+      newsItem.summary = markdownParser(newsItem.summary);
 
       res.render('news/show', {
         title: newsItem.title,
+        tab: 'news',
         item: newsItem,
         comments: results.comments
       });
@@ -96,6 +105,24 @@ exports.comments = function (req, res, next) {
 
   });
 };
+
+function urlWithoutQueryParam(originalUrl, paramName) {
+    var queryStart = originalUrl.indexOf('?'),
+      queryString = originalUrl.slice(queryStart + 1),
+      urlWithoutQueryString = originalUrl.slice(0, queryStart),
+      params = queryString.split('&');
+
+    params = params.filter(function (param) {
+      return param.indexOf(paramName) !== 0;
+    });
+
+    if(!params.length) {
+      return urlWithoutQueryString;
+    }
+
+    return urlWithoutQueryString + '?' + params.join('&');
+}
+
 
 exports.deleteNewsItemAndComments = function (req, res, next) {
   var errors = req.validationErrors();
@@ -162,13 +189,13 @@ exports.postComment = function (req, res, next) {
     itemType: 'news'
   });
 
-  comment.save(function(err) {
+  comment.save(function(err, comment) {
     if (err) {
       return res.redirect('/news/'+req.params.id);
     }
 
     req.flash('success', { msg  : 'Comment posted. Thanks!' });
-    res.redirect('/news/'+req.params.id);
+    res.redirect('/news/'+comment.item+'?last_comment='+comment.created);
   });
 };
 
@@ -273,6 +300,7 @@ exports.userNews = function(req, res, next) {
 
       res.render('news/index', {
         title: 'Posts by ' + user.username,
+        tab: 'news',
         items: results.newsItems,
         comments: results.comments,
         filteredUser: user.username,
@@ -297,6 +325,7 @@ exports.sourceNews = function(req, res, next) {
 
     res.render('news/index', {
       title: 'Recent news from ' + req.params.source,
+      tab: 'news',
       items: newsItems,
       page: page,
       newsItemsPerPage: newsItemsPerPage,
@@ -348,60 +377,85 @@ function getNewsItems(query, page, user, callback, sort) {
 
     if(err) return callback(err);
 
-    addVotesAndCommentCountToNewsItems(newsItems, user, function (err, newsItems) {
+    // no further sort necessary, just add metadata
+    if(!sort) return addVotesAndCommentDataToNewsItems(newsItems, user, callback);
 
+    // the only custom sort we use uses votes, so fetch those prior to sorting
+    addVotesToNewsItems(newsItems, user, function (err, newsItems) {
       if(err) return callback(err);
 
-      // no further sort necessary
-      if(!sort) return callback(null, newsItems);
-
+      // skip and limit is calculated the same way as for the mongo query
       var skip = (page - 1) * newsItemsPerPage;
       var limit = newsItemsPerPage;
 
       newsItems = sort(newsItems).slice(skip, skip + limit);
 
-      callback(null, newsItems);
-
+      // now add comment data to the reduced set
+      addCommentDataToNewsItems(newsItems, callback);
     });
+
   });
 }
 
-function addVotesAndCommentCountToNewsItems(items, user, callback) {
+/**
+ * All-in-one function for adding metadata to news items
+ */
+function addVotesAndCommentDataToNewsItems(items, user, callback) {
 
   async.waterfall([
     function (cb) {
       addVotesToNewsItems(items, user, cb);
     },
     function (items, cb) {
-      addCommentCountToNewsItems(items, cb);
-    },
-    function (items, cb) {
-        addLatestCommentTimeForNewsItems(items,cb);
+      addCommentDataToNewsItems(items, cb);
     }
   ], callback);
 }
 
-function addLatestCommentTimeForNewsItems(items,callback) {
+function addCommentDataToNewsItems(items, callback) {
+  async.waterfall([
+    function (cb) {
+      addCommentCountToNewsItems(items, cb);
+    },
+    function (items, cb) {
+      addLatestCommentTimeForNewsItems(items, cb);
+    }
+  ], callback);
+}
 
-     if(!items.length) return callback(null, items);
+function addLatestCommentTimeForNewsItems(items, callback) {
 
-     async.map(items, function(item, cb) {
-        
-		Comment.find({"item": item._id}).sort({"created":-1}).limit(1).exec(function(err, doc) {
+  if(!items.length) return callback(null, items);
 
-            if(err) return cb(err);
+  async.map(items, function(item, cb) {
 
-            var comments = doc[0];
+    Comment
+    .find({
+      item: item._id
+    })
+    .sort({
+      created: -1
+    })
+    .limit(1)
+    .exec(function(err, doc) {
 
-            if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
-                item.latestCommentAt = comments.created; 
+      if(err) return cb(err);
+
+      if(!doc || !doc.length) return cb(null, item);
+
+      var comments = doc[0];
+
+      if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
+        // convert to a plain object if necessary
+        item = typeof item.toObject === 'function' ? item.toObject() : item;
+        item.latestCommentAt = comments.created;
 				item.latestCommentBy = comments.poster;
-            } 
+      } 
             
-            cb(null,item);
-        }); 
+      cb(null, item);
+    }); 
 
-    }, callback);
+  }, callback);
 }
 
 function addCommentCountToNewsItems(items, callback) {
@@ -502,6 +556,7 @@ exports.submitNews = function(req, res) {
   };
 
   res.render('news/submit', {
+    tab: 'news',
     newsItem: newsItem,
     title: 'Submit News'
   });
@@ -559,6 +614,7 @@ exports.postNews = function(req, res, next) {
     return res.render('news/submit', {
       newsItem: newsItem,
       title: 'Submit News',
+      tab: 'news',
       posttype: posttype
     });
   }

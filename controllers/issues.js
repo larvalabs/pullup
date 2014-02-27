@@ -3,17 +3,19 @@ var Issue = require('../models/Issue');
 var User = require('../models/User');
 var Vote = require('../models/Vote');
 var async = require('async');
-var marked = require('marked');
 var _ = require('underscore');
 var votesController = require('./votes');
 var addVotesToIssues = votesController.addVotesFor('issue');
+var util = require('util');
+var markdownParser = require('../components/MarkdownParser');
 var githubSecrets = require('../config/secrets').github;
 var github = new GitHubApi({
   version: "3.0.0"
 });
 var githubDetails = {
   user: 'larvalabs',
-  repo: 'pullup'
+  repo: 'pullup',
+  issueUrlTemplate: 'https://github.com/larvalabs/pullup/issues/'
 };
 
 /**
@@ -41,7 +43,8 @@ exports.index = function (req, res, next) {
 
         res.render('issues/index', {
           title: 'Open Issues',
-          issues: issues
+          tab: 'issues',
+          issues: issues,
         });
 
       });
@@ -89,14 +92,15 @@ exports.show = function (req, res, next) {
 
       issue._id = issueDoc._id;
       issue.votes = issueDoc.votes;
-      issue.body = marked(issue.body);
+      issue.body = parseMarkdown(issue.body);
 
       _.each(results.comments, function (comment,i,l) {
-        comment.body = marked(comment.body);
+        comment.body = parseMarkdown(comment.body);
       });
 
       res.render('issues/show', {
         title: issue.title,
+        tab: 'issues',
         item: issue,
         comments: results.comments
       });
@@ -243,4 +247,19 @@ function githubAuth(user) {
         secret: githubSecrets.clientSecret
     });
   }
+}
+
+function parseMarkdown (content) {
+  content = parseIssueNumbers(content);
+
+  return markdownParser(content);
+}
+
+function parseIssueNumbers (content) {
+  return content.replace(/#[\d]+/g, function (issueNumber) {
+    var number = issueNumber.substring(1);
+    var href = githubDetails.issueUrlTemplate + number;
+
+    return util.format('[%s](%s "%s")', issueNumber, href, issueNumber);
+  });
 }

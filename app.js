@@ -83,6 +83,7 @@ app.use(passport.session());
 app.use(function(req, res, next) {
   res.locals({
     user: req.user,
+    cookies: req.cookies,
     pullup: { // global client-side JS object
       baseUrl: req.protocol + '://' + req.get('host')
     }
@@ -127,6 +128,7 @@ app.get('/logout', userController.logout);
  * Static Page Routes
  */
 
+app.get('/', homeController.index);
 app.get('/about', homeController.about);
 app.get('/bookmarklet', homeController.bookmarklet);
 app.get('/signup', homeController.signup);
@@ -141,8 +143,6 @@ app.post('/contact', contactController.postContact);
 /**
  * User Account Routes
  */
-
-app.get('/', newsController.index);
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
@@ -155,6 +155,7 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 
 app.get('/news', newsController.index);
 app.get('/news/page/:page', newsController.index);
+app.get('/rss', newsController.index);
 app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews);
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 

@@ -3,17 +3,19 @@ html
   head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='viewport', content='width=device-width, user-scalable=no')
     meta(name='description', content='')
     meta(name='author', content='')
     meta(name='apple-mobile-web-app-capable', content='yes')
     meta(name='apple-mobile-web-app-status-bar-style' content='black')
+    meta(name="apple-mobile-web-app-title" content="Pullup")
     link(rel='author', href='humans.txt')
 
     title #{title} - pullup
 
     link(href='/css/styles.css?v=#{cacheBuster}', rel='stylesheet')
     link(rel='apple-touch-icon', href='/img/appicon.png?v=#{cacheBuster}')
+    link(title="Pullup - new items", type="application/rss+xml", rel="alternate", href="/rss")
 
     script(src='/js/lib/jquery-2.1.0.min.js?v=#{cacheBuster}')
     script(src='/js/lib/bootstrap.min.js?v=#{cacheBuster}')

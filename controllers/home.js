@@ -4,9 +4,7 @@
  */
 
 exports.index = function(req, res) {
-  res.render('home', {
-    title: 'Home'
-  });
+  res.redirect('/news');
 };
 
 exports.signup = function(req, res) {

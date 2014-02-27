@@ -11,10 +11,9 @@ describe('NewsItem', function(){
 
   describe('sanity test', function() {
     it('Item should exist and have an ID', function(){
-      // The 'assert*' variables are simply to keep JSLint from 
-      // complaining about the lack of assignment with 'should.ok' syntax.
-      var assert1 = item.should.be.ok,
-          assert2 = item._id.should.be.ok;
+      /*jshint expr: true*/
+      item.should.be.ok;
+      item._id.should.be.ok;
     });
   });
 

@@ -58,6 +58,12 @@ var FlashBuilder = function (type, messages) {
 
 $(document).ready(function() {
 
+  if ($("button.alert-joinsite").length > 0) {
+    $("button.alert-joinsite").click(function () {
+      document.cookie = "skip_alert=true; path=/";
+    });
+  }
+
   if ($("#url").length > 0) {
     $("#title").on('focus', function() {
       var url = $("#url").val();
@@ -140,7 +146,7 @@ $(document).ready(function() {
           if (data.success) {
             $('button.upvote', form).remove();
 
-            var voteElement = $('.vote-count', form.closest('tr'));
+            var voteElement = $('.vote-count', form.closest('.news-item'));
             voteElement.text(parseInt(voteElement.text()) + 1);
           }
         })
