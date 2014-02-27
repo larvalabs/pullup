@@ -29,6 +29,12 @@ module.exports = {
     passReqToCallback: true
   },
 
+  heroku: {
+    email: process.env.HEROKU_EMAIL || false,
+    authToken: process.env.HEROKU_AUTH_TOKEN || false,
+    app: process.env.HEROKU_APP || false
+  },
+
   twitter: {
     consumerKey: 'Your Consumer Key',
     consumerSecret: 'Your Consumer Secret',

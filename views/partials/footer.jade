@@ -5,12 +5,16 @@
       |  &copy;#{' '}
       span#copyright
       |  Larva Labs
+
     div
       a(href='/bookmarklet') Bookmarklet
       |  ·  
       a(href='/rss') RSS
       |  ·  
       a(href='https://github.com/larvalabs/pullup')  GitHub Project
+      - if(pullup.commit)
+        |  ·  
+        a#commit(href="https://github.com/larvalabs/pullup/commit/#{pullup.commit}") Release #{pullup.commit}
 
 #mobile-footer.visible-xs
     .container
@@ -24,5 +28,6 @@
         a.col-xs-4.footer-tab(href='https://gitter.im/larvalabs/pullup')
           i.fa.fa-comments-o
           | Chat
+
 
 input(type='hidden', name='windowscrollto', value=windowscrolly)
