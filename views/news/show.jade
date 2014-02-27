@@ -24,9 +24,20 @@ block content
     if user
         .row
           form(action=item._id + '/comments', method='POST')
-            textarea.form-control(name='contents')
-            br
-            input.btn.btn-primary(type='submit', value='Add Comment')
+            .form-group.markdown.row
+              ul.nav.nav-tabs.col-sm-12
+                li.active
+                  a(href="#edit-tab-content", data-toggle="tab") Write
+                li
+                  a(href="#preview-tab-content", data-toggle="tab") Preview
+              .tab-content.col-sm-12
+                .tab-pane.fade.in.active#edit-tab-content
+                  textarea.form-control(type='text', name='contents', id='summary', style='height:200px')
+                .tab-pane.fade.in#preview-tab-content
+                  span Loading...
+            .row
+                .col-sm-2
+                    input.btn.btn-primary.btn-block(type='submit', value='Add Comment')
 
     each comment, index in comments
       div.comment

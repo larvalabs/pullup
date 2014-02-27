@@ -38,11 +38,19 @@ block content
       label.col-sm-3.control-label(for='source') Source
       .col-sm-7
         input.form-control(type='text', name='source', id='source', value='#{newsItem.source}')
-    .form-group
+    .form-group.markdown
       label.col-sm-3.control-label(for='summary') Summary
-      .col-sm-7
-        textarea.form-control(type='text', name='summary', id='summary', style='height:200px')
-          = newsItem.summary
+      ul.nav.nav-tabs.col-sm-7
+        li.active
+          a(href="#edit-tab-content", data-toggle="tab") Write
+        li
+          a(href="#preview-tab-content", data-toggle="tab") Preview
+      .tab-content.col-sm-7.col-sm-offset-3
+        .tab-pane.fade.in.active#edit-tab-content
+          textarea.form-control(type='text', name='summary', id='summary', style='height:200px')
+            = newsItem.summary
+        .tab-pane.fade.in#preview-tab-content
+          span Loading...
     .form-group
       .col-sm-offset-3.col-sm-7
         button.btn.btn-success(type='submit')
