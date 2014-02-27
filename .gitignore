@@ -13,6 +13,8 @@ logs
 results
 tmp
 
+.env
+
 npm-debug.log
 node_modules
 .idea
