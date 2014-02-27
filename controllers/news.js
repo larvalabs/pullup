@@ -227,11 +227,11 @@ exports.deleteComment = function (req, res, next) {
 
 /**
  * GET /ajaxGetUserGithubDataUrl/:id
- * Called via AJAX. 
+ * Called via AJAX.
  * Responds with 'failure' or the number of GitHub contributions of
  * the specified user.
  * GET paramaters
- *  id - the username of the user for whom the number of GitHub 
+ *  id - the username of the user for whom the number of GitHub
  *      contributions should be retrieved
  */
 exports.ajaxGetUserGithubData = function(req, res, next) {
@@ -253,7 +253,7 @@ exports.ajaxGetUserGithubData = function(req, res, next) {
       onSuccess: function(data) {
         if (constants.DEBUG) console.log (data);
         if (constants.DEBUG) console.log ('success');
-        var contributions = 
+        var contributions =
           githubContributors.getContributions(user.username, data);
         res.send ({contributions: contributions});
       }
@@ -362,7 +362,7 @@ function getNewsItems(query, page, user, callback, sort) {
     sort = null;
   }
 
-  
+
   if(!sort) {
     // default sort is by `created`, so we can use `skip` and `limit` on the Mongo query
     skip = (page - 1) * newsItemsPerPage;
@@ -383,6 +383,7 @@ function getNewsItems(query, page, user, callback, sort) {
   .exec(function (err, newsItems) {
 
     if(err) return callback(err);
+
 
     // no further sort necessary, just add metadata
     if(!sort) return addVotesAndCommentDataToNewsItems(newsItems, user, callback);
@@ -457,10 +458,10 @@ function addLatestCommentTimeForNewsItems(items, callback) {
         item = typeof item.toObject === 'function' ? item.toObject() : item;
         item.latestCommentAt = comments.created;
 				item.latestCommentBy = comments.poster;
-      } 
-            
+      }
+
       cb(null, item);
-    }); 
+    });
 
   }, callback);
 }
@@ -607,7 +608,7 @@ exports.postNews = function(req, res, next) {
 
   var posttype = req.body.posttype;
 
-  req.assert('title', 'Title cannot be blank.').notEmpty(); 
+  req.assert('title', 'Title cannot be blank.').notEmpty();
   if (posttype === 'self') {
     req.assert('summary', 'Post summary cannot be blank.').notEmpty();
   } else {
