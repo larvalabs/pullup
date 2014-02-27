@@ -7,7 +7,7 @@ var _ = require('underscore');
 var votesController = require('./votes');
 var addVotesToIssues = votesController.addVotesFor('issue');
 var util = require('util');
-var markdownParser = require('../components/markdownParser');
+var markdownParser = require('../components/MarkdownParser');
 var githubSecrets = require('../config/secrets').github;
 var github = new GitHubApi({
   version: "3.0.0"
