@@ -120,8 +120,6 @@ app.locals.timeago = timeago;
 /**
  * Sign in / out Routes
  */
-app.get('/login', userController.getLogin);
-app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
 
 /**
