@@ -158,6 +158,27 @@ $(document).ready(function() {
     });
   }
 
+  if($(".form-group.markdown").length) {
+    $(document).on('show.bs.tab', '.form-group.markdown', function(e) {
+      if(e.target.getAttribute("href") === "#preview-tab-content") {
+        $content = $(this).find("#preview-tab-content");
+        $content.html("Loading...");
+
+        $.ajax({
+          type: "POST",
+          url: "/api/markdown",
+          data: {
+            source: $(this).find("textarea").val()
+          },
+          success: function(msg) {
+            console.log($content, msg.result);
+            $content.html(msg.result);
+          }
+        });
+      }
+    });
+  }
+
   /*
    * If the user has installed pullup.io to their home screen, we want
    * links to open up within the web app, instead of pushing out to safari
