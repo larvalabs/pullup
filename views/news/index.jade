@@ -132,7 +132,7 @@ block content
                             a(href='/news/' + comment.newsItem._id + (comment.newsItem.latestCommentAt ? "?last_comment=#{comment.newsItem.latestCommentAt}" : ""), class='comments')
                                 small  #{comment.newsItem.comment_count} 
                                 i.fa.fa-comment-o
-                        blockquote.content= comment.contents
+                        blockquote.content!= comment.contents
                             +delete(comment.poster, '/news/' + comment.newsItem._id + '/comments/' + comment._id + '/delete')
                         small.timeago.hidden-xs(title="#{comment.created}")= timeago(comment.created)
                     div.col-sm-4.hidden-xs

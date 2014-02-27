@@ -261,6 +261,9 @@ exports.ajaxGetUserGithubData = function(req, res, next) {
   });
 };
 
+/**
+ * GET /news/user/:id
+ */
 exports.userNews = function(req, res, next) {
 
   User
@@ -297,6 +300,10 @@ exports.userNews = function(req, res, next) {
       }
     }, function (err, results) {
       if (err) return next(err);
+
+      _.each(results.comments, function (comment,i,l) {
+        comment.contents = markdownParser(comment.contents);
+      });
 
       res.render('news/index', {
         title: 'Posts by ' + user.username,
