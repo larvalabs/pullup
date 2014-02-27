@@ -3,11 +3,11 @@ var Issue = require('../models/Issue');
 var User = require('../models/User');
 var Vote = require('../models/Vote');
 var async = require('async');
-var marked = require('marked');
 var _ = require('underscore');
 var votesController = require('./votes');
 var addVotesToIssues = votesController.addVotesFor('issue');
 var util = require('util');
+var markdownParser = require('../components/markdownParser');
 var githubSecrets = require('../config/secrets').github;
 var github = new GitHubApi({
   version: "3.0.0"
@@ -92,10 +92,10 @@ exports.show = function (req, res, next) {
 
       issue._id = issueDoc._id;
       issue.votes = issueDoc.votes;
-      issue.body = marked(parseIssueNumbers(issue.body));
+      issue.body = parseMarkdown(issue.body);
 
       _.each(results.comments, function (comment,i,l) {
-        comment.body = marked(parseIssueNumbers(comment.body));
+        comment.body = parseMarkdown(comment.body);
       });
 
       res.render('issues/show', {
@@ -247,6 +247,12 @@ function githubAuth(user) {
         secret: githubSecrets.clientSecret
     });
   }
+}
+
+function parseMarkdown (content) {
+  content = parseIssueNumbers(content);
+
+  return markdownParser(content);
 }
 
 function parseIssueNumbers (content) {

@@ -10,20 +10,16 @@ var addVotesToItem = votesController.addVotesToItem;
 var Comment = require('../models/Comment');
 var request = require('request');
 var async = require('async');
-var marked = require('marked');
 var http = require('http');
 var githubContributors = require('../components/GithubContributors');
 var constants = require('../constants');
+var markdownParser = require('../components/MarkdownParser');
 
 /**
  * News Item config
  */
 var newsItemsPerPage = 30;
 var maxPages = 30;
-
-marked.setOptions({
-  sanitize: true
-});
 
 exports.index = function(req, res, next) {
 
@@ -94,10 +90,10 @@ exports.comments = function (req, res, next) {
       if(err) return next(err);
 
       _.each(results.comments, function (comment,i,l) {
-        comment.contents = marked(comment.contents);
+        comment.contents = markdownParser(comment.contents);
       });
 
-      newsItem.summary = marked(newsItem.summary);
+      newsItem.summary = markdownParser(newsItem.summary);
 
       res.render('news/show', {
         title: newsItem.title,
