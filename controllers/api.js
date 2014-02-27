@@ -81,7 +81,7 @@ exports.getMarkdown = function(req, res) {
   return res.send({
     result: marked(req.body.source)
   });
-}
+};
 
 /**
  * GET /api/tumblr
