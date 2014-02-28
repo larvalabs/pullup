@@ -12,9 +12,11 @@
       a(href='/rss') RSS
       |  ·
       a(href='https://github.com/larvalabs/pullup')  GitHub Project
+      |  ·
+      a(href='/logs')  Logs
       - if(pullup.commit)
         |  ·
-        a#commit(href="https://github.com/larvalabs/pullup/commit/#{pullup.commit}") Release #{pullup.commit}
+        a#commit(href="https://github.com/larvalabs/pullup/commit/#{pullup.commit}")  Release #{pullup.commit}
 
 #mobile-footer.visible-xs
     .container
