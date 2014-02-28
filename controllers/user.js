@@ -4,51 +4,6 @@ var _ = require('underscore');
 var User = require('../models/User');
 
 /**
- * GET /login
- * Login page.
- */
-
-exports.getLogin = function(req, res) {
-  if (req.user) return res.redirect('/');
-  res.render('account/login', {
-    title: 'Login'
-  });
-};
-
-/**
- * POST /login
- * Sign in using email and password.
- * @param {string} email
- * @param {string} password
- */
-
-exports.postLogin = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password cannot be blank').notEmpty();
-
-  var errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/login');
-  }
-
-  passport.authenticate('local', function(err, user, info) {
-    if (err) return next(err);
-
-    if (!user) {
-      req.flash('errors', { msg: info.message });
-      return res.redirect('/login');
-    }
-
-    req.logIn(user, function(err) {
-      if (err) return next(err);
-      return res.redirect('/');
-    });
-  })(req, res, next);
-};
-
-/**
  * GET /signup
  * Signup page.
  */

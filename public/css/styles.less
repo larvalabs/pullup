@@ -99,6 +99,23 @@ body {
   border-radius: 50%;
 }
 
+.form-group.markdown {
+  ul.nav.nav-tabs {
+    padding-left: 15px;
+  }
+
+  #preview-tab-content {
+    border: 2px solid #1abc9c;
+    border-radius: 4px;
+    padding: 15px;
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+  }
+}
+
 .modal { font-size: @font-size-base; }
 .modal .modal-footer button { margin: 0 0 0 10px; }
 
@@ -270,6 +287,18 @@ body {
       }
     }
   }
+}
+
+/*
+  Re-applies default ul styling for comments on the /news/user/:id pages.
+
+  Not sure if this would be better in the large block above or not.  This is
+  the only place it seems to be causing any issues at all, so I'm hesitant to
+  over-apply it.
+*/
+#user-comments .content ul {
+  padding-left: 40px;
+  list-style-type: disc;
 }
 
 // News Item

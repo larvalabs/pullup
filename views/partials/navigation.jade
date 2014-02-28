@@ -20,7 +20,7 @@
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)
-            a(href='/login') Login
+            a(href='/auth/github') Login
           li(class=title=='Signup'?'active':undefined)
             a(href='/signup') Signup
         else
