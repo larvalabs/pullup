@@ -58,7 +58,7 @@ if(secrets.heroku.email && secrets.heroku.authToken && secrets.heroku.app) {
   console.log(secrets.heroku);
   request.get('https://api.heroku.com/apps/'+encodeURIComponent(secrets.heroku.app)+'/releases', {
     auth: {
-      user: secrets.heroku.email, 
+      user: secrets.heroku.email,
       pass: secrets.heroku.authToken
     },
     headers: {
@@ -132,7 +132,7 @@ app.use(function(req, res, next) {
   }
   if (req.body.windowscrolly) req.session.windowscrolly = req.body.windowscrolly;
   res.locals.windowscrolly = req.session.windowscrolly;
-  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'none';");
+  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com http://sysinct.herokuapp.com; frame-src 'none';");
   res.setHeader("X-Frame-Options", "DENY");
   next();
 });
@@ -166,6 +166,7 @@ app.get('/logout', userController.logout);
 
 app.get('/', homeController.index);
 app.get('/about', homeController.about);
+app.get('/logs', homeController.logs);
 app.get('/bookmarklet', homeController.bookmarklet);
 app.get('/signup', homeController.signup);
 
