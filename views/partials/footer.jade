@@ -8,12 +8,12 @@
 
     div
       a(href='/bookmarklet') Bookmarklet
-      |  ·  
+      |  ·
       a(href='/rss') RSS
-      |  ·  
+      |  ·
       a(href='https://github.com/larvalabs/pullup')  GitHub Project
-      - if(pullup.commit)
-        |  ·  
+      - if(pullup.commit && false)
+        |  ·
         a#commit(href="https://github.com/larvalabs/pullup/commit/#{pullup.commit}") Release #{pullup.commit}
 
 #mobile-footer.visible-xs
