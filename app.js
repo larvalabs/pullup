@@ -33,6 +33,7 @@ var contactController = require('./controllers/contact');
 var newsController = require('./controllers/news');
 var issuesController = require('./controllers/issues');
 var votesController = require('./controllers/votes');
+var chatController = require('./controllers/chat');
 
 /**
  * API keys + Passport configuration.
@@ -132,7 +133,7 @@ app.use(function(req, res, next) {
   }
   if (req.body.windowscrolly) req.session.windowscrolly = req.body.windowscrolly;
   res.locals.windowscrolly = req.session.windowscrolly;
-  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'none';");
+  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'self' https://gitter.im;");
   res.setHeader("X-Frame-Options", "DENY");
   next();
 });
@@ -214,6 +215,11 @@ app.get('/news/ajaxGetUserGithubData/:id', newsController.ajaxGetUserGithubData)
 app.get('/issues', issuesController.index);
 app.get('/issues/:id', issuesController.show);
 app.post('/issues/:id', votesController.voteFor('issue', '/issues'));
+
+/**
+ * Chat Routes
+ */
+app.get('/chat', chatController.index);
 
 /**
  * API Routes
