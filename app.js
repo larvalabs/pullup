@@ -56,7 +56,6 @@ mongoose.connection.on('error', function() {
  */
  var commit = false;
 if(secrets.heroku.email && secrets.heroku.authToken && secrets.heroku.app) {
-  console.log(secrets.heroku);
   request.get('https://api.heroku.com/apps/'+encodeURIComponent(secrets.heroku.app)+'/releases', {
     auth: {
       user: secrets.heroku.email,
@@ -67,7 +66,6 @@ if(secrets.heroku.email && secrets.heroku.authToken && secrets.heroku.app) {
     }
   },
   function(error, response, body) {
-    console.log("Heroku Responses:", body);
     if(!error) {
       var releases;
       try {
@@ -125,7 +123,7 @@ app.use(function(req, res, next) {
     cookies: req.cookies,
     pullup: { // global client-side JS object
       baseUrl: req.protocol + '://' + req.get('host'),
-      commit: commit
+      commit: typeof(req.query.showCommit) !== "undefined" ? commit : false
     }
   });
 
