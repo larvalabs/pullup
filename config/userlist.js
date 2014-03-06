@@ -67,6 +67,7 @@ module.exports = {
         'sp1d3rx',
         'sriehl',
         'swelham',
+        'taddevries',
         'tejohnso',
         'testuser1',
         'theprofessor117',
