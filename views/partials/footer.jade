@@ -12,7 +12,7 @@
       a(href='/rss') RSS
       |  ·
       a(href='https://github.com/larvalabs/pullup')  GitHub Project
-      - if(pullup.commit && false)
+      - if(pullup.commit)
         |  ·
         a#commit(href="https://github.com/larvalabs/pullup/commit/#{pullup.commit}") Release #{pullup.commit}
 
