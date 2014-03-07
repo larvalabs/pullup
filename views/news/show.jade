@@ -14,7 +14,7 @@ block content
                     | ...
             +delete(item.poster, '/news/' + item._id + '/delete')
         h4
-          div(class="item-summary #{item.isSelfPost() ? '' : 'hidden'}")!= item.summary
+          div(class="item-summary")!= item.summary
         = 'submitted '
         span.timeago(title="#{item.created}")= timeago(item.created)
         = ' by '
