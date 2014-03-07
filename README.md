@@ -1,4 +1,4 @@
-PullUp [![Build Status](https://travis-ci.org/larvalabs/pullup.png?branch=master)](https://travis-ci.org/larvalabs/pullup) [![Code Climate](https://codeclimate.com/repos/52fba7f66956805f68002062/badges/b1a62e6c14008de1ff3c/gpa.png)](https://codeclimate.com/repos/52fba7f66956805f68002062/feed)
+PullUp [![Build Status](https://travis-ci.org/larvalabs/pullup.png?branch=master)](https://travis-ci.org/larvalabs/pullup) [![Code Climate](https://codeclimate.com/repos/52fba7f66956805f68002062/badges/b1a62e6c14008de1ff3c/gpa.png)](https://codeclimate.com/repos/52fba7f66956805f68002062/feed) [![Gitter chat](https://badges.gitter.im/larvalabs/pullup.png)](https://gitter.im/larvalabs/pullup)
 ======
 
 A website you join via pull request. See it live at http://pullup.io
@@ -82,7 +82,7 @@ grunt db-clear
 Pullup Dev Community
 --------------------
 
-IRC: #pullup on freenode [(join via Webchat)](https://webchat.freenode.net?channels=%23pullup)
+We hang out on [Gitter](https://gitter.im/larvalabs/pullup)
 
 Using the Vagrant-based Development Environment
 -----------------------
