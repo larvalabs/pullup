@@ -58,6 +58,27 @@ And perform build tasks and linting with:
 
 You can find out more technical details in the [Readme for Hackathon Starter](https://github.com/larvalabs/pullup/blob/master/hackathon-starter-readme.md).
 
+Seeding The Database
+--------------------
+
+Firstly make sure you have installed ```grunt-cli``` globally.
+
+```bash
+npm install -g grunt-cli
+```
+
+Once this has installed you can seed the database by running the following grunt task.
+
+```bash
+grunt db-seed
+```
+
+You may also wish to completely clear down the database, you can do so by running the ```db-clear``` task.
+
+```bash
+grunt db-clear
+```
+
 Pullup Dev Community
 --------------------
 
