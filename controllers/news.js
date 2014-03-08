@@ -182,8 +182,18 @@ exports.postComment = function (req, res, next) {
     return res.redirect('/news/'+req.params.id);
   }
 
+  var usernameRegexp = /@\w+(?!(\]|\w|\/))/;
+
+  var contents = req.body.contents,
+      match;
+
+  while (match = usernameRegexp.exec(contents)) {
+    contents = contents.replace(match[0], '[' + match[0] + ']' + '(/news/user/' + match[0].slice(1) + '/)');
+  }
+
+
   var comment = new Comment({
-    contents: req.body.contents,
+    contents: contents,
     poster: req.user.id,
     item: req.params.id,
     itemType: 'news'
