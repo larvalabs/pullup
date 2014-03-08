@@ -17,12 +17,16 @@ var githubDetails = {
   repo: 'pullup',
   issueUrlTemplate: 'https://github.com/larvalabs/pullup/issues/'
 };
+var itemsPerPage = 30;
 
 /**
  * GET /issues
  * View all open issues in the project
  */
 exports.index = function (req, res, next) {
+
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
 
   var issues = [];
 
@@ -52,10 +56,16 @@ exports.index = function (req, res, next) {
 
         if(err) return next(err);
 
+        var page = Math.max(Number(req.params.page) || 1, 1)
+          , skip = (page - 1) * itemsPerPage
+          , maxPages = Math.ceil(issues.length / itemsPerPage);
+
         res.render('issues/index', {
           title: 'Open Issues',
           tab: 'issues',
-          issues: issues,
+          issues: issues.slice(skip, skip + itemsPerPage),
+          page: page,
+          maxPages: maxPages
         });
 
       });
