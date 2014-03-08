@@ -24,14 +24,25 @@ var githubDetails = {
  */
 exports.index = function (req, res, next) {
 
+  var issues = [];
+
   githubAuth(req.user);
 
   github.issues.repoIssues({
     user: githubDetails.user,
     repo: githubDetails.repo,
-    state: 'open'
-  }, function (err, issues) {
+    state: 'open',
+    per_page: 100
+  }, issuesCallback);
+
+  function issuesCallback(err, ret) {
     if(err) return next(err);
+
+    issues = issues.concat(ret);
+
+    if(github.hasNextPage(ret)) {
+      return github.getNextPage(ret, issuesCallback);
+    }
 
     getIssueIds(issues, function (err, issues) {
 
@@ -50,7 +61,7 @@ exports.index = function (req, res, next) {
       });
 
     });
-  });
+  }
 };
 
 /**
