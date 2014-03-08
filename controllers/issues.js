@@ -17,6 +17,7 @@ var githubDetails = {
   repo: 'pullup',
   issueUrlTemplate: 'https://github.com/larvalabs/pullup/issues/'
 };
+var itemsPerPage = 30;
 
 /**
  * GET /issues
@@ -24,14 +25,28 @@ var githubDetails = {
  */
 exports.index = function (req, res, next) {
 
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
+  var issues = [];
+
   githubAuth(req.user);
 
   github.issues.repoIssues({
     user: githubDetails.user,
     repo: githubDetails.repo,
-    state: 'open'
-  }, function (err, issues) {
+    state: 'open',
+    per_page: 100
+  }, issuesCallback);
+
+  function issuesCallback(err, ret) {
     if(err) return next(err);
+
+    issues = issues.concat(ret);
+
+    if(github.hasNextPage(ret)) {
+      return github.getNextPage(ret, issuesCallback);
+    }
 
     getIssueIds(issues, function (err, issues) {
 
@@ -41,16 +56,22 @@ exports.index = function (req, res, next) {
 
         if(err) return next(err);
 
+        var page = Math.max(Number(req.params.page) || 1, 1),
+          skip = (page - 1) * itemsPerPage,
+          maxPages = Math.ceil(issues.length / itemsPerPage);
+
         res.render('issues/index', {
           title: 'Open Issues',
           tab: 'issues',
-          issues: issues,
+          issues: issues.slice(skip, skip + itemsPerPage),
+          page: page,
+          maxPages: maxPages
         });
 
       });
 
     });
-  });
+  }
 };
 
 /**
