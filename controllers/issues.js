@@ -119,6 +119,52 @@ exports.show = function (req, res, next) {
   });
 };
 
+/**
+ * POST /issues/:id/comments
+ * Post a comment about an issue
+ */
+
+exports.postComment = function (req, res, next) {
+  req.assert('contents', 'Comment cannot be blank.').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (!githubToken(req.user)) {
+    errors.push({
+      param: 'user',
+      msg: 'User must be logged in.',
+      value: undefined
+    });
+  }
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/news/'+req.params.id);
+  }
+
+  Issue
+  .findById(req.params.id)
+  .exec(function (err, issueDoc) {
+
+    if(err) return next(err);
+
+    githubAuth(req.user);
+
+    github.issues.createComment({
+      user: githubDetails.user,
+      repo: githubDetails.repo,
+      number: issueDoc.number,
+      body: req.body.contents
+    }, function (err, comment) {
+
+      if(err) return next(err);
+
+      req.flash('success', { msg  : 'Comment posted. Thanks!' });
+      res.redirect('/issues/'+issueDoc._id+'?last_comment='+comment.created_at);
+    });
+  });
+};
+
 // get the internal issue `_id`, and create new docs for those that don't yet exist
 function getIssueIds(issues, callback) {
   if(!issues || !issues.length) return callback(null, issues);
