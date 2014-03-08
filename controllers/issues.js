@@ -76,6 +76,8 @@ exports.show = function (req, res, next) {
         addVotesToIssues(issueDoc, req.user, cb);
       },
       issue: function (cb) {
+        githubAuth(req.user);
+
         github.issues.getRepoIssue({
           user: githubDetails.user,
           repo: githubDetails.repo,
@@ -83,6 +85,8 @@ exports.show = function (req, res, next) {
         }, cb);
       },
       comments: function (cb) {
+        githubAuth(req.user);
+
         github.issues.getComments({
           user: githubDetails.user,
           repo: githubDetails.repo,
