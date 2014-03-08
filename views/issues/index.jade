@@ -56,3 +56,8 @@ block content
                         br
                         p(class='hidden summary')
                             em= issue.body
+    if page > 1
+        a(href=(page-1), class='btn btn-sm btn-default')='Previous Page'
+    if maxPages !== page
+        a(href= '/issues/page/' + (page+1), class='btn btn-sm btn-default pull-right')='Next Page'
+
