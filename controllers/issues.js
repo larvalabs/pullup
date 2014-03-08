@@ -56,9 +56,9 @@ exports.index = function (req, res, next) {
 
         if(err) return next(err);
 
-        var page = Math.max(Number(req.params.page) || 1, 1)
-          , skip = (page - 1) * itemsPerPage
-          , maxPages = Math.ceil(issues.length / itemsPerPage);
+        var page = Math.max(Number(req.params.page) || 1, 1),
+          skip = (page - 1) * itemsPerPage,
+          maxPages = Math.ceil(issues.length / itemsPerPage);
 
         res.render('issues/index', {
           title: 'Open Issues',
