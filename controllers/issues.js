@@ -8,6 +8,7 @@ var votesController = require('./votes');
 var addVotesToIssues = votesController.addVotesFor('issue');
 var util = require('util');
 var markdownParser = require('../components/MarkdownParser');
+var utils = require('../utils');
 var githubSecrets = require('../config/secrets').github;
 var github = new GitHubApi({
   version: "3.0.0"
@@ -58,6 +59,11 @@ exports.index = function (req, res, next) {
  * View this issue and related comments
  */
 exports.show = function (req, res, next) {
+
+  // redirect to the plain portion of the url
+  if(req.query.last_comment) {
+    return res.redirect(utils.urlWithoutQueryParam(req.originalUrl, 'last_comment'));
+  }
 
   Issue
   .findById(req.params.id)
