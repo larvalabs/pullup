@@ -11,7 +11,8 @@ var markdownParser = require('../components/MarkdownParser');
 var utils = require('../utils');
 var githubSecrets = require('../config/secrets').github;
 var github = new GitHubApi({
-  version: "3.0.0"
+  version: "3.0.0",
+  debug: true
 });
 var githubDetails = {
   user: 'larvalabs',
