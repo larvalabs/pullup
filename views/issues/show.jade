@@ -13,9 +13,7 @@ block content
         a(href='/news/user/' + item.user.login, class='user')= item.user.login
         h4
           div(class="item-summary")!= item.body
-    .row
-        a(href=item.html_url).btn.btn-primary
-            | Add Comment
+    include ../partials/postcomment
 
     each comment, index in comments
       div.comment

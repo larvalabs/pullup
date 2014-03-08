@@ -10,7 +10,7 @@ var userSchema = new mongoose.Schema({
   twitter: { type: String, unique: true, sparse: true },
   google: { type: String, unique: true, sparse: true },
   github: { type: String, unique: true, sparse: true },
-  tokens: Array,
+  tokens: [ { kind: String, accessToken: String, tokenSecret: String } ],
 
   profile: {
     name: { type: String, default: '' },

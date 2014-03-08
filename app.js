@@ -216,6 +216,7 @@ app.get('/issues', issuesController.index);
 app.get('/issues/page/:page', issuesController.index);
 app.get('/issues/:id', issuesController.show);
 app.post('/issues/:id', votesController.voteFor('issue', '/issues'));
+app.post('/issues/:id/comments', passportConf.isAuthenticated, issuesController.postComment);
 
 /**
  * Chat Routes
