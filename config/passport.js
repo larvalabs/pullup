@@ -10,6 +10,7 @@ var User = require('../models/User');
 var secrets = require('./secrets');
 var userlist = require('./userlist');
 var _ = require('underscore');
+var util = require('util');
 
 function findUserIndex(username) {
   var userIndex = -1;
@@ -118,7 +119,6 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
     if (existingUser) {
       replaceToken(existingUser, 'github', accessToken);
       return existingUser.save(function (err) {
-
         done(err, existingUser);
       });
     }
