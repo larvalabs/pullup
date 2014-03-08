@@ -132,7 +132,7 @@ app.use(function(req, res, next) {
   }
   if (req.body.windowscrolly) req.session.windowscrolly = req.body.windowscrolly;
   res.locals.windowscrolly = req.session.windowscrolly;
-  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'self' https://gitter.im;");
+  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com http://sysinct.herokuapp.com; frame-src 'self' https://gitter.im;");
   res.setHeader("X-Frame-Options", "DENY");
   next();
 });
@@ -166,6 +166,7 @@ app.get('/logout', userController.logout);
 
 app.get('/', homeController.index);
 app.get('/about', homeController.about);
+app.get('/logs', homeController.logs);
 app.get('/bookmarklet', homeController.bookmarklet);
 app.get('/signup', homeController.signup);
 
