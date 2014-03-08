@@ -51,41 +51,6 @@ mongoose.connection.on('error', function() {
   console.log('✗ MongoDB Connection Error. Please make sure MongoDB is running.'.red);
 });
 
-/**
- * Get the current commit hash from Heroku
- */
- var commit = false;
-if(secrets.heroku.email && secrets.heroku.authToken && secrets.heroku.app) {
-  request.get('https://api.heroku.com/apps/'+encodeURIComponent(secrets.heroku.app)+'/releases', {
-    auth: {
-      user: secrets.heroku.email,
-      pass: secrets.heroku.authToken
-    },
-    headers: {
-      order: "version"
-    }
-  },
-  function(error, response, body) {
-    if(!error) {
-      var releases;
-      try {
-        releases = JSON.parse(body);
-      } catch(err) {
-        console.log("Error parsing Heroku releases JSON");
-        return false;
-      }
-
-      if(releases.length) {
-        commit = releases[releases.length - 1].commit;
-      }
-
-
-    } else {
-      console.log("Error getting releases from Heroku", error, body);
-    }
-  });
-}
-
 
 /**
  * Express configuration.
@@ -122,8 +87,7 @@ app.use(function(req, res, next) {
     user: req.user,
     cookies: req.cookies,
     pullup: { // global client-side JS object
-      baseUrl: req.protocol + '://' + req.get('host'),
-      commit: typeof(req.query.showCommit) !== "undefined" ? commit : false
+      baseUrl: req.protocol + '://' + req.get('host')
     }
   });
 
