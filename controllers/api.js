@@ -81,7 +81,7 @@ exports.getMarkdown = function(req, res) {
   if(req.body.source === ''){
     return res.send({
       result: ''
-    })
+    });
   }
 
   return res.send({
