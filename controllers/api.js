@@ -72,10 +72,16 @@ exports.getMarkdown = function(req, res) {
     });
   }
 
-  if(!req.body.source) {
+  if(typeof req.body.source == 'undefined') {
     return res.send({
       messages: [{ msg: "You didn't send any markdown."}]
     });
+  }
+
+  if(req.body.source === ''){
+    return res.send({
+      result: ''
+    })
   }
 
   return res.send({
