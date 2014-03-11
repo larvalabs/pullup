@@ -24,7 +24,9 @@ $(document).ready(function() {
     });
 
     function writeLog(log) {
-        $list.append("<li>"+log+"</li>");
+        var data = /^(\d+) <(\d+)>(\d) ([\d\-T\:\.\+]+) (\w+) (\w+) ([\w\.\d]+) - (.*)$/.exec(log);
+        var date = new Date(Date.parse(data[4]));
+        $list.append('<div class="row"><div class="col-xs-2">' + date.toLocaleString() + '</div><div class="col-xs-1">' + data[7] + '</div><div class="col-xs-8">' + ansi_up.ansi_to_html(data[8]) + '</div></div>');
         if($list.children().length > 1000) {
             $list.children().first.remove();
         }
