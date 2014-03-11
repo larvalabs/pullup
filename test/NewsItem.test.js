@@ -34,4 +34,16 @@ describe('NewsItem', function(){
     });
   });
 
+  describe('#formatUrl()', function() {
+    it('should append "http://" to a given URL if a protocol is not specified', function() {
+      item.url = NewsItem.formatUrl('ianvonwalter.com');
+      item.url.indexOf('http://').should.not.equal(-1);
+    });
+
+    it('should NOT modify a given URL if a protocol is specified', function() {
+      item.url = NewsItem.formatUrl('http://pullup.io');
+      item.url.indexOf('http://').should.not.equal(-1);
+    });
+  });
+
 });
