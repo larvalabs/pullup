@@ -14,6 +14,21 @@ newsItemSchema.methods.isSelfPost = function() {
   return this.url === '/news/' + this._id;
 };
 
+/**
+ * Returns a properly formatted URL in case it is missing information, i.e. protocol
+ * @param {string} url URL to format
+ * @returns {string} url Formatted URL
+ */
+newsItemSchema.statics.formatUrl = function(url) {
+  return /^(http:\/\/|https:\/\/)/.test(url) ? url : 'http://' + url;
+};
+
+// Logic to be executed before a model is saved to Mongo
+newsItemSchema.pre('save', function (next) {
+  this.url = this.formatUrl(this.url);
+  next();
+});
+
 var User = mongoose.model('User', userSchema);
 
 module.exports = mongoose.model('NewsItem', newsItemSchema);
