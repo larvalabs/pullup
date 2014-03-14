@@ -51,41 +51,6 @@ mongoose.connection.on('error', function() {
   console.log('✗ MongoDB Connection Error. Please make sure MongoDB is running.'.red);
 });
 
-/**
- * Get the current commit hash from Heroku
- */
- var commit = false;
-if(secrets.heroku.email && secrets.heroku.authToken && secrets.heroku.app) {
-  request.get('https://api.heroku.com/apps/'+encodeURIComponent(secrets.heroku.app)+'/releases', {
-    auth: {
-      user: secrets.heroku.email,
-      pass: secrets.heroku.authToken
-    },
-    headers: {
-      order: "version"
-    }
-  },
-  function(error, response, body) {
-    if(!error) {
-      var releases;
-      try {
-        releases = JSON.parse(body);
-      } catch(err) {
-        console.log("Error parsing Heroku releases JSON");
-        return false;
-      }
-
-      if(releases.length) {
-        commit = releases[releases.length - 1].commit;
-      }
-
-
-    } else {
-      console.log("Error getting releases from Heroku", error, body);
-    }
-  });
-}
-
 
 /**
  * Express configuration.
@@ -122,8 +87,7 @@ app.use(function(req, res, next) {
     user: req.user,
     cookies: req.cookies,
     pullup: { // global client-side JS object
-      baseUrl: req.protocol + '://' + req.get('host'),
-      commit: typeof(req.query.showCommit) !== "undefined" ? commit : false
+      baseUrl: req.protocol + '://' + req.get('host')
     }
   });
 
@@ -132,7 +96,7 @@ app.use(function(req, res, next) {
   }
   if (req.body.windowscrolly) req.session.windowscrolly = req.body.windowscrolly;
   res.locals.windowscrolly = req.session.windowscrolly;
-  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com; frame-src 'self' https://gitter.im;");
+  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com http://sysinct.herokuapp.com; frame-src 'self' https://gitter.im;");
   res.setHeader("X-Frame-Options", "DENY");
   next();
 });
@@ -166,6 +130,7 @@ app.get('/logout', userController.logout);
 
 app.get('/', homeController.index);
 app.get('/about', homeController.about);
+app.get('/logs', homeController.logs);
 app.get('/bookmarklet', homeController.bookmarklet);
 app.get('/signup', homeController.signup);
 
@@ -212,8 +177,10 @@ app.get('/news/ajaxGetUserGithubData/:id', newsController.ajaxGetUserGithubData)
  */
 
 app.get('/issues', issuesController.index);
+app.get('/issues/page/:page', issuesController.index);
 app.get('/issues/:id', issuesController.show);
 app.post('/issues/:id', votesController.voteFor('issue', '/issues'));
+app.post('/issues/:id/comments', passportConf.isAuthenticated, issuesController.postComment);
 
 /**
  * Chat Routes

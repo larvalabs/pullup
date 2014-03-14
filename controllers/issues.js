@@ -8,6 +8,7 @@ var votesController = require('./votes');
 var addVotesToIssues = votesController.addVotesFor('issue');
 var util = require('util');
 var markdownParser = require('../components/MarkdownParser');
+var utils = require('../utils');
 var githubSecrets = require('../config/secrets').github;
 var github = new GitHubApi({
   version: "3.0.0"
@@ -17,6 +18,7 @@ var githubDetails = {
   repo: 'pullup',
   issueUrlTemplate: 'https://github.com/larvalabs/pullup/issues/'
 };
+var itemsPerPage = 30;
 
 /**
  * GET /issues
@@ -24,14 +26,28 @@ var githubDetails = {
  */
 exports.index = function (req, res, next) {
 
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
+  var issues = [];
+
   githubAuth(req.user);
 
   github.issues.repoIssues({
     user: githubDetails.user,
     repo: githubDetails.repo,
-    state: 'open'
-  }, function (err, issues) {
+    state: 'open',
+    per_page: 100
+  }, issuesCallback);
+
+  function issuesCallback(err, ret) {
     if(err) return next(err);
+
+    issues = issues.concat(ret);
+
+    if(github.hasNextPage(ret)) {
+      return github.getNextPage(ret, issuesCallback);
+    }
 
     getIssueIds(issues, function (err, issues) {
 
@@ -41,16 +57,22 @@ exports.index = function (req, res, next) {
 
         if(err) return next(err);
 
+        var page = Math.max(Number(req.params.page) || 1, 1),
+          skip = (page - 1) * itemsPerPage,
+          maxPages = Math.ceil(issues.length / itemsPerPage);
+
         res.render('issues/index', {
           title: 'Open Issues',
           tab: 'issues',
-          issues: issues,
+          issues: issues.slice(skip, skip + itemsPerPage),
+          page: page,
+          maxPages: maxPages
         });
 
       });
 
     });
-  });
+  }
 };
 
 /**
@@ -58,6 +80,11 @@ exports.index = function (req, res, next) {
  * View this issue and related comments
  */
 exports.show = function (req, res, next) {
+
+  // redirect to the plain portion of the url
+  if(req.query.last_comment) {
+    return res.redirect(utils.urlWithoutQueryParam(req.originalUrl, 'last_comment'));
+  }
 
   Issue
   .findById(req.params.id)
@@ -70,6 +97,8 @@ exports.show = function (req, res, next) {
         addVotesToIssues(issueDoc, req.user, cb);
       },
       issue: function (cb) {
+        githubAuth(req.user);
+
         github.issues.getRepoIssue({
           user: githubDetails.user,
           repo: githubDetails.repo,
@@ -77,6 +106,8 @@ exports.show = function (req, res, next) {
         }, cb);
       },
       comments: function (cb) {
+        githubAuth(req.user);
+
         github.issues.getComments({
           user: githubDetails.user,
           repo: githubDetails.repo,
@@ -105,6 +136,52 @@ exports.show = function (req, res, next) {
         comments: results.comments
       });
 
+    });
+  });
+};
+
+/**
+ * POST /issues/:id/comments
+ * Post a comment about an issue
+ */
+
+exports.postComment = function (req, res, next) {
+  req.assert('contents', 'Comment cannot be blank.').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (!githubToken(req.user)) {
+    errors.push({
+      param: 'user',
+      msg: 'User must be logged in.',
+      value: undefined
+    });
+  }
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/news/'+req.params.id);
+  }
+
+  Issue
+  .findById(req.params.id)
+  .exec(function (err, issueDoc) {
+
+    if(err) return next(err);
+
+    githubAuth(req.user);
+
+    github.issues.createComment({
+      user: githubDetails.user,
+      repo: githubDetails.repo,
+      number: issueDoc.number,
+      body: req.body.contents
+    }, function (err, comment) {
+
+      if(err) return next(err);
+
+      req.flash('success', { msg  : 'Comment posted. Thanks!' });
+      res.redirect('/issues/'+issueDoc._id+'?last_comment='+comment.created_at);
     });
   });
 };

@@ -19,6 +19,12 @@ exports.about = function(req, res) {
   });
 };
 
+exports.logs = function(req, res) {
+  res.render('logs', {
+    title: 'Logs'
+  });
+};
+
 exports.bookmarklet = function(req, res) {
   res.render('bookmarklet', {
     title: 'Bookmarklet'

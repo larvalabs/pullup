@@ -1,4 +1,4 @@
-PullUp [![Build Status](https://travis-ci.org/larvalabs/pullup.png?branch=master)](https://travis-ci.org/larvalabs/pullup) [![Code Climate](https://codeclimate.com/repos/52fba7f66956805f68002062/badges/b1a62e6c14008de1ff3c/gpa.png)](https://codeclimate.com/repos/52fba7f66956805f68002062/feed)
+PullUp [![Build Status](https://travis-ci.org/larvalabs/pullup.png?branch=master)](https://travis-ci.org/larvalabs/pullup) [![Code Climate](https://codeclimate.com/repos/52fba7f66956805f68002062/badges/b1a62e6c14008de1ff3c/gpa.png)](https://codeclimate.com/repos/52fba7f66956805f68002062/feed) [![Gitter chat](https://badges.gitter.im/larvalabs/pullup.png)](https://gitter.im/larvalabs/pullup)
 ======
 
 A website you join via pull request. See it live at http://pullup.io
@@ -58,10 +58,31 @@ And perform build tasks and linting with:
 
 You can find out more technical details in the [Readme for Hackathon Starter](https://github.com/larvalabs/pullup/blob/master/hackathon-starter-readme.md).
 
+Seeding The Database
+--------------------
+
+Firstly make sure you have installed ```grunt-cli``` globally.
+
+```bash
+npm install -g grunt-cli
+```
+
+Once this has installed you can seed the database by running the following grunt task.
+
+```bash
+grunt db-seed
+```
+
+You may also wish to completely clear down the database, you can do so by running the ```db-clear``` task.
+
+```bash
+grunt db-clear
+```
+
 Pullup Dev Community
 --------------------
 
-IRC: #pullup on freenode [(join via Webchat)](https://webchat.freenode.net?channels=%23pullup)
+We hang out on [Gitter](https://gitter.im/larvalabs/pullup)
 
 Using the Vagrant-based Development Environment
 -----------------------

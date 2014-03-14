@@ -414,6 +414,34 @@ body {
   }
 }
 
+
+// Logs
+// -------------------------
+#log-list {
+    list-style-type: none;
+    background-color: @gray-lighter;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    overflow: scroll;
+    max-height: 500px;
+
+    li {
+        padding: 5px 0;
+        border-bottom: 1px solid darken(@gray-lighter, 5%);
+        white-space: nowrap;
+
+        &:last-child {
+            padding-top: 10px;
+            border-bottom: none;
+        }
+
+        &:before {
+            content: "> ";
+        }
+    }
+}
+
 // Miscellaneous
 // -------------------------
 
