@@ -21,6 +21,7 @@ var utils = require('../utils');
  */
 var newsItemsPerPage = 30;
 var maxPages = 30;
+var usernameRegexp = /@\w+(?!(\]|\w|\/))/;
 
 exports.index = function(req, res, next) {
 
@@ -91,10 +92,10 @@ exports.comments = function (req, res, next) {
       if(err) return next(err);
 
       _.each(results.comments, function (comment,i,l) {
-        comment.contents = markdownParser(comment.contents);
+        comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
       });
 
-      newsItem.summary = markdownParser(newsItem.summary);
+      newsItem.summary = markdownParser(utils.replaceUserMentions(newsItem.summary));
 
       res.render('news/show', {
         title: newsItem.title,
@@ -166,18 +167,8 @@ exports.postComment = function (req, res, next) {
     return res.redirect('/news/'+req.params.id);
   }
 
-  var usernameRegexp = /@\w+(?!(\]|\w|\/))/;
-
-  var contents = req.body.contents,
-      match;
-
-  while (match = usernameRegexp.exec(contents)) {
-    contents = contents.replace(match[0], '[' + match[0] + ']' + '(/news/user/' + match[0].slice(1) + '/)');
-  }
-
-
   var comment = new Comment({
-    contents: contents,
+    contents: req.body.contents,
     poster: req.user.id,
     item: req.params.id,
     itemType: 'news'
@@ -296,7 +287,7 @@ exports.userNews = function(req, res, next) {
       if (err) return next(err);
 
       _.each(results.comments, function (comment,i,l) {
-        comment.contents = markdownParser(comment.contents);
+        comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
       });
 
       res.render('news/index', {

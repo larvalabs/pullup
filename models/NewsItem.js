@@ -19,13 +19,16 @@ newsItemSchema.methods.isSelfPost = function() {
  * @param {string} url URL to format
  * @returns {string} url Formatted URL
  */
-newsItemSchema.statics.formatUrl = function(url) {
+newsItemSchema.methods.formatUrl = function(url) {
   return /^(http:\/\/|https:\/\/)/.test(url) ? url : 'http://' + url;
 };
 
 // Logic to be executed before a model is saved to Mongo
 newsItemSchema.pre('save', function (next) {
-  this.url = this.formatUrl(this.url);
+  if(!this.isSelfPost()) {
+    this.url = this.formatUrl(this.url);
+  }
+
   next();
 });
 

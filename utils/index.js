@@ -16,3 +16,15 @@ exports.urlWithoutQueryParam = function urlWithoutQueryParam(originalUrl, paramN
 
     return urlWithoutQueryString + '?' + params.join('&');
 };
+
+exports.replaceUserMentions = function(body) {
+  var usernameRegexp = /@\w+(?!(\]|\w|\/))/;
+  var match;
+
+  while(match = usernameRegexp.exec(body)) {
+    body = body.replace(match[0], '[' + match[0] + ']' + '(/news/user/' + match[0].slice(1) + '/)');
+    console.log(usernameRegexp.exec(body));
+  }
+
+  return body;
+}
