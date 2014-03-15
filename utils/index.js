@@ -1,4 +1,3 @@
-
 // Return a URL with just a single query parameter stripped out of it
 exports.urlWithoutQueryParam = function urlWithoutQueryParam(originalUrl, paramName) {
     var queryStart = originalUrl.indexOf('?'),
@@ -23,7 +22,6 @@ exports.replaceUserMentions = function(body) {
 
   while(match = usernameRegexp.exec(body)) {
     body = body.replace(match[0], '[' + match[0] + ']' + '(/news/user/' + match[0].slice(1) + '/)');
-    console.log(usernameRegexp.exec(body));
   }
 
   return body;
