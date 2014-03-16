@@ -11,8 +11,8 @@ How to join
 
 Summary:
 - Fork and set up project for development (see below)
-- Add a feature, fix a bug, improve the design, etc.
 - Add your GitHub username to the [authorized users list](https://github.com/larvalabs/pullup/blob/master/config/userlist.js).
+- Add a feature, fix a bug, improve the design, etc.
 - Submit a pull request! When we merge, you'll be allowed to log in.
 
 Development Setup

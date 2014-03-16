@@ -25,10 +25,14 @@ newsItemSchema.statics.formatUrl = function(url) {
 
 // Logic to be executed before a model is saved to Mongo
 newsItemSchema.pre('save', function (next) {
-  this.url = this.formatUrl(this.url);
+  if(!this.isSelfPost()) {
+    this.url = NewsItem.formatUrl(this.url);
+  }
+
   next();
 });
 
 var User = mongoose.model('User', userSchema);
 
-module.exports = mongoose.model('NewsItem', newsItemSchema);
+var NewsItem;
+module.exports = NewsItem = mongoose.model('NewsItem', newsItemSchema);
