@@ -28,6 +28,7 @@ var app = express();
 
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
+var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 var newsController = require('./controllers/news');
 var issuesController = require('./controllers/issues');
@@ -185,6 +186,11 @@ app.post('/issues/:id/comments', passportConf.isAuthenticated, issuesController.
  * Chat Routes
  */
 app.get('/chat', chatController.index);
+
+/**
+ * API Routes
+ */
+app.post('/api/markdown', apiController.getMarkdown);
 
 /**
  * OAuth routes for sign-in.
