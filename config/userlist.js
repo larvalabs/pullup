@@ -63,6 +63,7 @@ module.exports = {
         'rtfeldman',
         'ryanwi',
         'samcal',
+        'shantanoo',
         'shedd',
         'singularperturbation',
         'sorpaas',
