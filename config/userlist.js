@@ -53,6 +53,7 @@ module.exports = {
         'mreinhardt',
         'msied',
         'naturalethic',
+        'negitivezero',
         'omphalosskeptic',
         'parenparen',
         'pents90',

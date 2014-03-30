@@ -76,7 +76,6 @@ passport.use(new FacebookStrategy(secrets.facebook, function (req, accessToken, 
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken: accessToken });
           user.profile.name = user.profile.name || profile.displayName;
-          user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
           user.save(function(err) {
             req.flash('info', { msg: 'Facebook account has been linked.' });
@@ -94,7 +93,6 @@ passport.use(new FacebookStrategy(secrets.facebook, function (req, accessToken, 
       user.facebook = profile.id;
       user.tokens.push({ kind: 'facebook', accessToken: accessToken });
       user.profile.name = profile.displayName;
-      user.profile.gender = profile._json.gender;
       user.profile.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
       user.save(function(err) {
         done(err, user);
@@ -194,7 +192,6 @@ passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refre
           user.google = profile.id;
           user.tokens.push({ kind: 'google', accessToken: accessToken });
           user.profile.name = user.profile.name || profile.displayName;
-          user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || profile._json.picture;
           user.save(function(err) {
             req.flash('info', { msg: 'Google account has been linked.' });
@@ -211,7 +208,6 @@ passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refre
       user.google = profile.id;
       user.tokens.push({ kind: 'google', accessToken: accessToken });
       user.profile.name = profile.displayName;
-      user.profile.gender = profile._json.gender;
       user.profile.picture = profile._json.picture;
       user.save(function(err) {
         done(err, user);
