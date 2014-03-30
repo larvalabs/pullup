@@ -41,6 +41,7 @@ module.exports = {
         'kalmi',
         'kasperlewau',
         'kennethrapp',
+        'kevinsearle',
         'lablayers',
         'LeandroLovisolo',
         'lgarron',
