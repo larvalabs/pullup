@@ -20,6 +20,7 @@ module.exports = {
         'dylnclrk',
         'eik3',
         'euank',
+        'ericfode',
         'evsie001',
         'exadeci',
         'gwillen',
