@@ -80,6 +80,7 @@ module.exports = {
         'treygriffith',
         'utdemir',
         'williamle8300',
-        'willurd'
+        'willurd',
+        'd1plo1d'
     ]
 };
