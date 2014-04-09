@@ -84,6 +84,7 @@ exports.comments = function (req, res, next) {
           item: newsItem._id,
           itemType: 'news'
         })
+        .sort({created: 1})
         .populate('poster')
         .exec(cb);
       }
