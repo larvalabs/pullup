@@ -70,6 +70,7 @@ module.exports = {
         'sorpaas',
         'sp1d3rx',
         'sriehl',
+        'stewartjarod',
         'swelham',
         'tdhsmith',
         'tejohnso',
