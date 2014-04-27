@@ -7,6 +7,7 @@ var newsItemSchema = new mongoose.Schema({
   summary: { type: String },
   source: { type: String },
   poster: { type: String, ref: 'User' },
+  vote_count: {type: Number, default: 0 },
   created: { type: Date, default: Date.now }
 });
 

@@ -1,5 +1,9 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+
+    Comment = require('./Comment.js'),
+    Issue = require('./Issue.js'),
+    NewsItem = require('./NewsItem.js');
 
 
 var voteSchema = new mongoose.Schema({
@@ -30,4 +34,58 @@ var voteSchema = new mongoose.Schema({
 // each user can only vote on an item once
 voteSchema.index({ item: 1, voter: 1 }, { unique: true });
 
-module.exports = mongoose.model('Vote', voteSchema);
+// increment item vote count on save.
+voteSchema.pre('save', function(next) {
+
+  var initem = this;
+
+  // ensure this isn't a duplicate vote, as this happens before the
+  // unique index is enforced for the new vote.
+  Vote.findOne({item: initem.item, voter: initem.voter}, function(err, dup) {
+    if ( dup === null) {
+      incrementVote(initem.item, initem.itemType, 1, next);
+    } else {
+      next();
+    }
+  });
+    
+});
+
+// decrement item vote count on remove.
+voteSchema.pre('remove', function(next) {
+  incrementVote(this.item, this.itemType, -1, next);
+});
+
+// increment/decrement the aggregated vote count by amount.
+function incrementVote(itemId, type, amount, next) {
+
+  var item;
+  
+  if (type === 'issue') {
+    item = Issue;
+  } else if (type === 'comment') {
+    item = Comment;
+  } else {
+    item = NewsItem;
+  }
+  
+
+  item.findById(itemId, function(err, item){
+
+    if (err) { next(err); }
+
+    item.vote_count += amount;
+    item.save(function(err) {
+
+      if (err) {
+	next(err);
+      } else {
+	next();
+      }
+    });
+  });
+  
+}
+
+var Vote;
+module.exports = Vote = mongoose.model('Vote', voteSchema);
