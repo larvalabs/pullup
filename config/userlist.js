@@ -40,6 +40,7 @@ module.exports = {
         'julbaxter',
         'kalmi',
         'kasperlewau',
+		'keenrivals',
         'kennethrapp',
         'kevinsearle',
         'lablayers',
