@@ -5,7 +5,9 @@ block content
 
     .page-header
         h4 Open Issues
-            a.btn.btn-primary.btn-sm.pull-right(href='https://github.com/larvalabs/pullup/issues/new') New Issue
+            a.btn.btn-primary.btn-sm.pull-right(href='https://github.com/larvalabs/pullup/issues/new')
+                i.fa.fa-plus-square-o.fa-lg
+                |New Issue
 
     div#issues.tab-pane.fade.in.active
         ul
@@ -57,7 +59,11 @@ block content
                         p(class='hidden summary')
                             em= issue.body
     if page > 1
-        a(href=(page-1), class='btn btn-sm btn-default')='Previous Page'
+        a(href=(page-1), class='btn btn-sm btn-default')
+            i(class="fa fa-angle-double-left  fa-lg")
+            |Previous Page 
     if maxPages !== page
-        a(href= '/issues/page/' + (page+1), class='btn btn-sm btn-default pull-right')='Next Page'
+        a(href= '/issues/page/' + (page+1), class='btn btn-sm btn-default pull-right')
+            |Next Page
+            i(class="fa fa-angle-double-right  fa-lg")
 
