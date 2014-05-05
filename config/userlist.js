@@ -81,6 +81,7 @@ module.exports = {
         'treygriffith',
         'utdemir',
         'williamle8300',
-        'willurd'
+        'willurd',
+        'zhanglun'
     ]
 };
