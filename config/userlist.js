@@ -62,6 +62,7 @@ module.exports = {
         'pksjce',
         'qguv',
         'rickhanlonii',
+        'ritvik1512'
         'roryokane',
         'rtfeldman',
         'ryanwi',
