@@ -20,7 +20,9 @@
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)
-            a(href='/auth/github') Login
+            a(href='/auth/github') 
+              i.fa.fa-sign-in.fa-lg
+              |Login
           li(class=title=='Signup'?'active':undefined)
             a(href='/signup') Signup
         else
