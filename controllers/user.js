@@ -38,7 +38,11 @@ exports.postUpdateProfile = function(req, res, next) {
     user.email = req.body.email || '';
     user.profile.name = req.body.name || '';
     user.profile.location = req.body.location || '';
-    user.profile.description = req.body.description || '';
+
+    if(req.body.description.length < 32){  
+        user.profile.description = req.body.description || '';
+    }
+      
     if (req.body.website.match(/https?:\/\//i)) {
       user.profile.website = req.body.website;
     } else if (user.profile.website) {
