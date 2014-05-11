@@ -6,6 +6,13 @@ block content
     include ../partials/joinsite
 
     .page-header
+        div.col-xs-2.col-sm-1.upvote-wrapper
+            
+            input(type='hidden', name='amount', value='1')
+            button(type='submit', class='upvote')
+              i.fa.fa-chevron-up
+        div.col-xs-2.col-xs-pull-2.col-sm-1.col-sm-pull-0.vote-count-wrapper
+            span.badge.vote-count= 0
         h3
             a(href=item.url)= item.title
             if item.summary && ! item.isSelfPost()
@@ -17,15 +24,19 @@ block content
           div(class="item-summary")!= item.summary
         = 'submitted '
         span.timeago(title="#{item.created}")= timeago(item.created)
-        = ' by '
-        a(href='/news/user/' + item.poster.username, class='user')= item.poster.username
         = ' from '
         a(href='/news/source/' + item.source, class='source')= item.source
+        = ' by '
+        a(href='/news/user/' + item.poster.username, class='user')= item.poster.username
+        if item.poster.profile.description
+            = ', '
+            span(title="User description")= item.poster.profile.description
     include ../partials/postcomment
 
     each comment, index in comments
       div.comment
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
+        span.description=comment.poster.profile.description
         span.timeago(title="#{comment.created}")= timeago(comment.created)
         blockquote.content
             +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')

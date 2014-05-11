@@ -31,6 +31,10 @@ block content
           .col-xs-12.col-sm-4
             input.form-control(type='text', name='website', id='website', value='#{user.profile.website}')
         .form-group
+          label.col-xs-12.col-sm-2.control-label(for='description') Description
+          .col-xs-12.col-sm-4
+            input.form-control(type='text', name='description', id='description', value='#{user.profile.description}')
+        .form-group
           .col-xs-offset-0.col-xs-12.col-sm-offset-2.col-sm-4
             button.btn.btn.btn-primary(type='submit') Update Profile
 

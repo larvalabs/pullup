@@ -85,7 +85,7 @@ block content
                             small.submit-date(title="#{item.created}")= timeago(item.created)
                             small.hidden-xs #{' '}by#{' '}
                             if item.poster
-                                a.poster(href='/news/user/' + item.poster.username)
+                                a.poster(href='/news/user/' + item.poster.username, title=item.poster.profile.description)
                                     small #{item.poster.username}
                             else
                                 span.text-muted
