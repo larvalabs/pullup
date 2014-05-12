@@ -71,6 +71,7 @@ module.exports = {
         'sorpaas',
         'sp1d3rx',
         'sriehl',
+        'suprememoocow',
         'swelham',
         'tdhsmith',
         'tejohnso',
