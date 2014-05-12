@@ -17,11 +17,14 @@ block content
         .row.user-profile
             .col-lg-6
                 if userProfile
-                    h1
-                        if userProfile.picture
-                            img(src='#{userProfile.picture}')
-                        if userProfile.name
-                            | #{userProfile.name}
+                    if userProfile.picture
+                        img(src='#{userProfile.picture}')
+                    if userProfile.name
+                        div.user-header
+                            h1.name #{userProfile.name}
+                            if userProfile.description
+                                h5.description #{userProfile.description}
+                            
             .col-lg-6
                 dl.pull-right
                     dt GitHub:
@@ -85,7 +88,7 @@ block content
                             small.submit-date(title="#{item.created}")= timeago(item.created)
                             small.hidden-xs #{' '}by#{' '}
                             if item.poster
-                                a.poster(href='/news/user/' + item.poster.username)
+                                a.poster(href='/news/user/' + item.poster.username, title=item.poster.profile.description)
                                     small #{item.poster.username}
                             else
                                 span.text-muted

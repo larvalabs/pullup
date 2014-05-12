@@ -16,7 +16,8 @@ var userSchema = new mongoose.Schema({
     name: { type: String, default: '' },
     location: { type: String, default: '' },
     website: { type: String, default: '' },
-    picture: { type: String, default: '' }
+    picture: { type: String, default: '' },
+    description: { type: String, default: '' }
   }
 });
 
