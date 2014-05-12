@@ -68,7 +68,10 @@ block content
             each item, index in items
                 li.row.news-item
                     div.col-xs-2.col-sm-2.col-lg-1.upvote-wrapper
-                        span.hidden-xs.text-muted.col-sm-1= index + 1
+                        if page
+                            span.hidden-xs.text-muted.col-sm-1= ((page - 1) * newsItemsPerPage) + (index + 1)
+                        else
+                            span.hidden-xs.text-muted.col-sm-1= index + 1
                         if !item.votedFor
                             form(action='/news/' + item._id, method='POST', class='upvote-form')
                                 input(type='hidden', name='amount', value='1')
