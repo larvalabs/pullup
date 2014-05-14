@@ -29,7 +29,8 @@ block content
     each comment, index in comments
       div.comment
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
-        span.description=comment.poster.profile.description
+        if comment.poster.profile.description
+            span.description=comment.poster.profile.description
         span.timeago(title="#{comment.created}")= timeago(comment.created)
         blockquote.content
             +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
