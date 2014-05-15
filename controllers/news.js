@@ -38,13 +38,15 @@ exports.index = function(req, res, next) {
     res.set('Content-Type', 'text/xml; charset=utf-8');
   }
 
-  getNewsItems({}, page, req.user, function (err, newsItems) {
+  getNewsItems({
+    url: new RegExp("^\/news\/[^\/]*$")
+  }, page, req.user, function (err, discussions) {
     if(err) return next(err);
 
     res.render(view, {
-      title: 'Top News',
+      title: 'Top Discussions',
       tab: 'news',
-      items: newsItems,
+      items: discussions,
       page: page,
       archive: page > maxPages,
       newsItemsPerPage: newsItemsPerPage
@@ -291,7 +293,7 @@ exports.userNews = function(req, res, next) {
         comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
       });
 
-      res.render('news/index', {
+      res.render('news/all', {
         title: 'Posts by ' + user.username,
         tab: 'news',
         items: results.newsItems,
@@ -316,7 +318,7 @@ exports.sourceNews = function(req, res, next) {
   getNewsItems({'source': req.params.source}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
-    res.render('news/index', {
+    res.render('news/all', {
       title: 'Recent news from ' + req.params.source,
       tab: 'news',
       items: newsItems,
