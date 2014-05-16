@@ -329,6 +329,21 @@ exports.sourceNews = function(req, res, next) {
   });
 };
 
+/** Controller Helper Functions **/
+
+var addCommentDataToNewsItems = exports.addCommentDataToNewsItems = function(items, callback) {
+  async.waterfall([
+    function (cb) {
+      addCommentCountToNewsItems(items, cb);
+    },
+    function (items, cb) {
+      addLatestCommentTimeForNewsItems(items, cb);
+    }
+  ], callback);
+}
+
+/** Private Functions **/
+
 function getNewsItems(query, page, user, callback, sort) {
 
   var skip,
@@ -404,17 +419,6 @@ function addVotesAndCommentDataToNewsItems(items, user, callback) {
     },
     function (items, cb) {
       addCommentDataToNewsItems(items, cb);
-    }
-  ], callback);
-}
-
-function addCommentDataToNewsItems(items, callback) {
-  async.waterfall([
-    function (cb) {
-      addCommentCountToNewsItems(items, cb);
-    },
-    function (items, cb) {
-      addLatestCommentTimeForNewsItems(items, cb);
     }
   ], callback);
 }

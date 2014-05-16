@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  .col-md-8.col-md-offset-1.col-sm-12
     div.jumbotron
         h1 What is pullup?
         p.lead It’s a site you join via pull request. Other than that, it’s up to you.
@@ -29,3 +30,4 @@ block content
             | . We figured everybody who's worked on a website knows JavaScript, so it’d be a good universal language for the site.
         dt Why did you make this?
         dd We wondered what a site would be like where every user had contributed some code. It should mean no spam, no content marketing, and hopefully a stronger feeling of community.
+  include partials/newsfeed

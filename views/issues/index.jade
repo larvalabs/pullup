@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
+  .col-md-8.col-md-offset-1.col-sm-12
     include ../partials/joinsite
 
     .page-header
@@ -61,9 +62,9 @@ block content
     if page > 1
         a(href=(page-1), class='btn btn-sm btn-default')
             i(class="fa fa-angle-double-left  fa-lg")
-            |Previous Page 
+            |Previous Page
     if maxPages !== page
         a(href= '/issues/page/' + (page+1), class='btn btn-sm btn-default pull-right')
             |Next Page
             i(class="fa fa-angle-double-right  fa-lg")
-
+  include ../partials/newsfeed

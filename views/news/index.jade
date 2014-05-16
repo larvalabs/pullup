@@ -3,6 +3,7 @@ include ../mixins/delete
 
 
 block content
+  .col-md-8.col-md-offset-1.col-sm-12
     include ../partials/joinsite
 
     .page-header
@@ -83,3 +84,4 @@ block content
             i(class="fa fa-angle-double-right")
 
     script(src='/js/newsIndex.js?v#{cacheBuster}')
+  include ../partials/newsfeed

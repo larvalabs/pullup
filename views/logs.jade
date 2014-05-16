@@ -1,8 +1,10 @@
 extends layout
 
 block content
+  .col-md-8.col-md-offset-1.col-sm-12
     script(type="text/javascript", src="http://sysinct.herokuapp.com/socket.io/socket.io.js")
     script(type="text/javascript", src="/js/logs.js")
     script(type="text/javascript", src="/js/lib/ansi_up.js")
     h3 Logs
     div#log-list
+  include partials/newsfeed

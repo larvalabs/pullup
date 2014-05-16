@@ -3,6 +3,7 @@ include ../mixins/delete
 
 
 block content
+  .container
     include ../partials/joinsite
 
     if !filteredUser
@@ -24,7 +25,7 @@ block content
                             h1.name #{userProfile.name}
                             if userProfile.description
                                 h5.description #{userProfile.description}
-                            
+
             .col-lg-6
                 dl.pull-right
                     dt GitHub:

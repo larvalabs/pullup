@@ -25,7 +25,7 @@ html
       include partials/data
       include partials/navigation
       include partials/noscript
-      .container
-        include partials/flash
-        block content
+      include partials/flash
+      block content
     include partials/footer
+    script(src='/js/newsFeed.js?v=#{cacheBuster}')

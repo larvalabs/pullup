@@ -51,6 +51,7 @@ body {
 #footer {
   height: 75px;
   padding-top: 15px;
+  position: relative;
 }
 #mobile-footer {
   position: fixed;
@@ -88,6 +89,53 @@ body {
 
 // Global Elements
 // -------------------------
+
+.loading-animation {
+  height: 64px;
+  width: 64px;
+  margin: 10px auto;
+  background: @brand-primary url(../img/logo-small.jpg) center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  -webkit-animation-name: loading-animation;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-iteration-count: infinite;
+  opacity: 1;
+
+  -webkit-transition: background-size .5s, opacity 2s;
+
+  &.error {
+    background-size: 0;
+    opacity: 0;
+    background-color: @brand-danger;
+  }
+
+  &.hide {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes loading-animation {
+  0% {
+    -webkit-transform: none;
+  }
+
+  25% {
+    -webkit-transform: rotateZ(180deg);
+  }
+
+  50% {
+    -webkit-tranform: rotateX(180deg);
+  }
+
+  75% {
+    -webkit-transform: rotateY(180deg);
+  }
+
+  100% {
+    -webkit-transform: none;
+  }
+}
 
 .delete-form { display: inline; }
 .delete {
@@ -383,18 +431,18 @@ body {
 
 .user-profile {
     img {
-        vertical-align: top; 
+        vertical-align: top;
         padding-right: 10px;
     }
     .user-header {
         display:inline-block;
 
         .name {
-            margin-bottom: 0;   
+            margin-bottom: 0;
         }
 
         .description {
-            margin-top: -10px;   
+            margin-top: -10px;
             padding-left: 2px;
         }
     }
@@ -471,6 +519,65 @@ body {
     }
 }
 
+// News Feed
+// -------------------------
+.news-feed {
+    background-color: @gray-light;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 40px 10px 60px 10px;
+
+    @news-feed-font-size: .8em;
+
+    .loading-animation {
+      margin-top: 40px;
+    }
+
+    .retry {
+      text-align: center;
+      text-decoration: underline;
+      color: @gray-dark;
+      display: inline-block;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .news-item {
+      display: block;
+      color: @gray-darker;
+      border-bottom: 1px solid @gray-dark;
+      padding: .5em 0;
+
+      h3, address {
+        font-size: @news-feed-font-size;
+
+        a {
+          color: @brand-primary-darker;
+        }
+      }
+
+      a.comment-count {
+        color: @brand-primary-darker;
+        font-size: @news-feed-font-size;
+      }
+
+      address {
+        margin-bottom: 0;
+      }
+
+      h3 {
+        margin: .4em 0;
+
+        a {
+          color: @brand-primary;
+        }
+      }
+    }
+}
+
+
 // Miscellaneous
 // -------------------------
 
@@ -496,11 +603,11 @@ body {
 }
 
 #chat {
-  position: absolute; 
-  top:45px; 
+  position: absolute;
+  top:45px;
   bottom:75px;
 
-  iframe { 
+  iframe {
     height:100%; width:100%; border: 0
   }
 }

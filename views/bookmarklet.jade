@@ -1,9 +1,11 @@
 extends layout
 
 block content
+  .col-md-8.col-md-offset-1.col-sm-12
     div.jumbotron
         h1 Bookmarklet
         p.lead Submit links to Pullup directly from your browser
-    p To install, drag this link to your browser toolbar: 
+    p To install, drag this link to your browser toolbar:
       a.small(style="text-decoration:underline;", href="javascript:window.location=%22http://pullup.io/news/submit?u=%22+encodeURIComponent(document.location)") post to Pullup
     p When you click on the bookmarklet, it will submit the page you're on.
+  include partials/newsfeed
