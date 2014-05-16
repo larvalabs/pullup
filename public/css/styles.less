@@ -100,9 +100,21 @@ body {
   -webkit-animation-name: loading-animation;
   -webkit-animation-duration: 1.5s;
   -webkit-animation-iteration-count: infinite;
+  -webkit-transition: background-size .5s, opacity 2s;
+  -moz-animation-name: loading-animation;
+  -moz-animation-duration: 1.5s;
+  -moz-animation-iteration-count: infinite;
+  -moz-transition: background-size .5s, opacity 2s;
+  -o-animation-name: loading-animation;
+  -o-animation-duration: 1.5s;
+  -o-animation-iteration-count: infinite;
+  -o-transition: background-size .5s, opacity 2s;
+  animation-name: loading-animation;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  transition: background-size .5s, opacity 2s;
   opacity: 1;
 
-  -webkit-transition: background-size .5s, opacity 2s;
 
   &.error {
     background-size: 0;
@@ -116,25 +128,35 @@ body {
 }
 
 @-webkit-keyframes loading-animation {
-  0% {
-    -webkit-transform: none;
-  }
+  0% { -webkit-transform: none; }
+  25% { -webkit-transform: rotateZ(180deg); }
+  50% { -webkit-tranform: rotateX(180deg); }
+  75% { -webkit-transform: rotateY(180deg); }
+  100% { -webkit-transform: none; }
+}
 
-  25% {
-    -webkit-transform: rotateZ(180deg);
-  }
+@-moz-keyframes loading-animation {
+  0% { -moz-transform: none; }
+  25% { -moz-transform: rotateZ(180deg); }
+  50% { -moz-tranform: rotateX(180deg); }
+  75% { -moz-transform: rotateY(180deg); }
+  100% { -moz-transform: none; }
+}
 
-  50% {
-    -webkit-tranform: rotateX(180deg);
-  }
+@-o-keyframes loading-animation {
+  0% { -o-transform: none; }
+  25% { -o-transform: rotateZ(180deg); }
+  50% { -o-tranform: rotateX(180deg); }
+  75% { -o-transform: rotateY(180deg); }
+  100% { -o-transform: none; }
+}
 
-  75% {
-    -webkit-transform: rotateY(180deg);
-  }
-
-  100% {
-    -webkit-transform: none;
-  }
+@keyframes loading-animation {
+  0% { transform: none; }
+  25% { transform: rotateZ(180deg); }
+  50% { tranform: rotateX(180deg); }
+  75% { transform: rotateY(180deg); }
+  100% { transform: none; }
 }
 
 .delete-form { display: inline; }
@@ -527,7 +549,8 @@ body {
     position: fixed;
     right: 0;
     top: 0;
-    padding: 40px 10px 60px 10px;
+    padding: 40px 10px 100px 10px;
+    overflow-y: scroll;
 
     @news-feed-font-size: .8em;
 
