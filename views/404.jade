@@ -1,13 +1,14 @@
 extends ./layout
 
 block content
-  .col-md-8.col-md-offset-1.col-sm-12
-    if !user
-        .alert.alert-info
-            i.fa.fa-cloud-upload
-            strong Join this site via pull request!
-            |  Make the site better and become a full member. See the <a href="/about">about page</a> for more details.
-    h1 You Found Me!
-    p I'm pretty sure that this is the page you're looking for if you're trying to get lost in the jungle of links.
-    a(href='/') Back to Top
-  include partials/newsfeed
+  .row
+    .col-md-8.col-md-offset-1.col-sm-12
+      if !user
+          .alert.alert-info
+              i.fa.fa-cloud-upload
+              strong Join this site via pull request!
+              |  Make the site better and become a full member. See the <a href="/about">about page</a> for more details.
+      h1 You Found Me!
+      p I'm pretty sure that this is the page you're looking for if you're trying to get lost in the jungle of links.
+      a(href='/') Back to Top
+    include partials/newsfeed

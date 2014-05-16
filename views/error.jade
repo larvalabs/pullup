@@ -1,15 +1,16 @@
 extends ./layout
 
 block content
-	.col-md-8.col-md-offset-1.col-sm-12
-		h1 You broke it :(
-		h2
-		| You can help by reporting this or by fixing it, find out how on our <a href="https://github.com/larvalabs/pullup">GitHub page</a>.
-		p. The stack trace is located in the page source.
+	.row
+		.col-md-8.col-md-offset-1.col-sm-12
+			h1 You broke it :(
+			h2
+			| You can help by reporting this or by fixing it, find out how on our <a href="https://github.com/larvalabs/pullup">GitHub page</a>.
+			p. The stack trace is located in the page source.
 
-		.error
-			.name #{error.name}
-			.message #{error.message}
-			//
-				#{error.stack}
-	include partials/newsfeed
+			.error
+				.name #{error.name}
+				.message #{error.message}
+				//
+					#{error.stack}
+		include partials/newsfeed

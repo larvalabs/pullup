@@ -1,33 +1,34 @@
 extends layout
 
 block content
-  .col-md-8.col-md-offset-1.col-sm-12
-    div.jumbotron
-        h1 What is pullup?
-        p.lead It’s a site you join via pull request. Other than that, it’s up to you.
-        a(class='button btn btn-info btn-large', href='https://github.com/larvalabs/pullup')
-            span.fa.fa-download
-            | Pull from GitHub
-        | &nbsp;
-        a(class='button btn btn-info btn-large', href='https://twitter.com/intent/tweet?text=Make%20the%20site%20better%20and%20become%20a%20full%20member.%20Join%20Pullup.io%20via%20pull%20request!&url=http://pullup.io')
-            | Tweet this Page
+  .row
+    .col-md-8.col-md-offset-1.col-sm-12
+      div.jumbotron
+          h1 What is pullup?
+          p.lead It’s a site you join via pull request. Other than that, it’s up to you.
+          a(class='button btn btn-info btn-large', href='https://github.com/larvalabs/pullup')
+              span.fa.fa-download
+              | Pull from GitHub
+          | &nbsp;
+          a(class='button btn btn-info btn-large', href='https://twitter.com/intent/tweet?text=Make%20the%20site%20better%20and%20become%20a%20full%20member.%20Join%20Pullup.io%20via%20pull%20request!&url=http://pullup.io')
+              | Tweet this Page
 
-    h3 FAQ
-    dl.faq
-        dt What does the site do?
-        dd Not much yet! So far it’s just a Hacker News clone, but it would be great if it ended up growing into something else.
-        dt How exactly do I join?
-        dd Add a feature, fix a bug, improve the design, whatever you like. Find the details on the <a href="/signup">signup page</a>.
-        dt What feature should I add?
-        dd Right now we could use things like commenting, voting, bookmarklet and so on. If you’re ambitious maybe private messaging? Almost anything, as even this page sucks, for example.
-        dt What technology is the site using?
-        dd
-            a(href="http://nodejs.org/") NodeJS
-            | ,#{' '}
-            a(href="http://expressjs.com/") Express
-            | , and#{' '}
-            a(href="http://www.mongodb.org/") Mongo
-            | . We figured everybody who's worked on a website knows JavaScript, so it’d be a good universal language for the site.
-        dt Why did you make this?
-        dd We wondered what a site would be like where every user had contributed some code. It should mean no spam, no content marketing, and hopefully a stronger feeling of community.
-  include partials/newsfeed
+      h3 FAQ
+      dl.faq
+          dt What does the site do?
+          dd You tell me! Pullup is built entirely by its users, and anyone has the authority to change its direction!
+          dt How exactly do I join?
+          dd Add a feature, fix a bug, improve the design, whatever you like. Find the details on the <a href="/signup">signup page</a>.
+          dt What feature should I add?
+          dd See something broken? Fix it! Can't find anything to do? We label <a href='https://github.com/larvalabs/pullup/issues'>some issues</a> "beginner" that are great for new members to fix!
+          dt What technology is the site using?
+          dd
+              a(href="http://nodejs.org/") NodeJS
+              | ,#{' '}
+              a(href="http://expressjs.com/") Express
+              | , and#{' '}
+              a(href="http://www.mongodb.org/") Mongo
+              | . We figured everybody who's worked on a website knows JavaScript, so it’d be a good universal language for the site.
+          dt Why did you make this?
+          dd We wondered what a site would be like where every user had contributed some code. It should mean no spam, no content marketing, and hopefully a stronger feeling of community.
+    include partials/newsfeed

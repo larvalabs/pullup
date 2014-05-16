@@ -1,70 +1,71 @@
 extends ../layout
 
 block content
-  .col-md-8.col-md-offset-1.col-sm-12
-    include ../partials/joinsite
+  .row
+    .col-md-8.col-md-offset-1.col-sm-12
+      include ../partials/joinsite
 
-    .page-header
-        h4 Open Issues
-            a.btn.btn-primary.btn-sm.pull-right(href='https://github.com/larvalabs/pullup/issues/new')
-                i.fa.fa-plus-square-o.fa-lg
-                |New Issue
+      .page-header
+          h4 Open Issues
+              a.btn.btn-primary.btn-sm.pull-right(href='https://github.com/larvalabs/pullup/issues/new')
+                  i.fa.fa-plus-square-o.fa-lg
+                  |New Issue
 
-    div#issues.tab-pane.fade.in.active
-        ul
-            li.row.headers.hidden-xs
-                div.col-sm-1.col-sm-offset-1 Votes
-                div.col-sm-10 Title
-            each issue, index in issues
-                li.row.news-item
-                    div.col-xs-2.col-sm-1.upvote-wrapper
-                        if !issue.votedFor
-                            form(action='/issues/' + issue._id, method='POST', class='upvote-form')
-                                input(type='hidden', name='amount', value='1')
-                                button(type='submit', class='upvote')
-                                    i.fa.fa-chevron-up
-                    div.col-xs-2.col-xs-pull-2.col-sm-1.col-sm-pull-0.vote-count-wrapper
-                        span.badge.vote-count= issue.votes
-                    div.col-xs-10.col-xs-push-2.col-sm-6.col-sm-push-0.col-lg-7.title
-                        a(href='/issues/' + issue._id)
-                            | #{issue.title}
-                        if issue.body
-                            | &nbsp;
-                            a(href="#", class="show-summary")
-                                | ...
-                        br
-                        span
-                            small.submit-date(title="#{issue.created_at}")= timeago(issue.created_at)
-                            small.hidden-xs #{' '}by#{' '}
-                            a.poster(href='/news/user/' + issue.user.login)
-                                small #{issue.user.login}
-                            small.hidden-xs #{' '}with#{' '}
-                            br.visible-xs
-                            a.comment-count(href='/issues/' + issue._id + "?last_comment=#{issue.updated_at}")
-                                case issue.comments
-                                    when 0
-                                        small.hidden-xs no comments
-                                        small.hidden-sm.hidden-md.hidden-lg 0
-                                        i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
-                                    when 1
-                                        small 1
-                                        small.hidden-xs  comment
-                                        i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
-                                    default
-                                        small #{issue.comments}
-                                        small.hidden-xs  comments
-                                        i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
-                            if issue.comments > 0
-                                small.hidden-xs.text-muted(title="#{issue.updated_at}")  (last comment #{timeago(issue.updated_at)})
-                        br
-                        p(class='hidden summary')
-                            em= issue.body
-    if page > 1
-        a(href=(page-1), class='btn btn-sm btn-default')
-            i(class="fa fa-angle-double-left  fa-lg")
-            |Previous Page
-    if maxPages !== page
-        a(href= '/issues/page/' + (page+1), class='btn btn-sm btn-default pull-right')
-            |Next Page
-            i(class="fa fa-angle-double-right  fa-lg")
-  include ../partials/newsfeed
+      div#issues.tab-pane.fade.in.active
+          ul
+              li.row.headers.hidden-xs
+                  div.col-sm-1.col-sm-offset-1 Votes
+                  div.col-sm-10 Title
+              each issue, index in issues
+                  li.row.news-item
+                      div.col-xs-2.col-sm-1.upvote-wrapper
+                          if !issue.votedFor
+                              form(action='/issues/' + issue._id, method='POST', class='upvote-form')
+                                  input(type='hidden', name='amount', value='1')
+                                  button(type='submit', class='upvote')
+                                      i.fa.fa-chevron-up
+                      div.col-xs-2.col-xs-pull-2.col-sm-1.col-sm-pull-0.vote-count-wrapper
+                          span.badge.vote-count= issue.votes
+                      div.col-xs-10.col-xs-push-2.col-sm-6.col-sm-push-0.col-lg-7.title
+                          a(href='/issues/' + issue._id)
+                              | #{issue.title}
+                          if issue.body
+                              | &nbsp;
+                              a(href="#", class="show-summary")
+                                  | ...
+                          br
+                          span
+                              small.submit-date(title="#{issue.created_at}")= timeago(issue.created_at)
+                              small.hidden-xs #{' '}by#{' '}
+                              a.poster(href='/news/user/' + issue.user.login)
+                                  small #{issue.user.login}
+                              small.hidden-xs #{' '}with#{' '}
+                              br.visible-xs
+                              a.comment-count(href='/issues/' + issue._id + "?last_comment=#{issue.updated_at}")
+                                  case issue.comments
+                                      when 0
+                                          small.hidden-xs no comments
+                                          small.hidden-sm.hidden-md.hidden-lg 0
+                                          i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
+                                      when 1
+                                          small 1
+                                          small.hidden-xs  comment
+                                          i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
+                                      default
+                                          small #{issue.comments}
+                                          small.hidden-xs  comments
+                                          i.fa.fa-comment-o.hidden-sm.hidden-md.hidden-lg
+                              if issue.comments > 0
+                                  small.hidden-xs.text-muted(title="#{issue.updated_at}")  (last comment #{timeago(issue.updated_at)})
+                          br
+                          p(class='hidden summary')
+                              em= issue.body
+      if page > 1
+          a(href=(page-1), class='btn btn-sm btn-default')
+              i(class="fa fa-angle-double-left  fa-lg")
+              |Previous Page
+      if maxPages !== page
+          a(href= '/issues/page/' + (page+1), class='btn btn-sm btn-default pull-right')
+              |Next Page
+              i(class="fa fa-angle-double-right  fa-lg")
+    include ../partials/newsfeed
