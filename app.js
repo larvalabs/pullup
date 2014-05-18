@@ -156,7 +156,7 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 
 app.get('/news', newsController.index);
 app.get('/news/page/:page', newsController.index);
-app.get('/rss', newsController.index);
+app.get('/rss', newsController.all);
 app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews);
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 

@@ -54,6 +54,35 @@ exports.index = function(req, res, next) {
   }, sortByScore);
 };
 
+exports.all = function(req, res, next) {
+
+  var page = typeof req.params.page !== 'undefined' ? req.params.page : 1;
+  page = isNaN(page) ? 1 : Number(page);
+  page = page < 1 ? 1 : page;
+
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
+  var view = 'news/index';
+  if (req.route.path === '/rss') {
+    view = 'rss';
+    res.set('Content-Type', 'text/xml; charset=utf-8');
+  }
+
+  getNewsItems({}, page, req.user, function (err, discussions) {
+    if(err) return next(err);
+
+    res.render(view, {
+      title: 'Top Discussions',
+      tab: 'news',
+      items: discussions,
+      page: page,
+      archive: page > maxPages,
+      newsItemsPerPage: newsItemsPerPage
+    });
+  }, sortByScore);
+};
+
 /**
  * GET /news/:id
  * View comments on a news item
