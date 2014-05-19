@@ -42,11 +42,20 @@ exports.getMarkdown = function(req, res) {
 
 exports.newsFeed = function(req, res) {
 
+  var newsItemsPerPage = 10;
+
+  var page = typeof req.query.page !== 'undefined' ? req.query.page : 1;
+  page = isNaN(page) ? 1 : Number(page);
+  page = page < 1 ? 1 : page;
+
+  var skip = (page - 1) * newsItemsPerPage;
+
   NewsItem
   .find({url: new RegExp("^https?:\/\/")})
   .sort('-created')
-  .limit(20)
+  .limit(newsItemsPerPage)
   .populate('poster')
+  .skip(skip)
   .exec(function (err, newsItems) {
 
     if(err) {
@@ -79,7 +88,7 @@ exports.newsFeed = function(req, res) {
           }));
           return false;
         }
-
+        
         res.end(JSON.stringify(finalNewsItems));
       });
     });
