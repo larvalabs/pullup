@@ -76,7 +76,7 @@ block content
                             form(action='/news/' + item._id, method='POST', class='upvote-form')
                                 input(type='hidden', name='amount', value='1')
                                 button(type='submit', class='upvote')
-                                    i.fa.fa-chevron-up
+                                    i.fa.fa-thumbs-o-up.fa-lg
                     div.col-xs-2.col-xs-pull-2.col-sm-1.col-sm-pull-0.vote-count-wrapper
                         span.badge.vote-count= item.votes
                     div.col-xs-10.col-xs-push-2.col-sm-6.col-sm-push-0.col-lg-7.title
