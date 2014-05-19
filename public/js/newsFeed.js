@@ -1,5 +1,5 @@
 (function() {
-  var $newsFeed, $loading, $retryText, $newsFeed;
+  var $newsFeed, $loading, $retryText;
   var processingScroll = false;
   var page = 1;
 
@@ -17,7 +17,7 @@
     }
 
     $newsFeed.on('scroll', processScroll);
-  })
+  });
 
   function processScroll(e) {
     if(!processingScroll) {
@@ -57,7 +57,7 @@
         page++;
       } else {
         $newsFeed.off('scroll');
-        var $endText = $("<span class='end'>That's all, folks!</span>")
+        var $endText = $("<span class='end'>That's all, folks!</span>");
         $loading.before($endText);
       }
 
@@ -80,11 +80,15 @@
       commentsTerm = newsItem.comment_count+" comments";
     }
 
+
+    //Turning off JSHint because of missing semicolon errors
+    /* jshint ignore:start */
     return $("<div class='news-item'>"
             +  "<h3><a href='/news/"+newsItem._id+"'>"+newsItem.title+"</a></h3>"
             +  "<address>by <a href='/news/users/"+newsItem.poster.username+"'>"+newsItem.poster.username+"</a></address>"
             +  "<a href='/news/"+newsItem._id+"' class='comment-count'>"+commentsTerm+"</a>"
             +"</div>"
-            )
+          );
+    /* jshint ignore:end */
   }
 })();

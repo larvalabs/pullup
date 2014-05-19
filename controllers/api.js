@@ -59,7 +59,7 @@ exports.newsFeed = function(req, res) {
   .exec(function (err, newsItems) {
 
     if(err) {
-      res.statusCode = 500
+      res.statusCode = 500;
       res.end(JSON.stringify({
         error: "Could not find news items",
         message: err
@@ -88,10 +88,10 @@ exports.newsFeed = function(req, res) {
           }));
           return false;
         }
-        
+
         res.end(JSON.stringify(finalNewsItems));
       });
     });
 
   });
-}
+};

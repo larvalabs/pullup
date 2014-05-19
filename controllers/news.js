@@ -369,7 +369,7 @@ var addCommentDataToNewsItems = exports.addCommentDataToNewsItems = function(ite
       addLatestCommentTimeForNewsItems(items, cb);
     }
   ], callback);
-}
+};
 
 /** Private Functions **/
 
