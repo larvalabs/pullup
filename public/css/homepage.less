@@ -1,0 +1,45 @@
+// Overides
+body {
+  padding-top: 0;
+}
+
+.navbar {
+  margin: 0;
+  background: transparent;
+  border: none;
+}
+
+.navbar-header {
+  display: none;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+  color: darken(@brand-success, 30%);
+  text-shadow: 1px 0 1px darken(@brand-success, 10%);
+  opacity: .5;
+
+  &:hover {
+    text-shadow: 1px 0 1px darken(@brand-success, 5%);
+  }
+}
+
+
+// Hero
+section.hero {
+  #gradient.radial(@brand-success, #139c82);
+  text-align: center;
+  color: white;
+  padding: 100px 0 150px 0;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 150px;
+  font-weight: normal;
+}
+
+h2 {
+  font-size: 18px;
+  font-style: italic;
+  font-weight: normal;
+}
