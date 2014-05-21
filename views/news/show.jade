@@ -2,36 +2,39 @@ extends ../layout
 include ../mixins/delete
 
 block content
-  div.news-item
-    include ../partials/joinsite
+  .row
+    .col-md-8.col-md-offset-1.col-sm-12
+      div.news-item
+        include ../partials/joinsite
 
-    .page-header
-        h3
-            a(href=item.url)= item.title
-            if item.summary && ! item.isSelfPost()
-                | &nbsp;
-                a(href="#", class="show-summary")
-                    | ...
-            +delete(item.poster, '/news/' + item._id + '/delete')
-        h4
-          div(class="item-summary")!= item.summary
-        = 'submitted '
-        span.timeago(title="#{item.created}")= timeago(item.created)
-        = ' from '
-        a(href='/news/source/' + item.source, class='source')= item.source
-        = ' by '
-        a(href='/news/user/' + item.poster.username, class='user')= item.poster.username
-        if item.poster.profile.description
-            = ', '
-            span(title="User description")= item.poster.profile.description
-    include ../partials/postcomment
+        .page-header
+            h3
+                a(href=item.url)= item.title
+                if item.summary && ! item.isSelfPost()
+                    | &nbsp;
+                    a(href="#", class="show-summary")
+                        | ...
+                +delete(item.poster, '/news/' + item._id + '/delete')
+            h4
+              div(class="item-summary")!= item.summary
+            = 'submitted '
+            span.timeago(title="#{item.created}")= timeago(item.created)
+            = ' from '
+            a(href='/news/source/' + item.source, class='source')= item.source
+            = ' by '
+            a(href='/news/user/' + item.poster.username, class='user')= item.poster.username
+            if item.poster.profile.description
+                = ', '
+                span(title="User description")= item.poster.profile.description
+        include ../partials/postcomment
 
-    each comment, index in comments
-      div.comment
-        a(href='/news/user/' + comment.poster.username)= comment.poster.username
-        if comment.poster.profile.description
-            span.description=comment.poster.profile.description
-        span.timeago(title="#{comment.created}")= timeago(comment.created)
-        blockquote.content
-            +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
-            != comment.contents
+        each comment, index in comments
+          div.comment
+            a(href='/news/user/' + comment.poster.username)= comment.poster.username
+            if comment.poster.profile.description
+                span.description=comment.poster.profile.description
+            span.timeago(title="#{comment.created}")= timeago(comment.created)
+            blockquote.content
+                +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
+                != comment.contents
+    include ../partials/newsfeed

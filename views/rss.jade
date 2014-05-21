@@ -7,6 +7,10 @@ rss(version="2.0")
     if items.length
       lastBuildDate= new Date(items[0].created).toUTCString()
       each item, index in items
+        - if(item.url.indexOf('http') !== 0)
+          - url = "http://pullup.io"+item.url
+        - else
+          - url = item.url
         item
           title= item.title
           description
@@ -14,6 +18,6 @@ rss(version="2.0")
             br
             a(href='/news/#{item._id}')
               | Comments
-          link= item.url
+          link= url
           guid= item.url
           pubDate= item.created
