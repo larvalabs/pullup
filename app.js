@@ -156,7 +156,7 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 
 app.get('/news', newsController.index);
 app.get('/news/page/:page', newsController.index);
-app.get('/rss', newsController.index);
+app.get('/rss', newsController.all);
 app.get('/news/submit', passportConf.isAuthenticated, newsController.submitNews);
 app.post('/news/submit', passportConf.isAuthenticated, newsController.postNews);
 
@@ -191,6 +191,7 @@ app.get('/chat', chatController.index);
  * API Routes
  */
 app.post('/api/markdown', apiController.getMarkdown);
+app.get('/api/news', apiController.newsFeed);
 
 /**
  * OAuth routes for sign-in.

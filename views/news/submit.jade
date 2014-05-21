@@ -1,58 +1,62 @@
 extends ../layout
 
 block content
-  form.form-horizontal(id='signup-form', method='POST')
-    legend Submit News
-    p
-      em Just populate the URL and press tab, and let us fill out the rest!
-      |  You can also use our 
-      a(href='/bookmarklet') bookmarklet.
+  .row
+    .col-md-8.col-md-offset-1.col-sm-12
+      form.form-horizontal(id='signup-form', method='POST')
+        legend Submit News
+        p
+          em Think of a thoughtful discussion, and share it with Pullup!
+          |  You can also use our
+          a(href='/bookmarklet')  bookmarklet
+          |  to submit news.
 
-    .form-group
-      .col-sm-7.col-sm-offset-3
-        .btn-group(data-toggle="buttons")
-          label.btn.btn-success.post-type-btn.post-type-url(class="#{posttype === 'self' ? '' : 'active'}")
-            input(type="radio", name="posttype", value="url")
-            | Create Link
-          label.btn.btn-success.post-type-btn(class="#{posttype === 'self' ? 'active' : ''}")
-            if (posttype === self)
-              input(type="radio", name="posttype", value="self")
+        .form-group
+          .col-sm-7.col-sm-offset-3
+            .btn-group(data-toggle="buttons")
+              label.btn.btn-success.post-type-btn(class="#{posttype === 'link' ? '' : 'active'}")
+                if (posttype === 'link')
+                  input(type="radio", name="posttype", value="self")
+                else
+                  input(type="radio", name="posttype", value="self", checked)
+                | Create Discussion
+              label.btn.btn-success.post-type-btn.post-type-url(class="#{posttype === 'link' ? 'active' : ''}")
+                input(type="radio", name="posttype", value="url")
+                | Create Link
+        .form-group.form-group-url(style="#{posttype === 'link' ? '' : 'display:none;'}")
+          label.col-sm-3.control-label(for='url') URL
+          .col-sm-7
+            if newsItem.url
+              input.form-control(type='text', name='url', id='url', value='#{newsItem.url}', placeholder='URL')
             else
-              input(type="radio", name="posttype", value="self", checked)
-            | Create Discussion
-    .form-group.form-group-url(style="#{posttype === 'self' ? 'display:none;' : ''}")
-      label.col-sm-3.control-label(for='url') URL
-      .col-sm-7
-        if newsItem.url
-          input.form-control(type='text', name='url', id='url', value='#{newsItem.url}', placeholder='URL')
-        else
-          input.form-control(type='text', name='url', id='url', value='#{newsItem.url}', placeholder='URL', autofocus)
-    .form-group
-      label.col-sm-3.control-label(for='title') Title
-      .col-sm-7
-        if newsItem.url
-          input.form-control(type='text', name='title', id='title', placeholder='Title', value='#{newsItem.title}', autofocus)
-        else
-          input.form-control(type='text', name='title', id='title', placeholder='Title', value='#{newsItem.title}')
-    .form-group.form-group-source(style="#{posttype === 'self' ? 'display:none;' : '' }")
-      label.col-sm-3.control-label(for='source') Source
-      .col-sm-7
-        input.form-control(type='text', name='source', id='source', value='#{newsItem.source}')
-    .form-group.markdown
-      label.col-sm-3.control-label(for='summary') Summary
-      ul.nav.nav-tabs.col-sm-7
-        li.active
-          a(href="#edit-tab-content", data-toggle="tab") Write
-        li
-          a(href="#preview-tab-content", data-toggle="tab") Preview
-      .tab-content.col-sm-7.col-sm-offset-3
-        .tab-pane.fade.in.active#edit-tab-content
-          textarea.form-control(type='text', name='summary', id='summary', style='height:200px')
-            = newsItem.summary
-        .tab-pane.fade.in#preview-tab-content
-          span Loading...
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        button.btn.btn-success(type='submit')
-          i.fa.fa-check
-          | Submit
+              input.form-control(type='text', name='url', id='url', value='#{newsItem.url}', placeholder='URL', autofocus)
+        .form-group
+          label.col-sm-3.control-label(for='title') Title
+          .col-sm-7
+            if newsItem.url
+              input.form-control(type='text', name='title', id='title', placeholder='Title', value='#{newsItem.title}', autofocus)
+            else
+              input.form-control(type='text', name='title', id='title', placeholder='Title', value='#{newsItem.title}')
+        .form-group.form-group-source(style="#{posttype === 'link' ? '' : 'display:none;' }")
+          label.col-sm-3.control-label(for='source') Source
+          .col-sm-7
+            input.form-control(type='text', name='source', id='source', value='#{newsItem.source}')
+        .form-group.markdown
+          label.col-sm-3.control-label(for='summary') Summary
+          ul.nav.nav-tabs.col-sm-7
+            li.active
+              a(href="#edit-tab-content", data-toggle="tab") Write
+            li
+              a(href="#preview-tab-content", data-toggle="tab") Preview
+          .tab-content.col-sm-7.col-sm-offset-3
+            .tab-pane.fade.in.active#edit-tab-content
+              textarea.form-control(type='text', name='summary', id='summary', style='height:200px')
+                = newsItem.summary
+            .tab-pane.fade.in#preview-tab-content
+              span Loading...
+        .form-group
+          .col-sm-offset-3.col-sm-7
+            button.btn.btn-success(type='submit')
+              i.fa.fa-check
+              | Submit
+    include ../partials/newsfeed
