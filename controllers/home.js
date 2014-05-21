@@ -4,7 +4,9 @@
  */
 
 exports.index = function(req, res) {
-  res.redirect('/news');
+  res.render('homepage', {
+    title: "Pullup"
+  });
 };
 
 exports.signup = function(req, res) {
