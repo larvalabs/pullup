@@ -7,6 +7,7 @@ body {
   margin: 0;
   background: transparent;
   border: none;
+  position: absolute;
 }
 
 .navbar-header {
@@ -42,4 +43,92 @@ h2 {
   font-size: 18px;
   font-style: italic;
   font-weight: normal;
+}
+
+
+// Features
+
+h3 {
+  text-align: center;
+  color: @brand-primary;
+  font-size: 48px;
+}
+
+h4 {
+  text-align: center;
+  color: @brand-primary;
+  font-size: 18px;
+}
+
+
+.illustration {
+  width: 75%;
+  margin: auto;
+
+  .chat {
+    background: #a6bfbb;
+    border-radius: 12px;
+    margin: 15px 0 10px 60px;
+    color: @brand-primary;
+    font-size: 24px;
+    text-align: center;
+    padding: 30px 0;
+    position: relative;
+
+    &:hover {
+      &:before {
+        .tada();
+        .animation-duration(2s);
+        .animation-iteration-count(1);
+      }
+    }
+
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: -60px;
+      height: 57px;
+      width: 42px;
+      background-image: url("../img/homepage/grey-guy.png");
+      background-size: 42px 57px;
+      background-position: left bottom;
+      background-repeat: no-repeat;
+    }
+
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      height: 0;
+      width: 0;
+      border-right: 20px solid transparent;
+      border-bottom: 20px solid #a6bfbb;
+      bottom: 20px;
+      left: -9px;
+      .rotate(45deg)
+    }
+
+    &.chat-primary {
+      background-color: @brand-success;
+      color: white;
+      margin: 15px 60px 10px 0;
+
+      &:before {
+        background-image: url(../img/homepage/blue-guy.png);
+        right: -60px;
+        left: auto;
+        top: 0;
+      }
+
+      &:after {
+        border-bottom-color: @brand-success;
+        .rotate(225deg);
+        right: -9px;
+        left: auto;
+        top: 20px;
+      }
+    }
+  }
 }
