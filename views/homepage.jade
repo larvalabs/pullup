@@ -26,3 +26,70 @@ block content
         | drop the noise.
 
       .illustration
+        .news-item
+          h5 Atom Editor is Now Open Source
+          address
+            | by
+            a(href="http://pullup.io/news/users/josephwegner")  josephwegner
+          a(href="http://pullup.io/news") 5 comments
+        .news-item
+          h5 Mozilla CEO Steps Down
+          address
+            | by
+            a(href="http://pullup.io/news/users/chrishall")  chrishall
+          a(href="http://pullup.io/news") 3 comments
+        .news-item
+          h5 Atom Editor is Now Open Source
+          address
+            | by
+            a(href="http://pullup.io/news/users/josephwegner")  josephwegner
+          a(href="http://pullup.io/news") 7 comments
+
+    a(href="/news").col-md-6.col-md-offset-3.cta.cta-green
+      span Sound Interesting?
+      span Come inside and join us!
+
+  section.issues.row
+    h3 Pullup Membership
+    h4 submit a pull request to join!
+
+    ul.col-md-6.col-md-offset-3
+      li.issue
+        span.tag Beginner
+        br
+        span.id #35
+        span.title Sort On Demand
+      li.issue
+        span.tag Beginner
+        br
+        span.id #23
+        span.title Categories
+      li.issue
+        span.tag Beginner
+        br
+        span.id #46
+        span.title Public Personalization
+      li.issue
+        span.tag Beginner
+        br
+        span.id #37
+        span.title Notifications
+      li.issue
+        span.tag Beginner
+        br
+        span.id #29
+        span.title New Developer Bootcamp
+
+    a(href="/news").col-md-6.col-md-offset-3.cta
+      span Not sure what to work on?
+      span Poke around and see if you find anything!
+
+block extended_footer
+  .made-by
+    h3 Made with Love by
+    p
+      each user, index in users
+        if index != 0
+          |  ·
+
+        a(href="/news/user/#{user}")  #{user}

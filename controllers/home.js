@@ -1,3 +1,5 @@
+var userlist = require('../config/userlist');
+
 /**
  * GET /
  * Home page.
@@ -5,7 +7,8 @@
 
 exports.index = function(req, res) {
   res.render('homepage', {
-    title: "Pullup"
+    title: "Pullup",
+    users: userlist.users
   });
 };
 
