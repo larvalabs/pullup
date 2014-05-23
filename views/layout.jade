@@ -20,7 +20,7 @@ html
     script(src='/js/lib/jquery-2.1.0.min.js?v=#{cacheBuster}')
     script(src='/js/lib/bootstrap.min.js?v=#{cacheBuster}')
     script(src='/js/main.js?v=#{cacheBuster}')
-  body(class="page-#{title.replace(_slugify_strip_re, '').trim().toLowerCase().replace(_slugify_hyphenate_re, '-')}")
+  body(class="page-#{title.replace(/[^\w\s-]/g, '').trim().toLowerCase().replace(/[-\s]+/g, '-')}")
     #wrap
       include partials/data
       include partials/navigation

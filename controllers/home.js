@@ -1,4 +1,6 @@
 var userlist = require('../config/userlist');
+var issuesController = require('./issues');
+var NewsItem = require('../models/NewsItem');
 
 /**
  * GET /
@@ -6,9 +8,19 @@ var userlist = require('../config/userlist');
  */
 
 exports.index = function(req, res) {
-  res.render('homepage', {
-    title: "Pullup",
-    users: userlist.users
+  issuesController.githubAuth(req.user);
+
+  issuesController.beginnerIssues(function(err, issues) {
+
+    if(err) {
+      issues = [];
+    }
+
+    res.render('homepage', {
+      title: "Pullup",
+      users: userlist.users,
+      issues: issues
+    });
   });
 };
 

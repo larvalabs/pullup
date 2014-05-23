@@ -148,10 +148,19 @@ body.page-pullup {
         background-repeat: no-repeat;
         background-position: left center;
 
-        &:first-child {
-          .flipOutX();
+        &.animating {
           .animation-duration(1s);
           .animation-iteration-count(1);
+          .flipInX();
+        }
+
+        &.hideIt {
+          .flipOutX();
+          opacity: 0;
+        }
+
+        &:nth-child(n+4) {
+            display: none;
         }
 
         &:last-child {
@@ -227,16 +236,19 @@ body.page-pullup {
         font-size: 14px;
         font-weight: 200;
         color: white;
-        display: inline-block;
+        display: table-cell;
         width: 50px;
         position: relative;
         top: -3px;
+        text-decoration: none;
       }
 
       .title {
         font-size: 24px;
         color: white;
         font-weight: 200;
+        display: table-cell;
+        text-decoration: none;
       }
     }
   }

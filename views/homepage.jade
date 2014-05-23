@@ -1,6 +1,8 @@
 extends layout
 
 block content
+  script(type="text/javascript", src="/js/homepage.js")
+
   section.hero
     h1 pullup
     h2 an organic community of digital creators
@@ -27,23 +29,40 @@ block content
 
       .illustration
         .news-item
-          h5 Atom Editor is Now Open Source
+          h5
+            a(href="https://github.com/blog/1831-atom-free-and-open-source-for-everyone") Atom: Now open to all
           address
             | by
-            a(href="http://pullup.io/news/users/josephwegner")  josephwegner
-          a(href="http://pullup.io/news") 5 comments
+            a.poster(href="http://pullup.io/news/users/michaelnovakjr")  michaelnovakjr
+          a.comments(href="http://pullup.io/news/5368fc394450720400359552") 5 comments
         .news-item
-          h5 Mozilla CEO Steps Down
+          h5
+            a(href="http://dcurt.is/facebooks-predicament") Whatever goes up, that’s what we do
           address
             | by
-            a(href="http://pullup.io/news/users/chrishall")  chrishall
-          a(href="http://pullup.io/news") 3 comments
+            a(href="http://pullup.io/news/users/dfjones")  dfjones
+          a(href="http://pullup.io/news/53349c81e6d4e20a001c2beb") 7 comments
         .news-item
-          h5 Atom Editor is Now Open Source
+          h5
+            a(href="http://gabrielecirulli.github.io/2048/") 2048
           address
             | by
-            a(href="http://pullup.io/news/users/josephwegner")  josephwegner
-          a(href="http://pullup.io/news") 7 comments
+            a(href="http://pullup.io/news/users/willurd")  willurd
+          a(href="http://pullup.io/news/531ed2b1dcdf7d040037209a") 3 comments
+        .news-item
+          h5
+            a(href="http://gabrielecirulli.github.io/2048/") 2048
+          address
+            | by
+            a(href="http://pullup.io/news/users/willurd")  willurd
+          a(href="http://pullup.io/news/531ed2b1dcdf7d040037209a") 3 comments
+        .news-item
+          h5
+            a(href="http://gabrielecirulli.github.io/2048/") 2048
+          address
+            | by
+            a(href="http://pullup.io/news/users/willurd")  willurd
+          a(href="http://pullup.io/news/531ed2b1dcdf7d040037209a") 3 comments
 
     a(href="/news").col-md-6.col-md-offset-3.cta.cta-green
       span Sound Interesting?
@@ -54,31 +73,14 @@ block content
     h4 submit a pull request to join!
 
     ul.col-md-6.col-md-offset-3
-      li.issue
-        span.tag Beginner
-        br
-        span.id #35
-        span.title Sort On Demand
-      li.issue
-        span.tag Beginner
-        br
-        span.id #23
-        span.title Categories
-      li.issue
-        span.tag Beginner
-        br
-        span.id #46
-        span.title Public Personalization
-      li.issue
-        span.tag Beginner
-        br
-        span.id #37
-        span.title Notifications
-      li.issue
-        span.tag Beginner
-        br
-        span.id #29
-        span.title New Developer Bootcamp
+      each issue in issues
+        li.issue
+          span.tag Beginner
+          br
+          a.id(href=issue.html_url)
+            | #
+            = issue.number
+          a.title(href=issue.html_url)= issue.title
 
     a(href="/news").col-md-6.col-md-offset-3.cta
       span Not sure what to work on?
