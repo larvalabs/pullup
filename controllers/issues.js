@@ -250,7 +250,7 @@ exports.beginnerIssues = function(cb) {
     per_page: 5,
     "labels": "beginner"
   }, cb);
-}
+};
 
 // cast a vote for an issue if the author is a user of pullup
 function castFirstIssueVote(issue, author_username) {
@@ -334,7 +334,7 @@ exports.githubAuth = function(user) {
         secret: githubSecrets.clientSecret
     });
   }
-}
+};
 
 function parseMarkdown (content) {
   content = parseIssueNumbers(content);
