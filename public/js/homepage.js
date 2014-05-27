@@ -39,7 +39,7 @@ $(document).ready(function() {
     if(visible.length < 3) {
       position = visible.length;
     } else {
-      position = Math.floor(Math.random() * 3);
+      position = Math.floor(Math.random() * 2);
     }
 
     var elementToReplace = $(".news-item")[position];
