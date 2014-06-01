@@ -8,7 +8,12 @@ var issueSchema = new mongoose.Schema({
   },
   poster: {
     type: Schema.Types.ObjectId
+  },
+  vote_count: {
+    type: Number,
+    default: 0
   }
 });
 
-module.exports = mongoose.model('Issue', issueSchema);
+var Issue;
+module.exports = Issue =  mongoose.model('Issue', issueSchema);

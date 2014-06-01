@@ -20,6 +20,10 @@ var commentSchema = new mongoose.Schema({
     type: String,
     ref: 'User'
   },
+  vote_count: {
+    type: Number,
+    default: 0
+  },
   created: {
     type: Date,
     default: Date.now
@@ -27,5 +31,5 @@ var commentSchema = new mongoose.Schema({
 });
 
 var User = mongoose.model('User', userSchema);
-
-module.exports = mongoose.model('Comment', commentSchema);
+var Comment;
+module.exports = Comment = mongoose.model('Comment', commentSchema);
