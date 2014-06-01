@@ -31,7 +31,7 @@ exports.index = function (req, res, next) {
 
   var issues = [];
 
-  githubAuth(req.user);
+  exports.githubAuth(req.user);
 
   github.issues.repoIssues({
     user: githubDetails.user,
@@ -97,7 +97,7 @@ exports.show = function (req, res, next) {
         addVotesToIssues(issueDoc, req.user, cb);
       },
       issue: function (cb) {
-        githubAuth(req.user);
+        exports.githubAuth(req.user);
 
         github.issues.getRepoIssue({
           user: githubDetails.user,
@@ -106,7 +106,7 @@ exports.show = function (req, res, next) {
         }, cb);
       },
       comments: function (cb) {
-        githubAuth(req.user);
+        exports.githubAuth(req.user);
 
         github.issues.getComments({
           user: githubDetails.user,
@@ -169,7 +169,7 @@ exports.postComment = function (req, res, next) {
 
     if(err) return next(err);
 
-    githubAuth(req.user);
+    exports.githubAuth(req.user);
 
     github.issues.createComment({
       user: githubDetails.user,
@@ -242,6 +242,16 @@ function getIssueIds(issues, callback) {
   });
 }
 
+exports.beginnerIssues = function(cb) {
+  github.issues.repoIssues({
+    user: githubDetails.user,
+    repo: githubDetails.repo,
+    state: 'open',
+    per_page: 5,
+    "labels": "beginner"
+  }, cb);
+};
+
 // cast a vote for an issue if the author is a user of pullup
 function castFirstIssueVote(issue, author_username) {
 
@@ -307,7 +317,7 @@ function githubToken(user) {
   return false;
 }
 
-function githubAuth(user) {
+exports.githubAuth = function(user) {
   var token = githubToken(user);
 
   if(token) {
@@ -324,7 +334,7 @@ function githubAuth(user) {
         secret: githubSecrets.clientSecret
     });
   }
-}
+};
 
 function parseMarkdown (content) {
   content = parseIssueNumbers(content);

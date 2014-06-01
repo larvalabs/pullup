@@ -1,10 +1,27 @@
+var userlist = require('../config/userlist');
+var issuesController = require('./issues');
+var NewsItem = require('../models/NewsItem');
+
 /**
  * GET /
  * Home page.
  */
 
 exports.index = function(req, res) {
-  res.redirect('/news');
+  issuesController.githubAuth(req.user);
+
+  issuesController.beginnerIssues(function(err, issues) {
+
+    if(err) {
+      issues = [];
+    }
+
+    res.render('homepage', {
+      title: "Pullup",
+      users: userlist.users,
+      issues: issues
+    });
+  });
 };
 
 exports.signup = function(req, res) {
