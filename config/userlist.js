@@ -17,6 +17,7 @@ module.exports = {
         'dcancel',
         'dck273',
         'dfjones',
+        'djstearns',
         'dylnclrk',
         'eik3',
         'euank',
