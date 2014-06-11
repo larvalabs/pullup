@@ -7,6 +7,7 @@ module.exports = {
         'bobnisco',
         'briansoule',
         'bwlang',
+        'Caraheacock',
         'cgroner',
         'chall8908',
         'ChristianGaertner',
