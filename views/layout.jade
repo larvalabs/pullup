@@ -20,12 +20,12 @@ html
     script(src='/js/lib/jquery-2.1.0.min.js?v=#{cacheBuster}')
     script(src='/js/lib/bootstrap.min.js?v=#{cacheBuster}')
     script(src='/js/main.js?v=#{cacheBuster}')
-  body(class="page-#{title.replace(/[^\w\s-]/g, '').trim().toLowerCase().replace(/[-\s]+/g, '-')}")
+  body
     #wrap
       include partials/data
       include partials/navigation
       include partials/noscript
-      include partials/flash
-      block content
+      .container
+        include partials/flash
+        block content
     include partials/footer
-    script(src='/js/newsFeed.js?v=#{cacheBuster}')

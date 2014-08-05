@@ -38,44 +38,13 @@ exports.index = function(req, res, next) {
     res.set('Content-Type', 'text/xml; charset=utf-8');
   }
 
-  getNewsItems({
-    url: new RegExp("^\/news\/[^\/]*$")
-  }, page, req.user, function (err, discussions) {
+  getNewsItems({}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
     res.render(view, {
-      title: 'Top Discussions',
+      title: 'Top News',
       tab: 'news',
-      items: discussions,
-      page: page,
-      archive: page > maxPages,
-      newsItemsPerPage: newsItemsPerPage
-    });
-  }, sortByScore);
-};
-
-exports.all = function(req, res, next) {
-
-  var page = typeof req.params.page !== 'undefined' ? req.params.page : 1;
-  page = isNaN(page) ? 1 : Number(page);
-  page = page < 1 ? 1 : page;
-
-  // don't use a `/page/1` url
-  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
-
-  var view = 'news/index';
-  if (req.route.path === '/rss') {
-    view = 'rss';
-    res.set('Content-Type', 'text/xml; charset=utf-8');
-  }
-
-  getNewsItems({}, page, req.user, function (err, discussions) {
-    if(err) return next(err);
-
-    res.render(view, {
-      title: 'Top Discussions',
-      tab: 'news',
-      items: discussions,
+      items: newsItems,
       page: page,
       archive: page > maxPages,
       newsItemsPerPage: newsItemsPerPage
@@ -322,7 +291,7 @@ exports.userNews = function(req, res, next) {
         comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
       });
 
-      res.render('news/all', {
+      res.render('news/index', {
         title: 'Posts by ' + user.username,
         tab: 'news',
         items: results.newsItems,
@@ -347,7 +316,7 @@ exports.sourceNews = function(req, res, next) {
   getNewsItems({'source': req.params.source}, page, req.user, function (err, newsItems) {
     if(err) return next(err);
 
-    res.render('news/all', {
+    res.render('news/index', {
       title: 'Recent news from ' + req.params.source,
       tab: 'news',
       items: newsItems,
@@ -357,21 +326,6 @@ exports.sourceNews = function(req, res, next) {
     });
   });
 };
-
-/** Controller Helper Functions **/
-
-var addCommentDataToNewsItems = exports.addCommentDataToNewsItems = function(items, callback) {
-  async.waterfall([
-    function (cb) {
-      addCommentCountToNewsItems(items, cb);
-    },
-    function (items, cb) {
-      addLatestCommentTimeForNewsItems(items, cb);
-    }
-  ], callback);
-};
-
-/** Private Functions **/
 
 function getNewsItems(query, page, user, callback, sort) {
 
@@ -448,6 +402,17 @@ function addVotesAndCommentDataToNewsItems(items, user, callback) {
     },
     function (items, cb) {
       addCommentDataToNewsItems(items, cb);
+    }
+  ], callback);
+}
+
+function addCommentDataToNewsItems(items, callback) {
+  async.waterfall([
+    function (cb) {
+      addCommentCountToNewsItems(items, cb);
+    },
+    function (items, cb) {
+      addLatestCommentTimeForNewsItems(items, cb);
     }
   ], callback);
 }
