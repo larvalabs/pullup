@@ -49,8 +49,8 @@ body {
 // -------------------------
 
 #footer {
+  height: 75px;
   padding-top: 15px;
-  position: relative;
 }
 #mobile-footer {
   position: fixed;
@@ -88,75 +88,6 @@ body {
 
 // Global Elements
 // -------------------------
-
-.loading-animation {
-  height: 64px;
-  width: 64px;
-  margin: 10px auto;
-  background: @brand-primary url(../img/logo-small.jpg) center;
-  background-repeat: no-repeat;
-  background-size: 100%;
-  -webkit-animation-name: loading-animation;
-  -webkit-animation-duration: 1.5s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-transition: background-size .5s, opacity 2s;
-  -moz-animation-name: loading-animation;
-  -moz-animation-duration: 1.5s;
-  -moz-animation-iteration-count: infinite;
-  -moz-transition: background-size .5s, opacity 2s;
-  -o-animation-name: loading-animation;
-  -o-animation-duration: 1.5s;
-  -o-animation-iteration-count: infinite;
-  -o-transition: background-size .5s, opacity 2s;
-  animation-name: loading-animation;
-  animation-duration: 1.5s;
-  animation-iteration-count: infinite;
-  transition: background-size .5s, opacity 2s;
-  opacity: 1;
-
-
-  &.error {
-    background-size: 0;
-    opacity: 0;
-    background-color: @brand-danger;
-  }
-
-  &.hide {
-    opacity: 0;
-  }
-}
-
-@-webkit-keyframes loading-animation {
-  0% { -webkit-transform: none; }
-  25% { -webkit-transform: rotateZ(180deg); }
-  50% { -webkit-tranform: rotateX(180deg); }
-  75% { -webkit-transform: rotateY(180deg); }
-  100% { -webkit-transform: none; }
-}
-
-@-moz-keyframes loading-animation {
-  0% { -moz-transform: none; }
-  25% { -moz-transform: rotateZ(180deg); }
-  50% { -moz-tranform: rotateX(180deg); }
-  75% { -moz-transform: rotateY(180deg); }
-  100% { -moz-transform: none; }
-}
-
-@-o-keyframes loading-animation {
-  0% { -o-transform: none; }
-  25% { -o-transform: rotateZ(180deg); }
-  50% { -o-tranform: rotateX(180deg); }
-  75% { -o-transform: rotateY(180deg); }
-  100% { -o-transform: none; }
-}
-
-@keyframes loading-animation {
-  0% { transform: none; }
-  25% { transform: rotateZ(180deg); }
-  50% { tranform: rotateX(180deg); }
-  75% { transform: rotateY(180deg); }
-  100% { transform: none; }
-}
 
 .delete-form { display: inline; }
 .delete {
@@ -452,18 +383,18 @@ body {
 
 .user-profile {
     img {
-        vertical-align: top;
+        vertical-align: top; 
         padding-right: 10px;
     }
     .user-header {
         display:inline-block;
 
         .name {
-            margin-bottom: 0;
+            margin-bottom: 0;   
         }
 
         .description {
-            margin-top: -10px;
+            margin-top: -10px;   
             padding-left: 2px;
         }
     }
@@ -540,74 +471,6 @@ body {
     }
 }
 
-// News Feed
-// -------------------------
-.news-feed {
-    background-color: @gray-lighter;
-    height: 100%;
-    position: fixed;
-    right: 0;
-    top: 0;
-    padding: 40px 10px 100px 10px;
-    overflow-y: scroll;
-
-    @news-feed-font-size: .8em;
-
-    .loading-animation {
-      margin-top: 40px;
-    }
-
-    .retry {
-      text-align: center;
-      text-decoration: underline;
-      color: @gray-dark;
-      display: inline-block;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    .end {
-      display: inline-block;
-      text-align: center;
-      color: @gray-dark;
-      width: 100%;
-      margin-top: 10px;
-    }
-
-    .news-item {
-      display: block;
-      color: @gray-darker;
-      border-bottom: 1px solid @gray-dark;
-      padding: .5em 0;
-
-      h3, address {
-        font-size: @news-feed-font-size;
-
-        a {
-          color: @brand-primary-darker;
-        }
-      }
-
-      a.comment-count {
-        color: @brand-primary-darker;
-        font-size: @news-feed-font-size;
-      }
-
-      address {
-        margin-bottom: 0;
-      }
-
-      h3 {
-        margin: .4em 0;
-
-        a {
-          color: @brand-primary;
-        }
-      }
-    }
-}
-
-
 // Miscellaneous
 // -------------------------
 
@@ -633,11 +496,11 @@ body {
 }
 
 #chat {
-  position: absolute;
-  top:45px;
+  position: absolute; 
+  top:45px; 
   bottom:75px;
 
-  iframe {
+  iframe { 
     height:100%; width:100%; border: 0
   }
 }
@@ -647,6 +510,3 @@ body {
     width:100%;
   }
 }
-
-// Page Specific
-@import "./homepage";
