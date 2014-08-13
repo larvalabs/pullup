@@ -15,6 +15,8 @@ var githubContributors = require('../components/GithubContributors');
 var constants = require('../constants');
 var markdownParser = require('../components/MarkdownParser');
 var utils = require('../utils');
+var secrets = require('../config/secrets');
+var sendgrid  = require('sendgrid')(secrets.sendgrid.user, secrets.sendgrid.password);
 
 /**
  * News Item config
@@ -180,6 +182,38 @@ exports.postComment = function (req, res, next) {
       return res.redirect('/news/'+req.params.id);
     }
 
+    NewsItem
+    .findById(req.params.id)
+    .populate('poster')
+    .exec(function (err, newsItem) {
+
+      if (!err) {
+        var newsPoster = newsItem.poster;
+        console.log ('newItem poster email: ' + newsPoster.email);
+
+        if (newsPoster.email) {
+          var email = new sendgrid.Email({
+            to: newsPoster.email,
+            from: 'noreply@pullup.io',
+            fromname: 'pullup',
+            subject: 'There is a new comment on your post',
+            text: 'Link to post: http://pullup.io/news/' + req.params.id
+          });
+
+          sendgrid.send(email, function(err) {
+            if (err) {
+              // req.flash('errors', { msg: err.message });
+              // return res.redirect('/contact');
+              console.log("Error sending email: " + err.message);
+            }
+            // req.flash('success', { msg: 'Email has been sent successfully!' });
+            // res.redirect('/contact');
+          });
+
+        }
+      }
+    });
+ 
     req.flash('success', { msg  : 'Comment posted. Thanks!' });
     res.redirect('/news/'+comment.item+'?last_comment='+comment.created);
   });

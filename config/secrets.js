@@ -2,8 +2,8 @@ module.exports = {
   db: process.env.MONGOHQ_URL || 'localhost',
 
   sendgrid: {
-    user: 'Your SendGrid Username',
-    password: 'Your SendGrid Password'
+    user: process.env.SENDGRID_USERNAME,
+    password: process.env.SENDGRID_PASSWORD
   },
 
   facebook: {
