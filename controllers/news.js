@@ -55,6 +55,79 @@ exports.index = function(req, res, next) {
 };
 
 /**
+ * GET /dailyEmail
+ * Send a summary of yesterday's top posts to all users with a valid email address in their profile
+ */
+exports.dailyEmail = function(req, res, next) {
+  var startDate = new Date();
+  startDate.setDate(startDate.getDate() - 2);
+  startDate.setHours(0, 0, 0, 0);
+
+  var endDate = new Date();
+  endDate.setHours(0, 0, 0, 0);
+  console.log("Start date: " + startDate);
+  console.log("End date: " + endDate);
+
+  var query = {
+    'created': {'$gte' : startDate, '$lte' : endDate}
+  };
+
+  NewsItem
+    .find(query)
+    .sort('vote_count')
+    .limit(10)
+    .populate('poster')
+    .exec(function (err, newsItems) {
+
+      if(err) return callback(err);
+
+      console.log("Results size: " + newsItems.length);
+
+      var emailBody = "Top news stories from yesterday:<br><br>";
+
+      newsItems.forEach(function (item) {
+        console.log("Item: s:"+item.vote_count+" / " + item.title);
+        emailBody += "<a href='http://pullup.io/news/"+item.id+"'>"+item.title + "</a> (" + item.vote_count + " votes)<br>";
+      });
+
+      console.log(emailBody);
+
+      User
+        .find({username: 'megamattron'})
+        .exec(function (err, users) {
+          if (!users || users.length == 0) return callback(err);
+
+          var user = users[0];
+          console.log("Sending daily email to " + user.email);
+          var email = new sendgrid.Email({
+            to: user.email,
+            from: 'noreply@pullup.io',
+            fromname: 'pullup',
+            subject: 'Yeseterday\'s top stories on pullup',
+            html: emailBody
+          });
+
+          sendgrid.send(email, function(err) {
+            if (err) {
+              // req.flash('errors', { msg: err.message });
+              // return res.redirect('/contact');
+              console.log("Error sending email: " + err.message);
+            }
+            // req.flash('success', { msg: 'Email has been sent successfully!' });
+            // res.redirect('/contact');
+          });
+
+
+          req.flash('success', { msg: 'Daily email sent.' });
+          res.redirect("/news");
+
+        });
+
+    });
+
+};
+
+/**
  * GET /news/:id
  * View comments on a news item
  */
