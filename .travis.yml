@@ -12,3 +12,5 @@ deploy:
   app: pullup
   on:
     repo: larvalabs/pullup
+git:
+  depth: 10
