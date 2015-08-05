@@ -36,6 +36,7 @@ module.exports = {
         'jmcelwain',
         'joewright',
         'jordancalder',
+        'josegonzalez',
         'josephwegner',
         'jphatton',
         'julbaxter',
