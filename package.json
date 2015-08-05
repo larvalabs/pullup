@@ -29,7 +29,7 @@
     "octonode": "~0.5.0",
     "passport": "~0.2.0",
     "passport-facebook": "~1.0.2",
-    "passport-github": "~0.1.5",
+    "passport-github": "git+https://git@github.com/alexgorbatchev/passport-github.git#9fef321dc7237c977b81fbf4a4f9589fc8ae9aaf",
     "passport-google-oauth": "~0.1.5",
     "passport-local": "~0.1.6",
     "passport-oauth": "~1.0.0",
