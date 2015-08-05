@@ -120,9 +120,15 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
         done(err, existingUser);
       });
     }
+
+    if(!profile.verifiedPrimaryEmail) {
+      req.flash('errors', { msg: 'You need a verified email on GitHub to use Pullup.'});
+      return done();
+    }
+
     var user = new User();
     user.username = profile.username;
-    user.email = profile._json.email;
+    user.email = profile.verifiedPrimaryEmail;
     user.github = profile.id;
     replaceToken(user, 'github', accessToken);
     user.profile.name = profile.displayName;
