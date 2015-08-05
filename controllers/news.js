@@ -206,7 +206,7 @@ exports.postComment = function (req, res, next) {
 
       var newsPoster = results.newsItem.poster;
 
-      if (newsPoster.email) {
+      if (newsPoster.email && newsPoster.email !== req.user.email) {
         var email = new sendgrid.Email({
           to: newsPoster.email,
           from: 'noreply@pullup.io',
