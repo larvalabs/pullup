@@ -41,6 +41,7 @@ module.exports = {
         'jphatton',
         'julbaxter',
         'kalmi',
+        'kanakiyajay',
         'kasperlewau',
         'kckolz',
         'KeenRivals',
