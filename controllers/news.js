@@ -23,7 +23,6 @@ var sendgrid  = require('sendgrid')(secrets.sendgrid.user, secrets.sendgrid.pass
  */
 var newsItemsPerPage = 30;
 var maxPages = 30;
-var usernameRegexp = /@\w+(?!(\]|\w|\/))/;
 
 exports.index = function(req, res, next) {
 
@@ -182,36 +181,67 @@ exports.postComment = function (req, res, next) {
       return res.redirect('/news/'+req.params.id);
     }
 
-    NewsItem
-    .findById(req.params.id)
-    .populate('poster')
-    .exec(function (err, newsItem) {
+    var mentions = utils.findUserMentions(comment.contents);
 
-      if (!err) {
-        var newsPoster = newsItem.poster;
-        console.log ('newItem poster email: ' + newsPoster.email);
+    async.parallel({
+      newsItem: function (cb) {
+        NewsItem
+        .findById(req.params.id)
+        .populate('poster')
+        .exec(cb);
+      },
+      mentions: function (cb) {
+        User
+        .find({
+          username: {
+            $in: mentions
+          }
+        })
+        .exec(cb);
+      }
+    }, function (err, results) {
+      if(err) {
+        return console.log("Error while retrieving emails for notifications", err);
+      }
 
-        if (newsPoster.email) {
+      var newsPoster = results.newsItem.poster;
+
+      if (newsPoster.email) {
+        var email = new sendgrid.Email({
+          to: newsPoster.email,
+          from: 'noreply@pullup.io',
+          fromname: 'pullup',
+          subject: 'There is a new comment on your post',
+          text: 'Link to post: http://pullup.io/news/' + req.params.id
+        });
+
+        sendgrid.send(email, function(err) {
+          if (err) {
+            return console.log("Error sending email: " + err.message);
+          }
+          console.log("Email successfully sent to " + newsPoster.id);
+        });
+      }
+
+      utils.uniqueMongo(results.mentions).forEach(function (user) {
+        if(user.email && user.email !== req.user.email) {
           var email = new sendgrid.Email({
-            to: newsPoster.email,
+            to: user.email,
             from: 'noreply@pullup.io',
             fromname: 'pullup',
-            subject: 'There is a new comment on your post',
-            text: 'Link to post: http://pullup.io/news/' + req.params.id
+            subject: "You've been mentioned in a comment",
+            text: req.user.username + " mentioned you in a comment on the discussion for \"" + results.newsItem.title + "\".\n\n" +
+              'Link to post: http://pullup.io/news/' + req.params.id
           });
 
           sendgrid.send(email, function(err) {
             if (err) {
-              // req.flash('errors', { msg: err.message });
-              // return res.redirect('/contact');
-              console.log("Error sending email: " + err.message);
+              return console.log("Error sending email: " + err.message);
             }
-            // req.flash('success', { msg: 'Email has been sent successfully!' });
-            // res.redirect('/contact');
+            console.log("Email successfully sent to " + user.id);
           });
-
         }
-      }
+      });
     });
  
     req.flash('success', { msg  : 'Comment posted. Thanks!' });
