@@ -86,6 +86,7 @@ module.exports = {
         'travishorn',
         'treygriffith',
         'utdemir',
+        'vallyath'
         'williamle8300',
         'willurd',
         'zhanglun'
