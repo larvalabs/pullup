@@ -15,37 +15,34 @@ block content
                     a.btn.btn-primary.btn-sm.pull-right(href='/news/submit') Submit News
     else
         .row.user-profile
-            .col-lg-6
+            .col-sm-4
                 if userProfile
                     if userProfile.picture
-                        img(src='#{userProfile.picture}')
+                        img.img-responsive(src='#{userProfile.picture}')
+            .col-sm-8
                     if userProfile.name
-                        div.user-header
-                            h1.name #{userProfile.name}
-                            if userProfile.description
-                                h5.description #{userProfile.description}
-                            
-            .col-lg-6
-                dl.pull-right
-                    dt GitHub:
-                    dd
-                        a(href='http://github.com/#{filteredUser}', target='_blank') http://github.com/#{filteredUser}
-                    br
-                    dt Contributions:
-                    dd
-                        span#contribution-count
-                    br
-                    if userProfile.location
-                        dt Location:
-                        dd= userProfile.location
-                        br
-                    if userProfile.website
-                        dt Website:
+                        h1.name #{userProfile.name}
+                        if userProfile.description
+                            h5.description #{userProfile.description}
+                        dt GitHub:
                         dd
-                            if (!userProfile.website.match(/^http[s]?:\/\//))
-                                - userProfile.website = 'http://' + userProfile.website
-
-                            a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
+                            a(href='http://github.com/#{filteredUser}', target='_blank') http://github.com/#{filteredUser}
+                        br
+                        dt Contributions:
+                        dd
+                            span#contribution-count
+                        br
+                        if userProfile.location
+                            dt Location:
+                            dd= userProfile.location
+                            br
+                        if userProfile.website
+                            dt Website:
+                            dd
+                                if (!userProfile.website.match(/^http[s]?:\/\//))
+                                    - userProfile.website = 'http://' + userProfile.website
+    
+                                a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
         .page-header
           ul.nav.nav-tabs
             li.active
