@@ -23,6 +23,7 @@ module.exports = {
         'euank',
         'evsie001',
         'exadeci',
+        'fridays',
         'gwillen',
         'hemanth',
         'humd',
