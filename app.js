@@ -108,7 +108,7 @@ app.use(function(req, res) {
   res.render('404', { status: 404 });
 });
 app.use(function(err, req, res, next){
-  console.error("req: "+req.url +"\nerror: "+err.message);
+  console.error("req: "+req.url +"\nerror: "+err.stack);
   res.statusCode = 500;
   res.render('error',{error:err});
 });
