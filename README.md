@@ -34,8 +34,8 @@ npm install -g gulp
 
 # Set the following environment variables:
 
-export GITHUB_CLIENTID='CLIENTID'
-export GITHUB_SECRET='SECRET'
+export GITHUB_CLIENTID=CLIENTID
+export GITHUB_SECRET=SECRET
 
 # Or, on Windows...
 

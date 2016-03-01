@@ -126,6 +126,7 @@ exports.show = function (req, res, next) {
       issue.body = parseMarkdown(issue.body);
 
       _.each(results.comments, function (comment,i,l) {
+        comment.mdBody = comment.body;
         comment.body = parseMarkdown(comment.body);
       });
 
