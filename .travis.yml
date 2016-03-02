@@ -8,7 +8,7 @@ before_script:
 deploy:
   provider: heroku
   api_key:
-    secure: A3aL5P0SVJWd8rh5xd+H5mCx6W0AanePd5TzRfkygvM0NuSS0xzNl126WrFwoFxVFd1Wb32QDVR7cJoH9BSJCBvgXyb2JI2WpFHTlReZumi2HrfGwF5sttFlpOrmgbSvhj0qabgWaQbwMAtIG9wdH88sskYE14d86wJD0wbNrJk=
+    secure: yNgE0NqIUewmXddVOx6WS64EbBBbr9OwkpWDLQWugiH/eKGMqAGSlMsGcpiqC2tOR6M0tq0FINEcWBduGWs9OhFOY4ggFe+RSFnQgiAoKwzQLlla3v/vHA+SJ15xidENEWdrBfy4i66gn/j2jpWWcpgnY0gsaU6claJc+aHlbKE=
   app: pullup
   on:
     repo: larvalabs/pullup
