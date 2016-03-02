@@ -1,4 +1,4 @@
-PullUp [![Build Status](https://travis-ci.org/larvalabs/pullup.png?branch=master)](https://travis-ci.org/larvalabs/pullup) [![Code Climate](https://codeclimate.com/repos/52fba7f66956805f68002062/badges/b1a62e6c14008de1ff3c/gpa.png)](https://codeclimate.com/repos/52fba7f66956805f68002062/feed) [![Gitter chat](https://badges.gitter.im/larvalabs/pullup.png)](https://gitter.im/larvalabs/pullup)
+PullUp [![Build Status](https://travis-ci.org/larvalabs/pullup.svg?branch=master)](https://travis-ci.org/larvalabs/pullup) [![Code Climate](https://codeclimate.com/repos/52fba7f66956805f68002062/badges/b1a62e6c14008de1ff3c/gpa.svg)](https://codeclimate.com/repos/52fba7f66956805f68002062/feed) [![Gitter chat](https://badges.gitter.im/larvalabs/pullup.png)](https://gitter.im/larvalabs/pullup)
 ======
 
 A website you join via pull request. See it live at http://pullup.io
@@ -34,8 +34,8 @@ npm install -g gulp
 
 # Set the following environment variables:
 
-export GITHUB_CLIENTID='CLIENTID'
-export GITHUB_SECRET='SECRET'
+export GITHUB_CLIENTID=CLIENTID
+export GITHUB_SECRET=SECRET
 
 # Or, on Windows...
 

@@ -1,6 +1,7 @@
 module.exports = {
     users: [ // ADD YOUR USERNAME IN ITS ALPHABETICAL SLOT
         'andersos',
+        'arminkhoshbin',
         'avaynshtok',
         'barretts',
         'bluetidepro',
@@ -18,11 +19,13 @@ module.exports = {
         'dcancel',
         'dck273',
         'dfjones',
+        'djstearns',
         'dylnclrk',
         'eik3',
         'euank',
         'evsie001',
         'exadeci',
+        'fridays',
         'gwillen',
         'hemanth',
         'humd',
@@ -86,7 +89,7 @@ module.exports = {
         'travishorn',
         'treygriffith',
         'utdemir',
-        'vallyath'
+        'vallyath',
         'williamle8300',
         'willurd',
         'zhanglun'
