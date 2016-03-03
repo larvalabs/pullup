@@ -355,16 +355,19 @@ exports.userNews = function(req, res, next) {
         comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
       });
 
-      res.render('news/index', {
-        title: 'Posts by ' + user.username,
-        tab: 'news',
-        items: results.newsItems,
-        comments: results.comments,
-        filteredUser: user.username,
-        filteredUserWebsite: user.profile.website,
-        userProfile: user.profile
+      githubContributors.getPulls(function(data){
+        var pulls = githubContributors.getPullsForUser(user.username, data);
+        res.render('news/index', {
+          title: 'Posts by ' + user.username,
+          tab: 'news',
+          items: results.newsItems,
+          comments: results.comments,
+          contributions: pulls,
+          filteredUser: user.username,
+          filteredUserWebsite: user.profile.website,
+          userProfile: user.profile
+        });
       });
-
     });
   });
 };

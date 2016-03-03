@@ -82,5 +82,49 @@ GithubContributors.prototype.getContributions = function(
     return contributions;
 };
 
-module.exports = new GithubContributors();
+GithubContributors.prototype.getPulls = function(onSuccess, onError) {
+  var that = this;
 
+  this.cache.get('githubPulls', function (err, value) {
+    if (err) {
+      onError();
+    } else if (!Object.keys(value).length) {
+      var client = github.client(),
+          ghrepo = client.repo('larvalabs/pullup');
+
+      ghrepo.prs(function (err, data, headers) {
+        if (err) {
+          onError();
+          return;
+        }
+
+        onSuccess(data);
+
+        that.cache.set('githubPulls', data,
+          function (err, success) {
+
+            if (!err && success) {
+              console.log('cached github pull requests');
+            } else {
+              console.warn('failed to cache github pull requests');
+            }
+          });
+      });
+    } else {
+      console.log('getUserGithubPullData: cache hit');
+      onSuccess(value.githubPulls);
+    }
+  });
+};
+
+GithubContributors.prototype.getPullsForUser = function(username, allRepoPulls) {
+  var pulls = [];
+  for (var i in allRepoPulls) {
+    if (allRepoPulls[i].user.login === username) {
+      pulls.push(allRepoPulls[i]);
+    }
+  }
+  return pulls;
+};
+
+module.exports = new GithubContributors();
