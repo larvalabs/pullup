@@ -15,7 +15,7 @@ block content
                     a.btn.btn-primary.btn-sm.pull-right(href='/news/submit') Submit News
     else
         .row.user-profile
-            .col-lg-6
+            .col-lg-8
                 if userProfile
                     if userProfile.picture
                         img(src='#{userProfile.picture}')
@@ -24,9 +24,11 @@ block content
                             h1.name #{userProfile.name}
                             if userProfile.description
                                 h5.description #{userProfile.description}
-                            
-            .col-lg-6
-                dl.pull-right
+                    if userProfile.bio
+                        p!= userProfile.bio
+                        br
+            .col-lg-4
+                dl.pull-right-lg
                     dt GitHub:
                     dd
                         a(href='http://github.com/#{filteredUser}', target='_blank') http://github.com/#{filteredUser}
@@ -46,6 +48,7 @@ block content
                                 - userProfile.website = 'http://' + userProfile.website
 
                             a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
+                        br
         .page-header
           ul.nav.nav-tabs
             li.active

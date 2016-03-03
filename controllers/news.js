@@ -355,6 +355,8 @@ exports.userNews = function(req, res, next) {
         comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
       });
 
+      user.profile.bio = markdownParser(user.profile.bio);
+
       res.render('news/index', {
         title: 'Posts by ' + user.username,
         tab: 'news',
