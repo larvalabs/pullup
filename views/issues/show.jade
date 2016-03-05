@@ -21,7 +21,7 @@ block content
         span.timeago(title="#{comment.created_at}")= timeago(comment.created_at)
         blockquote.content
             != comment.body
-            button.btn.btn-primary(data-toggle='modal', data-target='##{index}modal', style= 'float: right;') View MD Source
+            button.btn.btn-link.btn-xs(data-toggle='modal', data-target='##{index}modal', style= 'float: right;') View MD Source
             div(style= 'clear:both;')
         div(id= index + 'modal', tabindex= "-1", role= "dialog").modal.fade
           div.modal-dialog
