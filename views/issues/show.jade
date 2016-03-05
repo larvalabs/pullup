@@ -30,7 +30,7 @@ block content
                 button.close(data-dismiss= "modal")
                   span(aria-hidden= "true", st) &times;
                 h4.modal-title
-                  Comment MD Source
+                  | Comment’s Markdown Source
               div.modal-body
                 textarea(readonly, style="width: 100%; height: 300px;")
-                  #{comment.mdBody}
+                  = comment.mdBody
