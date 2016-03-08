@@ -355,8 +355,11 @@ exports.userNews = function(req, res, next) {
         comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
       });
 
+      user.profile.bio = markdownParser(user.profile.bio);
+
       githubContributors.getPulls(function(data){
         var pulls = githubContributors.getPullsForUser(user.username, data);
+
         res.render('news/index', {
           title: 'Posts by ' + user.username,
           tab: 'news',
