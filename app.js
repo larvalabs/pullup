@@ -100,10 +100,15 @@ app.use(function(req, res, next) {
   res.setHeader("X-Frame-Options", "DENY");
   next();
 });
+
 app.use(flash());
+
 app.use(less({ src: __dirname + '/public', compress: true }));
+
 app.use(app.router);
+
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: week }));
+
 app.use(function(req, res) {
   res.render('404', { status: 404 });
 });
@@ -114,6 +119,15 @@ app.use(function(err, req, res, next){
 });
 
 app.locals.timeago = timeago;
+
+/* does a 301 redirect to pullup.herokuapp.com */ 
+
+app.get('*',function(req,res){
+    //console.log(req.get('host'));
+    if(req.get('host') == "pullup.herokuapp.com"){
+        res.redirect(301,'https://pullup.io');
+    }
+});
 
 /**
  * Application routes.
