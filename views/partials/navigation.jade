@@ -9,8 +9,10 @@
       a.navbar-brand(href='/') pullup
     .collapse.navbar-collapse
       ul.nav.navbar-nav
-        li.hidden-xs(class=tab=='news'?'active':undefined)
-          a(href='/news') News
+        li.hidden-xs(class=tab=='top'?'active':undefined)
+          a(href='/news') Top
+        li.hidden-xs(class=tab =='new' ? 'active' : undefined)
+          a(href='/news/new') New
         li.hidden-xs(class=tab=='issues'?'active':undefined)
           a(href='/issues') Issues
         li.hidden-xs
