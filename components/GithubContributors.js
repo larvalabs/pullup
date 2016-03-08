@@ -82,17 +82,17 @@ GithubContributors.prototype.getContributions = function(
     return contributions;
 };
 
-GithubContributors.prototype.getPulls = function(onSuccess, onError) {
+GithubContributors.prototype.getIssues = function(onSuccess, onError) {
   var that = this;
 
-  this.cache.get('githubPulls', function (err, value) {
+  this.cache.get('githubIssues', function (err, value) {
     if (err) {
       onError();
     } else if (!Object.keys(value).length) {
       var client = github.client(),
-          ghrepo = client.repo('larvalabs/pullup');
+        ghrepo = client.repo('larvalabs/pullup');
 
-      ghrepo.prs(function (err, data, headers) {
+      ghrepo.issues({state: 'all'}, function (err, data, headers) {
         if (err) {
           onError();
           return;
@@ -100,31 +100,31 @@ GithubContributors.prototype.getPulls = function(onSuccess, onError) {
 
         onSuccess(data);
 
-        that.cache.set('githubPulls', data,
+        that.cache.set('githubIssues', data,
           function (err, success) {
 
             if (!err && success) {
-              console.log('cached github pull requests');
+              console.log('cached github issues');
             } else {
-              console.warn('failed to cache github pull requests');
+              console.warn('failed to cache github issues');
             }
           });
       });
     } else {
-      console.log('getUserGithubPullData: cache hit');
-      onSuccess(value.githubPulls);
+      console.log('getUserGithubIssueData: cache hit');
+      onSuccess(value.githubIssues);
     }
   });
 };
 
-GithubContributors.prototype.getPullsForUser = function(username, allRepoPulls) {
-  var pulls = [];
-  for (var i in allRepoPulls) {
-    if (allRepoPulls[i].user.login === username) {
-      pulls.push(allRepoPulls[i]);
+GithubContributors.prototype.getIssuesForUser = function(username, allIssues) {
+  var issues = [];
+  for (var i in allIssues) {
+    if (allIssues[i].user.login === username) {
+      issues.push(allIssues[i]);
     }
   }
-  return pulls;
+  return issues;
 };
 
 module.exports = new GithubContributors();
