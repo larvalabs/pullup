@@ -65,6 +65,12 @@ app.locals.cacheBuster = Date.now();
 app.set('port', process.env.PORT || argv.p || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.use(function(req, res, next) {
+  if (req.header("host") == "pullup.herokuapp.com") {
+    res.redirect(301,'https://pullup.io');
+  }
+  next();
+});
 app.use(express.compress());
 app.use(express.favicon(path.join(__dirname, 'public/img/favicon.ico')));
 app.use(express.logger('dev'));
@@ -119,15 +125,6 @@ app.use(function(err, req, res, next){
 });
 
 app.locals.timeago = timeago;
-
-/* does a 301 redirect to pullup.herokuapp.com */ 
-
-app.get('*',function(req,res){
-    //console.log(req.get('host'));
-    if(req.get('host') == "pullup.herokuapp.com"){
-        res.redirect(301,'https://pullup.io');
-    }
-});
 
 /**
  * Application routes.
