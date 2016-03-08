@@ -57,6 +57,9 @@ block content
             li
               a(href='#user-comments', data-toggle='tab')
                 h4 Comments
+            li
+               a(href='#user-contributions', data-toggle='tab')
+                h4 Contributions
 
     div.tab-content
       div#news.tab-pane.fade.in.active
@@ -162,6 +165,22 @@ block content
                                         small  #{comment.newsItem.comment_count} comments
                             if comment.newsItem.comment_count > 0
                                 small.hidden-xs.text-muted(title="#{comment.newsItem.latestCommentAt}")  (last comment #{timeago(comment.newsItem.latestCommentAt)})
+
+        div#user-contributions.tab-pane.fade
+          ul
+            li.row.headers.hidden-xs
+                div.col-sm-1.text-muted PR #
+                div.col-sm-7 Title
+                div.col-sm-4
+            each contribution, index in contributions
+                li.row.news-item
+                  div.col-sm-1
+                      a(href="#{contribution.html_url}", target="_blank")="#" + contribution.number
+                  div.col-sm-7
+                      span=contribution.title
+                  div.col-sm-4
+                    span=timeago(contribution.created_at)
+
 
     if page > 1
         a(href=(page-1), class='btn btn-sm btn-default')
