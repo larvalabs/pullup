@@ -6,6 +6,7 @@ var cheerio = require('cheerio');
 var request = require('request');
 var _ = require('underscore');
 var marked = require('marked');
+var userlist = require('../config/userlist.js');
 
 marked.setOptions({
   sanitize: true,
@@ -34,4 +35,8 @@ exports.getMarkdown = function(req, res) {
   return res.send({
     result: marked(req.body.source)
   });
+};
+
+exports.getUserList = function(req, res){
+  return res.send(userlist);
 };

@@ -181,6 +181,18 @@ $(document).ready(function() {
     });
   }
 
+  $.ajax ({
+    url: pullup.baseUrl + '/api/userlist',
+    method: 'GET',
+    success: function (data) {
+      $('.user-atwho').atwho({
+        at: "@",
+        data: data.users
+      });
+    }
+  });
+
+
   /*
    * If the user has installed pullup.io to their home screen, we want
    * links to open up within the web app, instead of pushing out to safari

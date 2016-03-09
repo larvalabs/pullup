@@ -13,12 +13,15 @@ html
 
     title #{title} - pullup
 
+    link(href='/css/lib/jquery.atwho.css?v=#{cacheBuster}', rel='stylesheet')
     link(href='/css/styles.css?v=#{cacheBuster}', rel='stylesheet')
     link(rel='apple-touch-icon', href='/img/appicon.png?v=#{cacheBuster}')
     link(title="Pullup - new items", type="application/rss+xml", rel="alternate", href="/rss")
 
     script(src='/js/lib/jquery-2.1.0.min.js?v=#{cacheBuster}')
     script(src='/js/lib/bootstrap.min.js?v=#{cacheBuster}')
+    script(src='/js/lib/jquery.caret.js?v=#{cacheBuster}')
+    script(src='/js/lib/jquery.atwho.js?v=#{cacheBuster}')
     script(src='/js/main.js?v=#{cacheBuster}')
   body
     #wrap

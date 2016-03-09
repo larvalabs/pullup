@@ -202,6 +202,7 @@ app.get('/chat', chatController.index);
  * API Routes
  */
 app.post('/api/markdown', apiController.getMarkdown);
+app.get('/api/userlist', apiController.getUserList);
 
 /**
  * OAuth routes for sign-in.
