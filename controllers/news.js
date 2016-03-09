@@ -382,15 +382,15 @@ exports.userNews = function(req, res, next) {
 
       user.profile.bio = markdownParser(user.profile.bio);
 
-      githubContributors.getPulls(function(data){
-        var pulls = githubContributors.getPullsForUser(user.username, data);
+      githubContributors.getIssues(function(allIssues) {
+        var contributions = githubContributors.getIssuesForUser(user.username, allIssues);
 
         res.render('news/index', {
           title: 'Posts by ' + user.username,
           tab: 'news',
           items: results.newsItems,
           comments: results.comments,
-          contributions: pulls,
+          contributions: contributions,
           filteredUser: user.username,
           filteredUserWebsite: user.profile.website,
           userProfile: user.profile
