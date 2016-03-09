@@ -44,13 +44,38 @@ exports.index = function(req, res, next) {
 
     res.render(view, {
       title: 'Top News',
-      tab: 'news',
+      tab: 'top',
       items: newsItems,
       page: page,
       archive: page > maxPages,
       newsItemsPerPage: newsItemsPerPage
     });
   }, sortByScore);
+};
+
+exports.new = function(req, res, next) {
+
+  var page = typeof req.params.page !== 'undefined' ? req.params.page : 1;
+  page = isNaN(page) ? 1 : Number(page);
+  page = page < 1 ? 1 : page;
+
+  // don't use a `/page/1` url
+  if(req.params.page === '1') return res.redirect(req.url.slice(0, req.url.indexOf('page')));
+
+  var view = 'news/index';
+
+  getNewsItems({}, page, req.user, function (err, newsItems) {
+    if(err) return next(err);
+
+    res.render(view, {
+      title: 'Newest',
+      tab: 'new',
+      items: newsItems,
+      page: page,
+      archive: page > maxPages,
+      newsItemsPerPage: newsItemsPerPage
+    });
+  }, sortByNewest);
 };
 
 /**
@@ -559,6 +584,14 @@ function sortByScore(newsItems) {
   // sort with highest scores first
   newsItems.sort(function (a,b) {
     return b.score - a.score;
+  });
+
+  return newsItems;
+}
+
+function sortByNewest(newsItems) {
+  newsItems.sort(function (a,b) {
+    return b.created.getTime() - a.created.getTime();
   });
 
   return newsItems;
