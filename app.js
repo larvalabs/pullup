@@ -67,6 +67,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(function(req, res, next) {
   if (req.header("host") == "pullup.herokuapp.com") {
+    console.log("✗ Redirecting Heroku host to pullup.io");
     res.redirect(301,'http://pullup.io');
   }
   next();
