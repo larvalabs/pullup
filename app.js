@@ -67,6 +67,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(function(req, res, next) {
   if (req.header("host") == "pullup.herokuapp.com") {
+    console.log("✗ Redirecting Heroku host to pullup.io");
     res.redirect(301,'http://pullup.io');
   }
   next();
@@ -93,7 +94,10 @@ app.use(function(req, res, next) {
     user: req.user,
     cookies: req.cookies,
     pullup: { // global client-side JS object
-      baseUrl: req.protocol + '://' + req.get('host')
+      baseUrl: req.protocol + '://' + req.get('host'),
+      keenProjectID: process.env.KEEN_PROJECT_ID,
+      keenWriteKey: process.env.KEEN_WRITE_KEY,
+      keenReadKey: process.env.KEEN_READ_KEY,
     }
   });
 
@@ -102,7 +106,7 @@ app.use(function(req, res, next) {
   }
   if (req.body.windowscrolly) req.session.windowscrolly = req.body.windowscrolly;
   res.locals.windowscrolly = req.session.windowscrolly;
-  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com http://sysinct.herokuapp.com; frame-src 'self' https://gitter.im;");
+  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com http://sysinct.herokuapp.com https://www.google.com https://api.keen.io; frame-src 'self' https://gitter.im;");
   res.setHeader("X-Frame-Options", "DENY");
   next();
 });
