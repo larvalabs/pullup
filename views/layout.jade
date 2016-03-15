@@ -23,8 +23,9 @@ html
     script(src='/js/lib/jquery.caret.js?v=#{cacheBuster}')
     script(src='/js/lib/jquery.atwho.js?v=#{cacheBuster}')
     script(src='/js/main.js?v=#{cacheBuster}')
-    script(src='/js/lib/keen.min.js?v=#{cacheBuster}')
-    script(src='/js/keen.js?v=#{cacheBuster}')
+    if user
+      script(src="https://d26b395fwzu5fz.cloudfront.net/3.4.0/keen.min.js", type="text/javascript")
+      script(src='/js/keen.js?v=#{cacheBuster}')
   body
     #wrap
       include partials/data
