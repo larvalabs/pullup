@@ -90,6 +90,7 @@ module.exports = {
         'treygriffith',
         'utdemir',
         'vallyath',
+        'vvayne',
         'williamle8300',
         'willurd',
         'zhanglun'
