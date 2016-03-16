@@ -150,7 +150,7 @@ function getUserOrRespond(req, resp, next, callback){
 
       githubContributors.getContributors({
         onError: function() {
-          callback(user)
+          callback(user);
         },
         onSuccess: function(data) {
           user.profile.contributions_count = githubContributors.getContributions(user.username, data);
@@ -177,7 +177,7 @@ function getCommentsForUser(user, callback){
       _.each(comments, function (comment,i,l) {
       comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
       });
-      cb(null, comments)
+      cb(null, comments);
     }
   ], callback);
 }
@@ -197,7 +197,7 @@ exports.user = function(req, res, next) {
         userProfile: user.profile
       });
     });
-  })
+  });
 };
 
 /**
