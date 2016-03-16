@@ -304,64 +304,8 @@ exports.deleteComment = function (req, res, next) {
  * GET /news/user/:id
  */
 exports.userNews = function(req, res, next) {
-
-  User
-  .findOne({'username': req.params.id})
-  .exec(function(err, user) {
-
-    if(err) return next(err);
-
-    if(!user) {
-      req.flash('errors', { msg: "That user does not exist. "});
-      return res.redirect('/');
-    }
-
-    async.parallel({
-      newsItems: function(cb) {
-        getNewsItems({'poster': user.id}, req.user, cb);
-      },
-      comments: function(cb) {
-
-        async.waterfall([
-          function (cb) {
-            Comment
-            .find({'poster': user.id})
-            .sort('-created')
-            .limit(30)
-            .populate('poster')
-            .exec(cb);
-          },
-          function (comments, cb) {
-            getNewsItemsForComments(comments, req.user, cb);
-          }
-        ], cb);
-
-      }
-    }, function (err, results) {
-      if (err) return next(err);
-
-      _.each(results.comments, function (comment,i,l) {
-        comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
-      });
-
-      user.profile.bio = markdownParser(user.profile.bio);
-
-      githubContributors.getIssues(function(allIssues) {
-        var contributions = githubContributors.getIssuesForUser(user.username, allIssues);
-
-        res.render('news/index', {
-          title: 'Posts by ' + user.username,
-          tab: 'news',
-          items: results.newsItems,
-          comments: results.comments,
-          contributions: contributions,
-          filteredUser: user.username,
-          filteredUserWebsite: user.profile.website,
-          userProfile: user.profile
-        });
-      });
-    });
-  });
+  // Legacy redirect
+  res.redirect(301, '/user/' + req.params.id);
 };
 
 exports.sourceNews = function(req, res, next) {

@@ -20,7 +20,7 @@ block content
         = ' from '
         a(href='/news/source/' + item.source, class='source')= item.source
         = ' by '
-        a(href='/news/user/' + item.poster.username, class='user')= item.poster.username
+        a(href='/user/' + item.poster.username, class='user')= item.poster.username
         if item.poster.profile.description
             = ', '
             span(title="User description")= item.poster.profile.description
@@ -28,7 +28,7 @@ block content
 
     each comment, index in comments
       div.comment
-        a(href='/news/user/' + comment.poster.username)= comment.poster.username
+        a(href='/user/' + comment.poster.username)= comment.poster.username
         if comment.poster.profile.description
             span.description=comment.poster.profile.description
         span.timeago(title="#{comment.created}")= timeago(comment.created)

@@ -35,7 +35,7 @@ block content
                         span
                             small.submit-date(title="#{issue.created_at}")= timeago(issue.created_at)
                             small.hidden-xs #{' '}by#{' '}
-                            a.poster(href='/news/user/' + issue.user.login)
+                            a.poster(href='/user/' + issue.user.login)
                                 small #{issue.user.login}
                             small.hidden-xs #{' '}with#{' '}
                             br.visible-xs
