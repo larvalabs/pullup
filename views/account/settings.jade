@@ -1,0 +1,63 @@
+extends ../layout
+
+block content
+  .col-md-3.sidebar
+    ul.nav.nav-tabs.nav-stacked
+      li.active
+        a(href="#profile-information", data-toggle="tab") Profile Information
+      li
+        a(href="#delete-account", data-toggle="tab") Delete Account
+
+  .col-md-9.tab-content
+    #profile-information.tab-pane.active
+      .page-header
+        h3 Profile Information
+
+      form.form-horizontal(id='profile', action='/account/profile', method='POST')
+        .form-group
+          label.col-xs-12.col-sm-2.control-label(for='email') Email
+          .col-xs-12.col-sm-4
+            input.form-control(type='email', name='email', id='email', value='#{user.email}')
+        .form-group
+          label.col-xs-12.col-sm-2.control-label(for='name') Name
+          .col-xs-12.col-sm-4
+            input.form-control(type='text', name='name', id='name', value='#{user.profile.name}')
+        .form-group
+          label.col-xs-12.col-sm-2.control-label(for='location') Location
+          .col-xs-12.col-sm-4
+            input.form-control(type='text', name='location', id='location', value='#{user.profile.location}')
+        .form-group
+          label.col-xs-12.col-sm-2.control-label(for='website') Website
+          .col-xs-12.col-sm-4
+            input.form-control(type='text', name='website', id='website', value='#{user.profile.website}')
+        .form-group
+          label.col-xs-12.col-sm-2.control-label(for='description') Description
+          .col-xs-12.col-sm-4
+            input.form-control(type='text', name='description', id='description', value='#{user.profile.description}', maxlength=32)
+        .form-group
+          label.col-xs-12.col-sm-2.control-label(for='bio') Bio
+          .col-xs-12.col-sm-4
+            textarea.form-control(name='bio', id='bio', form="profile")= user.profile.bio
+        .form-group
+          .col-xs-offset-0.col-xs-12.col-sm-offset-2.col-sm-4
+            button.btn.btn.btn-primary(type='submit') Update Profile
+
+    #delete-account.tab-pane
+      .page-header
+        h3 Delete Account
+
+      p You can delete your account, but keep in mind this action is irreversible.
+      button(class="btn btn-danger", data-toggle="modal", data-target="#deleteModal").
+        Delete my account
+
+      div.modal(id="deleteModal", role="dialog")
+        .modal-dialog
+          .modal-content
+            .modal-header
+              button(type="button", class="close", data-dismiss="modal") x
+              h3 Are you sure?
+            .modal-body
+              p You can delete your account, but keep in mind this action is irreversible.
+              form(action='/account/delete', method='POST')
+                button.btn.btn-danger(type='submit') I understand, delete my account
+            .modal-footer

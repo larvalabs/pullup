@@ -1,0 +1,8 @@
+if page > 1
+  a(href=(page-1), class='btn btn-sm btn-default')
+    i(class="fa fa-angle-double-left")
+    |Previous Page
+if items.length === newsItemsPerPage
+  a(href= (filteredSource ? '/news/source/' + filteredSource : '/news') + '/page/' + (page+1), class='btn btn-sm btn-default pull-right')
+    |Next Page
+    i(class="fa fa-angle-double-right")

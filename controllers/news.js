@@ -764,3 +764,6 @@ exports.postNews = function(req, res, next) {
  * @param {number} amount Which direction and amount to vote up a news item (limited to +1 for now)
  */
 // See votes.js
+
+exports.getNewsItems = getNewsItems;
+exports.getNewsItemsForComments = getNewsItemsForComments;
