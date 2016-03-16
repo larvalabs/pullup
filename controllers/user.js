@@ -186,7 +186,6 @@ exports.user = function(req, res, next) {
         tab: 'news',
         items: newsItems,
         filteredUser: user.username,
-        filteredUserWebsite: user.profile.website,
         userProfile: user.profile
       });
     });
@@ -202,11 +201,10 @@ exports.userComments = function(req, res, next) {
       if (err) return next(err);
 
       res.render('account/comments', {
-        title: 'Posts by ' + user.username,
+        title: 'Comments by ' + user.username,
         tab: 'comments',
         comments: comments,
         filteredUser: user.username,
-        filteredUserWebsite: user.profile.website,
         userProfile: user.profile
       });
     });
@@ -222,11 +220,10 @@ exports.userContributions = function(req, res, next) {
       var contributions = githubContributors.getIssuesForUser(user.username, allIssues);
 
       res.render('account/contributions', {
-        title: 'Posts by ' + user.username,
+        title: 'Contributions by ' + user.username,
         tab: 'contributions',
         contributions: contributions,
         filteredUser: user.username,
-        filteredUserWebsite: user.profile.website,
         userProfile: user.profile
       });
     });
