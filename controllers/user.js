@@ -134,68 +134,103 @@ exports.getOauthUnlink = function(req, res, next) {
   });
 };
 
-/**
- * GET /user/:id
- */
-exports.user = function(req, res, next) {
-
+function getUserOrRespond(req, resp, next, callback){
   User
     .findOne({'username': req.params.id})
     .exec(function(err, user) {
 
-      if(err) return next(err);
+      if (err) return next(err);
 
-      if(!user) {
-        req.flash('errors', { msg: "That user does not exist. "});
+      if (!user) {
+        req.flash('errors', {msg: "That user does not exist. "});
         return res.redirect('/');
       }
 
-      async.parallel({
-        newsItems: function(cb) {
-          news.getNewsItems({'poster': user.id}, req.user, cb);
-        },
-        comments: function(cb) {
+      user.profile.bio = markdownParser(user.profile.bio);
 
-          async.waterfall([
-            function (cb) {
-              Comment
-                .find({'poster': user.id})
-                .sort('-created')
-                .limit(30)
-                .populate('poster')
-                .exec(cb);
-            },
-            function (comments, cb) {
-              news.getNewsItemsForComments(comments, req.user, cb);
-            }
-          ], cb);
+      callback(user)
+    });
+}
 
-        }
-      }, function (err, results) {
-        if (err) return next(err);
+function getCommentsForUser(user, callback){
+  async.waterfall([
+    function (cb) {
+      Comment
+        .find({'poster': user.id})
+        .sort('-created')
+        .limit(30)
+        .populate('poster')
+        .exec(cb);
+    },
+    function (comments, cb) {
+      news.getNewsItemsForComments(comments, user, cb);
+    },
+    function (comments, cb){
+      _.each(comments, function (comment,i,l) {
+      comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
+      });
+      cb(null, comments)
+    }
+  ], callback);
+}
 
-        _.each(results.comments, function (comment,i,l) {
-          comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
-        });
-
-        user.profile.bio = markdownParser(user.profile.bio);
-
-        githubContributors.getIssues(function(allIssues) {
-          var contributions = githubContributors.getIssuesForUser(user.username, allIssues);
-
-          res.render('account/news', {
-            title: 'Posts by ' + user.username,
-            tab: 'news',
-            items: results.newsItems,
-            comments: results.comments,
-            contributions: contributions,
-            filteredUser: user.username,
-            filteredUserWebsite: user.profile.website,
-            userProfile: user.profile
-          });
-        });
+/**
+ * GET /user/:id
+ */
+exports.user = function(req, res, next) {
+  getUserOrRespond(req, res, next, function(user){
+    news.getNewsItems({'poster': user.id}, req.user, function(err, newsItems){
+      if (err) return next(err);
+      res.render('account/news', {
+        title: 'Posts by ' + user.username,
+        tab: 'news',
+        items: newsItems,
+        filteredUser: user.username,
+        filteredUserWebsite: user.profile.website,
+        userProfile: user.profile
       });
     });
+  })
+};
+
+/**
+ * GET /user/:id/comments
+ */
+exports.userComments = function(req, res, next) {
+  getUserOrRespond(req, res, next, function(user){
+    getCommentsForUser(user, function (err, comments) {
+      if (err) return next(err);
+
+      res.render('account/comments', {
+        title: 'Posts by ' + user.username,
+        tab: 'comments',
+        comments: comments,
+        filteredUser: user.username,
+        filteredUserWebsite: user.profile.website,
+        userProfile: user.profile
+      });
+    });
+  });
+};
+
+/**
+ * GET /user/:id/comments
+ */
+exports.userContributions = function(req, res, next) {
+  getUserOrRespond(req, res, next, function(user){
+    githubContributors.getIssues(function(allIssues) {
+      var contributions = githubContributors.getIssuesForUser(user.username, allIssues);
+
+      res.render('account/contributions', {
+        title: 'Posts by ' + user.username,
+        tab: 'contributions',
+        contributions: contributions,
+        filteredUser: user.username,
+        filteredUserWebsite: user.profile.website,
+        userProfile: user.profile
+      });
+    });
+  });
 };
 
 /**

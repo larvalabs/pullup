@@ -1,0 +1,56 @@
+extends ../layout
+include ../mixins/delete
+
+
+block content
+    include joinsite
+
+    .row.user-profile
+        .col-lg-8
+            if userProfile
+                if userProfile.picture
+                    img(src='#{userProfile.picture}')
+                if userProfile.name
+                    div.user-header
+                        h1.name #{userProfile.name}
+                        if userProfile.description
+                            h5.description #{userProfile.description}
+                if userProfile.bio
+                    p!= userProfile.bio
+                    br
+        .col-lg-4
+            dl.pull-right-lg
+                dt GitHub:
+                dd
+                    a(href='http://github.com/#{filteredUser}', target='_blank') http://github.com/#{filteredUser}
+                br
+                dt Contributions:
+                dd
+                    span#contribution-count
+                br
+                if userProfile.location
+                    dt Location:
+                    dd= userProfile.location
+                    br
+                if userProfile.website
+                    dt Website:
+                    dd
+                        if (!userProfile.website.match(/^http[s]?:\/\//))
+                            - userProfile.website = 'http://' + userProfile.website
+
+                        a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
+                    br
+    .page-header
+        ul.nav.nav-tabs
+            li(class=tab == 'news' ? 'active' : '')
+                a(href='/user/#{user.username}')
+                    h4 News Submitted
+            li(class=tab == 'comments' ? 'active' : '')
+                a(href='/user/#{user.username}/comments')
+                    h4 Comments
+            li(class=tab == 'contributions' ? 'active' : '')
+                a(href='/user/#{user.username}/contributions')
+                    h4 Contributions
+
+    div.tab-content
+        block tab-content

@@ -166,6 +166,8 @@ app.post('/account/password', passportConf.isAuthenticated, userController.postU
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 app.get('/user/:id', userController.user);
+app.get('/user/:id/comments', userController.userComments);
+app.get('/user/:id/contributions', userController.userContributions);
 /**
  * News Routes
  */

@@ -13,8 +13,8 @@ block content
             a.btn.btn-primary.btn-sm.pull-right(href='/news/submit') Submit News
 
     div.tab-content
-        include ./list
-        include ./pagination
+        div#news.tab-pane.fade.in.active
+            include newslist
 
     div(id='filtered-user' data-val=filteredUser)
     script(src='/js/newsIndex.js?v#{cacheBuster}')

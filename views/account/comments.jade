@@ -1,62 +1,8 @@
-extends ../layout
-include ../mixins/delete
+extends ../partials/profile
 
-
-block content
-    include ../partials/joinsite
-
-    .row.user-profile
-        .col-lg-8
-            if userProfile
-                if userProfile.picture
-                    img(src='#{userProfile.picture}')
-                if userProfile.name
-                    div.user-header
-                        h1.name #{userProfile.name}
-                        if userProfile.description
-                            h5.description #{userProfile.description}
-                if userProfile.bio
-                    p!= userProfile.bio
-                    br
-        .col-lg-4
-            dl.pull-right-lg
-                dt GitHub:
-                dd
-                    a(href='http://github.com/#{filteredUser}', target='_blank') http://github.com/#{filteredUser}
-                br
-                dt Contributions:
-                dd
-                    span#contribution-count
-                br
-                if userProfile.location
-                    dt Location:
-                    dd= userProfile.location
-                    br
-                if userProfile.website
-                    dt Website:
-                    dd
-                        if (!userProfile.website.match(/^http[s]?:\/\//))
-                            - userProfile.website = 'http://' + userProfile.website
-
-                        a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
-                    br
-    .page-header
-      ul.nav.nav-tabs
-        li.active
-          a(href='/user/#{user.id}', data-toggle='tab')
-            h4 News Submitted
-        li
-          a(href='/user/#{user.id}/comments', data-toggle='tab')
-            h4 Comments
-        li
-           a(href='/user/#{user.id}/contributions', data-toggle='tab')
-            h4 Contributions
-
-    div.tab-content
-      include ../news/list
-      if filteredUser
-        div#user-comments.tab-pane.fade
-          ul
+block tab-content
+    div#user-comments.tab-pane.fade.in.active
+        ul
             li.row.headers.hidden-xs
                 div.col-sm-1.text-muted #
                 div.col-sm-7 Comment
@@ -74,7 +20,7 @@ block content
                                 small  #{comment.newsItem.comment_count}
                                 i.fa.fa-comment-o
                         blockquote.content!= comment.contents
-                            +delete(comment.poster, '/news/' + comment.newsItem._id + '/comments/' + comment._id + '/delete')
+                        +delete(comment.poster, '/news/' + comment.newsItem._id + '/comments/' + comment._id + '/delete')
                         small.timeago.hidden-xs(title="#{comment.created}")= timeago(comment.created)
                     div.col-sm-4.hidden-xs
                         a(href=comment.newsItem.url)
@@ -93,34 +39,6 @@ block content
                                         small  #{comment.newsItem.comment_count} comments
                             if comment.newsItem.comment_count > 0
                                 small.hidden-xs.text-muted(title="#{comment.newsItem.latestCommentAt}")  (last comment #{timeago(comment.newsItem.latestCommentAt)})
-
-        div#user-contributions.tab-pane.fade
-          ul
-            li.row.headers.hidden-xs
-                div.col-sm-1 Type
-                div.col-sm-8 Title
-                div.col-sm-3
-            each contribution, index in contributions
-                li.row.news-item
-                  div.col-sm-1.type
-                    if contribution.pull_request
-                      span.label.label-info="pull"
-                    else
-                      span.label.label-default="issue"
-                  div.col-sm-8
-                    a(href="#{contribution.html_url}", target="_blank")="#" + contribution.number + ": " + contribution.title
-                  div.col-sm-3
-                    span=timeago(contribution.created_at)
-
-
-    if page > 1
-        a(href=(page-1), class='btn btn-sm btn-default')
-            i(class="fa fa-angle-double-left")
-            |Previous Page
-    if items.length === newsItemsPerPage
-        a(href= (filteredSource ? '/news/source/' + filteredSource : '/news') + '/page/' + (page+1), class='btn btn-sm btn-default pull-right')
-            |Next Page
-            i(class="fa fa-angle-double-right")
 
     div(id='filtered-user' data-val=filteredUser)
     script(src='/js/newsIndex.js?v#{cacheBuster}')
