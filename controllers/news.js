@@ -301,103 +301,11 @@ exports.deleteComment = function (req, res, next) {
 };
 
 /**
- * GET /ajaxGetUserGithubDataUrl/:id
- * Called via AJAX.
- * Responds with 'failure' or the number of GitHub contributions of
- * the specified user.
- * GET paramaters
- *  id - the username of the user for whom the number of GitHub
- *      contributions should be retrieved
- */
-exports.ajaxGetUserGithubData = function(req, res, next) {
-  if (constants.DEBUG) console.log ('ajaxGetUserGithubData');
-  User
-  .findOne({'username': req.params.id})
-  .exec(function(err, user) {
-
-    if(err || !user) {
-      res.send ('failure');
-      return;
-    }
-
-    githubContributors.getContributors({
-      onError: function() {
-        if (constants.DEBUG) console.log ('failure');
-        res.send('failure');
-      },
-      onSuccess: function(data) {
-        if (constants.DEBUG) console.log (data);
-        if (constants.DEBUG) console.log ('success');
-        var contributions =
-          githubContributors.getContributions(user.username, data);
-        res.send ({contributions: contributions});
-      }
-    });
-  });
-};
-
-/**
  * GET /news/user/:id
  */
 exports.userNews = function(req, res, next) {
-
-  User
-  .findOne({'username': req.params.id})
-  .exec(function(err, user) {
-
-    if(err) return next(err);
-
-    if(!user) {
-      req.flash('errors', { msg: "That user does not exist. "});
-      return res.redirect('/');
-    }
-
-    async.parallel({
-      newsItems: function(cb) {
-        getNewsItems({'poster': user.id}, req.user, cb);
-      },
-      comments: function(cb) {
-
-        async.waterfall([
-          function (cb) {
-            Comment
-            .find({'poster': user.id})
-            .sort('-created')
-            .limit(30)
-            .populate('poster')
-            .exec(cb);
-          },
-          function (comments, cb) {
-            getNewsItemsForComments(comments, req.user, cb);
-          }
-        ], cb);
-
-      }
-    }, function (err, results) {
-      if (err) return next(err);
-
-      _.each(results.comments, function (comment,i,l) {
-        comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
-      });
-
-      user.profile.bio = markdownParser(user.profile.bio);
-
-      githubContributors.getIssues(function(allIssues) {
-        var contributions = githubContributors.getIssuesForUser(user.username, allIssues);
-
-        res.render('news/index', {
-          title: 'Posts by ' + user.username,
-          tab: 'news',
-          items: results.newsItems,
-          comments: results.comments,
-          contributions: contributions,
-          filteredUser: user.username,
-          filteredUserWebsite: user.profile.website,
-          userProfile: user.profile
-        });
-      });
-    });
-  });
+  // Legacy redirect
+  res.redirect(301, '/user/' + req.params.id);
 };
 
 exports.sourceNews = function(req, res, next) {
@@ -764,3 +672,6 @@ exports.postNews = function(req, res, next) {
  * @param {number} amount Which direction and amount to vote up a news item (limited to +1 for now)
  */
 // See votes.js
+
+exports.getNewsItems = getNewsItems;
+exports.getNewsItemsForComments = getNewsItemsForComments;

@@ -23,7 +23,7 @@ exports.replaceUserMentions = function(body) {
       usernameRegexp = new RegExp(this.usernameRegexp);
 
   while(match = usernameRegexp.exec(body)) {
-    body = body.replace(match[0], '[' + match[0] + ']' + '(/news/user/' + match[0].slice(1) + '/)');
+    body = body.replace(match[0], '[' + match[0] + ']' + '(/user/' + match[0].slice(1) + '/)');
   }
 
   return body;

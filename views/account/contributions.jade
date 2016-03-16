@@ -1,0 +1,20 @@
+extends ../partials/profile
+
+block tab-content
+    div#user-contributions.tab-pane.fade.in.active
+      ul
+        li.row.headers.hidden-xs
+            div.col-sm-1 Type
+            div.col-sm-8 Title
+            div.col-sm-3
+        each contribution, index in contributions
+            li.row.news-item
+              div.col-sm-1.type
+                if contribution.pull_request
+                  span.label.label-info="pull"
+                else
+                  span.label.label-default="issue"
+              div.col-sm-8
+                a(href="#{contribution.html_url}", target="_blank")="#" + contribution.number + ": " + contribution.title
+              div.col-sm-3
+                span=timeago(contribution.created_at)

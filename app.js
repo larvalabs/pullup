@@ -165,7 +165,9 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
-
+app.get('/user/:id', userController.user);
+app.get('/user/:id/comments', userController.userComments);
+app.get('/user/:id/contributions', userController.userContributions);
 /**
  * News Routes
  */
@@ -188,7 +190,6 @@ app.post('/news/:id/comments', passportConf.isAuthenticated, newsController.post
 app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, newsController.deleteComment);
 app.post('/news/:id', votesController.voteFor('news', '/'));
 app.get('/news/user/:id', newsController.userNews);
-app.get('/news/ajaxGetUserGithubData/:id', newsController.ajaxGetUserGithubData);
 
 /**
  * Issues Routes
