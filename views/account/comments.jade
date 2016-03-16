@@ -39,6 +39,3 @@ block tab-content
                                         small  #{comment.newsItem.comment_count} comments
                             if comment.newsItem.comment_count > 0
                                 small.hidden-xs.text-muted(title="#{comment.newsItem.latestCommentAt}")  (last comment #{timeago(comment.newsItem.latestCommentAt)})
-
-    div(id='filtered-user' data-val=filteredUser)
-    script(src='/js/newsIndex.js?v#{cacheBuster}')

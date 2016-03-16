@@ -148,7 +148,15 @@ function getUserOrRespond(req, resp, next, callback){
 
       user.profile.bio = markdownParser(user.profile.bio);
 
-      callback(user)
+      githubContributors.getContributors({
+        onError: function() {
+          callback(user)
+        },
+        onSuccess: function(data) {
+          user.profile.contributions_count = githubContributors.getContributions(user.username, data);
+          callback(user);
+        }
+      });
     });
 }
 

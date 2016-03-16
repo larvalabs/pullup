@@ -190,7 +190,6 @@ app.post('/news/:id/comments', passportConf.isAuthenticated, newsController.post
 app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, newsController.deleteComment);
 app.post('/news/:id', votesController.voteFor('news', '/'));
 app.get('/news/user/:id', newsController.userNews);
-app.get('/news/ajaxGetUserGithubData/:id', newsController.ajaxGetUserGithubData);
 
 /**
  * Issues Routes
