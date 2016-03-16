@@ -19,6 +19,9 @@
           a(href='/chat') Chat
         li(class=title=='About'?'active':undefined)
           a(href='/about') About
+        if user
+          li.hidden-xs(class=title=='Analytics'?'active':undefined)
+            a(href='/analytics') Analytics
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)

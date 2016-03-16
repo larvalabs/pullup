@@ -19,6 +19,12 @@ exports.about = function(req, res) {
   });
 };
 
+exports.analytics = function(req, res) {
+  res.render('analytics', {
+    title: 'Analytics'
+  });
+};
+
 exports.logs = function(req, res) {
   res.render('logs', {
     title: 'Logs'

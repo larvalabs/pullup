@@ -106,7 +106,7 @@ app.use(function(req, res, next) {
   }
   if (req.body.windowscrolly) req.session.windowscrolly = req.body.windowscrolly;
   res.locals.windowscrolly = req.session.windowscrolly;
-  res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com http://sysinct.herokuapp.com https://www.google.com https://api.keen.io; frame-src 'self' https://gitter.im;");
+  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-eval' https://apis.google.com http://sysinct.herokuapp.com https://www.google.com https://api.keen.io https://d26b395fwzu5fz.cloudfront.net ; frame-src 'self' https://gitter.im;");
   res.setHeader("X-Frame-Options", "DENY");
   next();
 });
@@ -145,6 +145,7 @@ app.get('/logout', userController.logout);
 
 app.get('/', homeController.index);
 app.get('/about', homeController.about);
+app.get('/analytics', passportConf.isAuthenticated, homeController.analytics);
 app.get('/logs', homeController.logs);
 app.get('/bookmarklet', homeController.bookmarklet);
 app.get('/signup', homeController.signup);
