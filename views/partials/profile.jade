@@ -22,7 +22,7 @@ block content
             dl.pull-right-lg
                 dt GitHub:
                 dd
-                    a(href='http://github.com/#{filteredUser}', target='_blank') http://github.com/#{filteredUser}
+                    a(href='http://github.com/#{userProfile.username}', target='_blank') http://github.com/#{filteredUser}
                 br
                 dt Contributions:
                 dd
@@ -43,13 +43,13 @@ block content
     .page-header
         ul.nav.nav-tabs
             li(class=tab == 'news' ? 'active' : '')
-                a(href='/user/#{user.username}')
+                a(href='/user/#{userProfile.username}')
                     h4 News Submitted
             li(class=tab == 'comments' ? 'active' : '')
-                a(href='/user/#{user.username}/comments')
+                a(href='/user/#{userProfile.username}/comments')
                     h4 Comments
             li(class=tab == 'contributions' ? 'active' : '')
-                a(href='/user/#{user.username}/contributions')
+                a(href='/user/#{userProfile.username}/contributions')
                     h4 Contributions
 
     div.tab-content
