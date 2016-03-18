@@ -113,7 +113,7 @@ exports.addVotesToItem = function (item, item_id, user, votes) {
       return vote.voter.username
     });
 
-  return item;
+    return item;
 };
 
 // all-in-one query
