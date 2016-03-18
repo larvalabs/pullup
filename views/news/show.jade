@@ -7,12 +7,16 @@ block content
 
     .page-header
         h3
+            span.vote-count=votes.votes
             a(href=item.url)= item.title
             if item.summary && ! item.isSelfPost()
                 | &nbsp;
                 a(href="#", class="show-summary")
                     | ...
             +delete(item.poster, '/news/' + item._id + '/delete')
+        p.voters
+            each voter, index in votes.voters
+                a.voter(href="/user/#{voter}")=voter
         h4
           div(class="item-summary")!= item.summary
         = 'submitted '
@@ -24,6 +28,7 @@ block content
         if item.poster.profile.description
             = ', '
             span(title="User description")= item.poster.profile.description
+
     include ../partials/postcomment
 
     each comment, index in comments
