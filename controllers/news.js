@@ -128,7 +128,8 @@ exports.comments = function (req, res, next) {
         title: newsItem.title,
         tab: 'news',
         item: newsItem,
-        comments: results.comments
+        comments: results.comments,
+        votes: results.votes
       });
     });
 

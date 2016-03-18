@@ -82,6 +82,7 @@ exports.retrieveVotesFor = function (type, id, callback) {
     item: id,
     itemType: type
   })
+  .populate('voter')
   .exec(callback);
 };
 
@@ -104,6 +105,13 @@ exports.addVotesToItem = function (item, item_id, user, votes) {
 
       return prev + curr.amount;
     }, 0);
+
+  item.voters = votes.filter(function(vote){
+      return vote.item.toString() === item_id;
+    })
+    .map(function (vote) {
+      return vote.voter.username
+    });
 
   return item;
 };
