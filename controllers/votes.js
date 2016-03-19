@@ -110,7 +110,7 @@ exports.addVotesToItem = function (item, item_id, user, votes) {
       return vote.item.toString() === item_id;
     })
     .map(function (vote) {
-      return vote.voter.username
+      return vote.voter.username;
     });
 
     return item;
