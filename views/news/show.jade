@@ -40,3 +40,6 @@ block content
         blockquote.content
             +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
             != comment.contents
+
+    if !user && comments.length == 0
+        include ../partials/nocomments
