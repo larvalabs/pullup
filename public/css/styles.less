@@ -303,6 +303,35 @@ body {
 
 // News Item
 // -------------------------
+.news-item .page-header span.vote-count {
+  background-color: #95a5a6;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 28px;
+  padding: 0px 10px;
+  margin-right: 8px;
+  vertical-align: text-bottom;
+}
+
+.news-item p.voters {
+  margin-top: 5px;
+  margin-left: -5px;
+
+  a.voter {
+    background-color: #95a5a6;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 12px;
+    margin-left: 5px;
+    padding: 0 6px;
+    vertical-align: text-bottom;
+    display: inline-block;
+  }
+  a.voter:hover {
+    text-decoration: none;
+    background-color: #139C82;
+  }
+}
 
 .news-item .row {
   margin: 0 0 10px;
@@ -384,18 +413,18 @@ body {
 
 .user-profile {
     img {
-        vertical-align: top; 
+        vertical-align: top;
         padding-right: 10px;
     }
     .user-header {
         display:inline-block;
 
         .name {
-            margin-bottom: 0;   
+            margin-bottom: 0;
         }
 
         .description {
-            margin-top: -10px;   
+            margin-top: -10px;
             padding-left: 2px;
         }
     }
@@ -528,11 +557,11 @@ body {
 }
 
 #chat {
-  position: absolute; 
-  top:45px; 
+  position: absolute;
+  top:45px;
   bottom:75px;
 
-  iframe { 
+  iframe {
     height:100%; width:100%; border: 0
   }
 }

@@ -193,8 +193,7 @@ exports.user = function(req, res, next) {
         title: 'Posts by ' + user.username,
         tab: 'news',
         items: newsItems,
-        filteredUser: user.username,
-        userProfile: user.profile
+        user: user
       });
     });
   });
@@ -212,8 +211,7 @@ exports.userComments = function(req, res, next) {
         title: 'Comments by ' + user.username,
         tab: 'comments',
         comments: comments,
-        filteredUser: user.username,
-        userProfile: user.profile
+        user: user
       });
     });
   });
@@ -231,8 +229,7 @@ exports.userContributions = function(req, res, next) {
         title: 'Contributions by ' + user.username,
         tab: 'contributions',
         contributions: contributions,
-        filteredUser: user.username,
-        userProfile: user.profile
+        user: user
       });
     });
   });

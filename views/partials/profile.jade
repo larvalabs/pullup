@@ -7,38 +7,38 @@ block content
 
     .row.user-profile
         .col-lg-8
-            if userProfile
-                if userProfile.picture
-                    img(src='#{userProfile.picture}')
-                if userProfile.name
+            if user.profile
+                if user.profile.picture
+                    img(src='#{user.profile.picture}')
+                if user.profile.name
                     div.user-header
-                        h1.name #{userProfile.name}
-                        if userProfile.description
-                            h5.description #{userProfile.description}
-                if userProfile.bio
-                    p!= userProfile.bio
+                        h1.name #{user.profile.name}
+                        if user.profile.description
+                            h5.description #{user.profile.description}
+                if user.profile.bio
+                    p!= user.profile.bio
                     br
         .col-lg-4
             dl.pull-right-lg
                 dt GitHub:
                 dd
-                    a(href='http://github.com/#{filteredUser}', target='_blank') http://github.com/#{filteredUser}
+                    a(href='http://github.com/#{user.username}', target='_blank') http://github.com/#{user.username}
                 br
                 dt Contributions:
                 dd
-                    span=userProfile.contributions_count
+                    span=user.profile.contributions_count
                 br
-                if userProfile.location
+                if user.profile.location
                     dt Location:
-                    dd= userProfile.location
+                    dd= user.profile.location
                     br
-                if userProfile.website
+                if user.profile.website
                     dt Website:
                     dd
-                        if (!userProfile.website.match(/^http[s]?:\/\//))
-                            - userProfile.website = 'http://' + userProfile.website
+                        if (!user.profile.website.match(/^http[s]?:\/\//))
+                            - user.profile.website = 'http://' + user.profile.website
 
-                        a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
+                        a(href='#{user.profile.website}', target='_blank') #{user.profile.website}
                     br
     .page-header
         ul.nav.nav-tabs
