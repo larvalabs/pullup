@@ -161,7 +161,20 @@ body {
 // News & Issues Table
 // -------------------------
 
-#news, #issues, #user-comments, #user-contributions {
+#news, #issues, #user-comments, #user-contributions, #news-show {
+  .upvote-form {
+    display: inline-block;
+    position: relative;
+
+    .upvote {
+      border: none;
+      background: none;
+      &:hover {
+        color: #18bc9c;
+      }
+    }
+  }
+
   ul {
     padding: 0;
     list-style-type: none;
@@ -208,18 +221,8 @@ body {
         }
 
         .upvote-form {
-          display: inline-block;
-          position: relative;
           left: 50%;
           margin-left: -15px;
-
-          .upvote {
-            border: none;
-            background: none;
-            &:hover {
-              color: #18bc9c;
-            }
-          }
         }
       }
     }
