@@ -188,6 +188,7 @@ app.get('/news/:id', newsController.comments);
 app.post('/news/:id/delete', newsController.deleteNewsItemAndComments);
 app.post('/news/:id/comments', passportConf.isAuthenticated, newsController.postComment);
 app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, newsController.deleteComment);
+app.get('/news/:id/comments/:comment_id', newsController.viewComment);
 app.post('/news/:id', votesController.voteFor('news', '/'));
 app.get('/news/user/:id', newsController.userNews);
 

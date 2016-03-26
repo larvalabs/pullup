@@ -1,12 +1,8 @@
-each comment, index in comments
-    div.comment
-        a(href='/user/' + comment.poster.username)= comment.poster.username
-        if comment.poster.profile.description
-            span.description=comment.poster.profile.description
-        span.timeago(title="#{comment.created}")= timeago(comment.created)
-        blockquote.content
-            +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
-            != comment.contents
+extends ../layout
+include ../mixins/delete
 
-if !user && comments.length == 0
-    include ../partials/nocomments
+block content
+    #comment-show.news-item
+        include ../partials/joinsite
+        include ../news/newsitem
+        include comment

@@ -301,6 +301,47 @@ exports.deleteComment = function (req, res, next) {
   });
 };
 
+exports.viewComment = function (req, res, next) {
+  NewsItem
+    .findById(req.params.id)
+    .populate('poster')
+    .exec(function (err, newsItem) {
+
+      if(err) return next(err);
+      if (!newsItem) {
+        req.flash('errors', { msg: 'News item not found.' });
+        return res.redirect('/news');
+      }
+
+      async.parallel({
+        votes: function (cb) {
+          addVotesToNewsItems(newsItem, req.user, cb);
+        },
+        comment: function (cb) {
+          Comment
+            .findById(req.params.comment_id)
+            .populate('poster')
+            .exec(cb);
+        }
+      }, function (err, results) {
+
+        if (err) return next(err);
+
+        results.comment.source = results.comment.contents
+        results.comment.contents = markdownParser(utils.replaceUserMentions(results.comment.contents));
+
+        newsItem.summary = markdownParser(utils.replaceUserMentions(newsItem.summary));
+
+        res.render('comments/index', {
+          title: 'Comment',
+          item: newsItem,
+          comment: results.comment,
+          votes: results.votes
+        });
+      });
+    });
+};
+
 /**
  * GET /news/user/:id
  */
