@@ -13,7 +13,7 @@ block content
         a(href='/user/' + item.user.login, class='user')= item.user.login
         h4
           div(class="item-summary")!= item.body
-    include ../partials/postcomment
+    include ../comments/postcomment
 
     each comment, index in comments
       div.comment
