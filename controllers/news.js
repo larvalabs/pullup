@@ -336,6 +336,10 @@ exports.viewComment = function (req, res, next) {
 
 exports.editComment = function (req, res, next) {
   getNewsItemShowData(req.user, req.params.id, req.params.comment_id, function(results) {
+    if(req.user.username !== results.comments[0].poster.username) {
+      return res.redirect('/news/'+req.params.id+"/comments/"+req.params.comment_id);
+    }
+
     res.render('comments/index', {
       title: 'Comment',
       item: results.newsItem,

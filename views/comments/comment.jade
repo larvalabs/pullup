@@ -1,5 +1,5 @@
 div.comment
-    if !edit
+    if !edit && user && comment.poster.username === user.username
         a(href="/news/#{item.id}/comments/#{comment.id}/edit", style="float:right")="edit"
 
     a(href='/user/' + comment.poster.username)= comment.poster.username
