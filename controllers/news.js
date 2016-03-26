@@ -89,50 +89,14 @@ exports.comments = function (req, res, next) {
     return res.redirect(utils.urlWithoutQueryParam(req.originalUrl, 'last_comment'));
   }
 
-  NewsItem
-  .findById(req.params.id)
-  .populate('poster')
-  .exec(function (err, newsItem) {
-
-    if(err) return next(err);
-    if (!newsItem) {
-      req.flash('errors', { msg: 'News item not found.' });
-      return res.redirect('/news');
-    }
-
-    async.parallel({
-      votes: function (cb) {
-        addVotesToNewsItems(newsItem, req.user, cb);
-      },
-      comments: function (cb) {
-        Comment
-        .find({
-          item: newsItem._id,
-          itemType: 'news'
-        })
-        .sort({created: 1})
-        .populate('poster')
-        .exec(cb);
-      }
-    }, function (err, results) {
-
-      if(err) return next(err);
-
-      _.each(results.comments, function (comment,i,l) {
-        comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
-      });
-
-      newsItem.summary = markdownParser(utils.replaceUserMentions(newsItem.summary));
-
-      res.render('news/show', {
-        title: newsItem.title,
-        tab: 'news',
-        item: newsItem,
-        comments: results.comments,
-        votes: results.votes
-      });
+  getNewsItemShowData(req.user, req.params.id, function(results) {
+    res.render('news/show', {
+      title: results.newsItem.title,
+      tab: 'news',
+      item: results.newsItem,
+      comments: results.comments,
+      votes: results.votes
     });
-
   });
 };
 
@@ -275,6 +239,64 @@ exports.postComment = function (req, res, next) {
   });
 };
 
+function getNewsItemShowData(user, itemId, commentId, callback) {
+  if (arguments.length === 3){
+    callback = commentId;
+    commentId = null;
+  }
+  NewsItem
+    .findById(itemId)
+    .populate('poster')
+    .exec(function (err, newsItem) {
+
+      if(err) return next(err);
+      if (!newsItem) {
+        req.flash('errors', { msg: 'News item not found.' });
+        return res.redirect('/news');
+      }
+
+      async.parallel({
+        votes: function (cb) {
+          addVotesToNewsItems(newsItem, user, cb);
+        },
+        comments: function (cb) {
+          if (commentId) {
+            Comment
+              .findById(commentId)
+              .populate('poster')
+              .exec(cb);
+          } else {
+            Comment
+              .find({
+                item: newsItem._id,
+                itemType: 'news'
+              })
+              .sort({created: 1})
+              .populate('poster')
+              .exec(cb);
+          }
+
+        }
+      }, function (err, results) {
+
+        if (err) return next(err);
+
+        if(!Array.isArray(results.comments)) {
+          results.comments = [results.comments];
+        }
+
+        _.each(results.comments, function (comment, i, l) {
+          comment.source = comment.contents;
+          comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
+        });
+
+        newsItem.summary = markdownParser(utils.replaceUserMentions(newsItem.summary));
+        results.newsItem = newsItem;
+
+        callback(results);
+      });
+    });
+}
 exports.deleteComment = function (req, res, next) {
   var errors = req.validationErrors();
 
@@ -302,44 +324,26 @@ exports.deleteComment = function (req, res, next) {
 };
 
 exports.viewComment = function (req, res, next) {
-  NewsItem
-    .findById(req.params.id)
-    .populate('poster')
-    .exec(function (err, newsItem) {
-
-      if(err) return next(err);
-      if (!newsItem) {
-        req.flash('errors', { msg: 'News item not found.' });
-        return res.redirect('/news');
-      }
-
-      async.parallel({
-        votes: function (cb) {
-          addVotesToNewsItems(newsItem, req.user, cb);
-        },
-        comment: function (cb) {
-          Comment
-            .findById(req.params.comment_id)
-            .populate('poster')
-            .exec(cb);
-        }
-      }, function (err, results) {
-
-        if (err) return next(err);
-
-        results.comment.source = results.comment.contents
-        results.comment.contents = markdownParser(utils.replaceUserMentions(results.comment.contents));
-
-        newsItem.summary = markdownParser(utils.replaceUserMentions(newsItem.summary));
-
-        res.render('comments/index', {
-          title: 'Comment',
-          item: newsItem,
-          comment: results.comment,
-          votes: results.votes
-        });
-      });
+  getNewsItemShowData(req.user, req.params.id, req.params.comment_id, function(results) {
+    res.render('comments/index', {
+      title: 'Comment',
+      item: results.newsItem,
+      comment: results.comments[0],
+      votes: results.votes
     });
+  });
+};
+
+exports.editComment = function (req, res, next) {
+  getNewsItemShowData(req.user, req.params.id, req.params.comment_id, function(results) {
+    res.render('comments/index', {
+      title: 'Comment',
+      item: results.newsItem,
+      comment: results.comments[0],
+      votes: results.votes,
+      edit: true
+    });
+  });
 };
 
 /**

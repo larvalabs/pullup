@@ -1,6 +1,11 @@
 if user
     .row
-      form(action=item._id + '/comments', method='POST')
+
+      if edit
+        - var url = '/' + item._id + '/comments/' + comment.id + "/update"
+      else
+        - var url = '/' + item._id + '/comment'
+      form(action=url, method='POST')
         .form-group.markdown.row
           ul.nav.nav-tabs.col-sm-12
             li.active
@@ -9,9 +14,11 @@ if user
               a(href="#preview-tab-content", data-toggle="tab") Preview
           .tab-content.col-sm-12
             .tab-pane.fade.in.active#edit-tab-content
-              textarea.form-control(type='text', class="user-atwho" name='contents', id='summary', style='height:200px')=comment.source
+              textarea.form-control(type='text', class="user-atwho" name='contents', id='summary', style='height:200px')
+                if comment
+                  != comment.source
             .tab-pane.fade.in#preview-tab-content
               span Loading...
         .row
             .col-sm-3
-                input.btn.btn-primary.btn-block(type='submit', value='Add Comment')
+                input.btn.btn-primary.btn-block(type='submit', value=edit ? 'Update Comment' : 'Add Comment')
