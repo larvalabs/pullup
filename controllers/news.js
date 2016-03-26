@@ -346,6 +346,48 @@ exports.editComment = function (req, res, next) {
   });
 };
 
+exports.updateComment = function (req, res, next) {
+  req.assert('contents', 'Comment cannot be blank.').notEmpty();
+  //req.assert('user', 'User must be logged in.').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (!req.user) {
+    errors.push({
+      param: 'user',
+      msg: 'User must be logged in.',
+      value: undefined
+    });
+  }
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('back');
+  }
+
+  Comment
+    .findById(req.params.comment_id)
+    .exec(function(err, comment) {
+      if (err) next(err);
+
+      if(req.user.id.toString() !== comment.poster.toString()){
+        req.flash('errors', {
+          param: 'user',
+          msg: 'User does not have access to this comment.',
+          value: undefined
+        });
+        return res.redirect('back');
+      }
+
+      comment.contents = req.body.contents;
+      comment.save(function(err, comment) {
+        if (err) next(err);
+        req.flash('success', { msg  : 'Comment updated!' });
+        return res.redirect('/news/'+req.params.id+"/comments/"+req.params.comment_id);
+      });
+    });
+};
+
 /**
  * GET /news/user/:id
  */

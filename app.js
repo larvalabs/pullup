@@ -190,6 +190,7 @@ app.post('/news/:id/comments', passportConf.isAuthenticated, newsController.post
 app.get('/news/:id/comments/:comment_id', newsController.viewComment);
 app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, newsController.deleteComment);
 app.get('/news/:id/comments/:comment_id/edit', passportConf.isAuthenticated, newsController.editComment);
+app.post('/news/:id/comments/:comment_id/update', passportConf.isAuthenticated, newsController.updateComment);
 app.post('/news/:id', votesController.voteFor('news', '/'));
 app.get('/news/user/:id', newsController.userNews);
 

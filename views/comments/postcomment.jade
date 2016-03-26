@@ -2,10 +2,10 @@ if user
     .row
 
       if edit
-        - var url = '/' + item._id + '/comments/' + comment.id + "/update"
+        - var url = '/news/' + item._id + '/comments/' + comment.id + "/update"
       else
-        - var url = '/' + item._id + '/comment'
-      form(action=url, method='POST')
+        - var url = '/news/' + item._id + '/comment'
+      form(action=url, method='POST', class="post-comment")
         .form-group.markdown.row
           ul.nav.nav-tabs.col-sm-12
             li.active

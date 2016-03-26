@@ -1,13 +1,16 @@
 div.comment
+    if !edit
+        a(href="/news/#{item.id}/comments/#{comment.id}/edit", style="float:right")="edit"
+
     a(href='/user/' + comment.poster.username)= comment.poster.username
     if comment.poster.profile.description
         span.description=comment.poster.profile.description
-    a(href="/news/#{item.id}/comments/#{comment.id}/edit", style="float:right")="edit"
     a.timeago(href="/news/#{item.id}/comments/#{comment.id}", title="#{comment.created}")= timeago(comment.created)
+
     blockquote.content
-        +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
         if edit
             include postcomment
         else
+            +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
             != comment.contents
 
