@@ -18,6 +18,8 @@ var utils = require('../utils');
 var secrets = require('../config/secrets');
 var sendgrid  = require('sendgrid')(secrets.sendgrid.user, secrets.sendgrid.password);
 
+const ONE_HOUR = 60 * 60 * 1000;  // ms
+
 /**
  * News Item config
  */
@@ -239,6 +241,10 @@ exports.postComment = function (req, res, next) {
   });
 };
 
+function commentIsEditable(comment) {
+  return ((new Date) - comment.created) < ONE_HOUR;
+}
+
 function getNewsItemShowData(user, itemId, commentId, callback) {
   if (arguments.length === 3){
     callback = commentId;
@@ -288,6 +294,7 @@ function getNewsItemShowData(user, itemId, commentId, callback) {
         _.each(results.comments, function (comment, i, l) {
           comment.source = comment.contents;
           comment.contents = markdownParser(utils.replaceUserMentions(comment.contents));
+          comment.editable = commentIsEditable(comment);
         });
 
         newsItem.summary = markdownParser(utils.replaceUserMentions(newsItem.summary));
@@ -336,7 +343,9 @@ exports.viewComment = function (req, res, next) {
 
 exports.editComment = function (req, res, next) {
   getNewsItemShowData(req.user, req.params.id, req.params.comment_id, function(results) {
-    if(req.user.username !== results.comments[0].poster.username) {
+    var userHasAccess = req.user.username === results.comments[0].poster.username;
+    var commentEditable = commentIsEditable(results.comments[0]);
+    if(!userHasAccess || !commentEditable) {
       return res.redirect('/news/'+req.params.id+"/comments/"+req.params.comment_id);
     }
 
@@ -345,7 +354,7 @@ exports.editComment = function (req, res, next) {
       item: results.newsItem,
       comment: results.comments[0],
       votes: results.votes,
-      edit: true
+      editing: true
     });
   });
 };
@@ -378,6 +387,15 @@ exports.updateComment = function (req, res, next) {
         req.flash('errors', {
           param: 'user',
           msg: 'User does not have access to this comment.',
+          value: undefined
+        });
+        return res.redirect('back');
+      }
+
+      if(!commentIsEditable(comment)) {
+        req.flash('errors', {
+          param: 'user',
+          msg: 'Sorry, this comment is too old to edit.',
           value: undefined
         });
         return res.redirect('back');

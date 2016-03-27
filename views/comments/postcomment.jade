@@ -1,7 +1,7 @@
 if user
     .row
 
-      if edit
+      if editing
         - var url = '/news/' + item._id + '/comments/' + comment.id + "/update"
       else
         - var url = '/news/' + item._id + '/comment'
@@ -21,4 +21,4 @@ if user
               span Loading...
         .row
             .col-sm-3
-                input.btn.btn-primary.btn-block(type='submit', value=edit ? 'Update Comment' : 'Add Comment')
+                input.btn.btn-primary.btn-block(type='submit', value=editing ? 'Update Comment' : 'Add Comment')

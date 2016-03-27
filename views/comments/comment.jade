@@ -1,5 +1,7 @@
 div.comment
-    if !edit && user && comment.poster.username === user.username
+    - var editable = comment.editable && !editing;
+    - var userCanEdit = user && comment.poster.username === user.username;
+    if editable && userCanEdit
         a(href="/news/#{item.id}/comments/#{comment.id}/edit", style="float:right")="edit"
 
     a(href='/user/' + comment.poster.username)= comment.poster.username
@@ -8,7 +10,7 @@ div.comment
     a.timeago(href="/news/#{item.id}/comments/#{comment.id}", title="#{comment.created}")= timeago(comment.created)
 
     blockquote.content
-        if edit
+        if editing
             include postcomment
         else
             +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
