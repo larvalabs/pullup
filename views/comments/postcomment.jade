@@ -4,7 +4,7 @@ if user
       if editing
         - var url = '/news/' + item._id + '/comments/' + comment.id + "/update"
       else
-        - var url = '/news/' + item._id + '/comment'
+        - var url = '/news/' + item._id + '/comments'
       form(action=url, method='POST', class="post-comment")
         .form-group.markdown.row
           ul.nav.nav-tabs.col-sm-12
