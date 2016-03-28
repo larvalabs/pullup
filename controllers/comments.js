@@ -16,10 +16,10 @@ var utils = require('../utils');
 var secrets = require('../config/secrets');
 var sendgrid  = require('sendgrid')(secrets.sendgrid.user, secrets.sendgrid.password);
 
-const ONE_HOUR = 60 * 60 * 1000;  // ms
+var ONE_HOUR = 60 * 60 * 1000;  // ms
 
 function commentIsEditable(comment) {
-  return ((new Date) - comment.created) < ONE_HOUR;
+  return ((new Date()) - comment.created) < ONE_HOUR;
 }
 
 function getNewsItemShowData(user, itemId, commentId, callback) {
