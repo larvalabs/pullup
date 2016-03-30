@@ -7,49 +7,49 @@ block content
 
     .row.user-profile
         .col-lg-8
-            if user.profile
-                if user.profile.picture
-                    img(src='#{user.profile.picture}')
-                if user.profile.name
+            if userView.profile
+                if userView.profile.picture
+                    img(src='#{userView.profile.picture}')
+                if userView.profile.name
                     div.user-header
-                        h1.name #{user.profile.name}
-                        if user.profile.description
-                            h5.description #{user.profile.description}
-                if user.profile.bio
-                    p!= user.profile.bio
+                        h1.name #{userView.profile.name}
+                        if userView.profile.description
+                            h5.description #{userView.profile.description}
+                if userView.profile.bio
+                    p!= userView.profile.bio
                     br
         .col-lg-4
             dl.pull-right-lg
                 dt GitHub:
                 dd
-                    a(href='http://github.com/#{user.username}', target='_blank') http://github.com/#{user.username}
+                    a(href='http://github.com/#{userView.username}', target='_blank') http://github.com/#{userView.username}
                 br
                 dt Contributions:
                 dd
-                    span=user.profile.contributions_count
+                    span=userView.profile.contributions_count
                 br
-                if user.profile.location
+                if userView.profile.location
                     dt Location:
-                    dd= user.profile.location
+                    dd= userView.profile.location
                     br
-                if user.profile.website
+                if userView.profile.website
                     dt Website:
                     dd
-                        if (!user.profile.website.match(/^http[s]?:\/\//))
-                            - user.profile.website = 'http://' + user.profile.website
+                        if (!userView.profile.website.match(/^http[s]?:\/\//))
+                            - userView.profile.website = 'http://' + userView.profile.website
 
-                        a(href='#{user.profile.website}', target='_blank') #{user.profile.website}
+                        a(href='#{userView.profile.website}', target='_blank') #{userView.profile.website}
                     br
     .page-header
         ul.nav.nav-tabs
             li(class=tab == 'news' ? 'active' : '')
-                a(href='/user/#{user.username}')
+                a(href='/user/#{userView.username}')
                     h4 News Submitted
             li(class=tab == 'comments' ? 'active' : '')
-                a(href='/user/#{user.username}/comments')
+                a(href='/user/#{userView.username}/comments')
                     h4 Comments
             li(class=tab == 'contributions' ? 'active' : '')
-                a(href='/user/#{user.username}/contributions')
+                a(href='/user/#{userView.username}/contributions')
                     h4 Contributions
 
     div.tab-content
