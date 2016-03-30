@@ -21,6 +21,7 @@ module.exports = {
         'dck273',
         'dfjones',
         'djstearns',
+        'DusanSacha',
         'dylnclrk',
         'eik3',
         'euank',
