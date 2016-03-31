@@ -99,7 +99,7 @@ exports.addVotesToItem = function (item, item_id, user, votes) {
     .reduce(function (prev, curr, i) {
 
       // count this item as voted for if the logged in user has a vote tallied
-      if(user && user.id && curr.voter.toString() === user.id.toString()) {
+      if(user && user.id && curr.voter.id.toString() === user.id.toString()) {
         item.votedFor = true;
       }
 

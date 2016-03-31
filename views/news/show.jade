@@ -8,7 +8,7 @@ block content
     .page-header
         h3
             span.vote-count=votes.votes
-            if !item.votedFor
+            if !votes.votedFor
                 form(action='/news/' + item._id, method='POST', class='upvote-form')
                     input(type='hidden', name='amount', value='1')
                     button(type='submit', class='upvote')
