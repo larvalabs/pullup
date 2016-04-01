@@ -31,6 +31,7 @@ var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 var newsController = require('./controllers/news');
+var commentController = require('./controllers/comments');
 var issuesController = require('./controllers/issues');
 var votesController = require('./controllers/votes');
 var chatController = require('./controllers/chat');
@@ -184,12 +185,20 @@ app.get('/news/summarize', passportConf.isAuthenticated, newsController.summariz
 
 app.get('/news/source/:source', newsController.sourceNews);
 app.get('/news/source/:source/page/:page', newsController.sourceNews);
-app.get('/news/:id', newsController.comments);
 app.post('/news/:id/delete', newsController.deleteNewsItemAndComments);
-app.post('/news/:id/comments', passportConf.isAuthenticated, newsController.postComment);
-app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, newsController.deleteComment);
 app.post('/news/:id', votesController.voteFor('news', '/'));
 app.get('/news/user/:id', newsController.userNews);
+
+/**
+ * Comment routes
+ */
+
+app.get('/news/:id', commentController.comments);
+app.post('/news/:id/comments', passportConf.isAuthenticated, commentController.postComment);
+app.get('/news/:id/comments/:comment_id', commentController.viewComment);
+app.post('/news/:id/comments/:comment_id/delete', passportConf.isAuthenticated, commentController.deleteComment);
+app.get('/news/:id/comments/:comment_id/edit', passportConf.isAuthenticated, commentController.editComment);
+app.post('/news/:id/comments/:comment_id/update', passportConf.isAuthenticated, commentController.updateComment);
 
 /**
  * Issues Routes

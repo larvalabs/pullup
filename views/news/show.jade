@@ -4,48 +4,6 @@ include ../mixins/delete
 block content
   #news-show.news-item
     include ../partials/joinsite
-
-    .page-header
-        h3
-            span.vote-count=votes.votes
-            if !votes.votedFor
-                form(action='/news/' + item._id, method='POST', class='upvote-form')
-                    input(type='hidden', name='amount', value='1')
-                    button(type='submit', class='upvote')
-                        i.fa.fa-chevron-up
-
-            a(href=item.url)= item.title
-            if item.summary && ! item.isSelfPost()
-                | &nbsp;
-                a(href="#", class="show-summary")
-                    | ...
-            +delete(item.poster, '/news/' + item._id + '/delete')
-        p.voters
-            each voter, index in votes.voters
-                a.voter(href="/user/#{voter}")=voter
-        h4
-          div(class="item-summary")!= item.summary
-        = 'submitted '
-        span.timeago(title="#{item.created}")= timeago(item.created)
-        = ' from '
-        a(href='/news/source/' + item.source, class='source')= item.source
-        = ' by '
-        a(href='/user/' + item.poster.username, class='user')= item.poster.username
-        if item.poster.profile.description
-            = ', '
-            span(title="User description")= item.poster.profile.description
-
-    include ../partials/postcomment
-
-    each comment, index in comments
-      div.comment
-        a(href='/user/' + comment.poster.username)= comment.poster.username
-        if comment.poster.profile.description
-            span.description=comment.poster.profile.description
-        span.timeago(title="#{comment.created}")= timeago(comment.created)
-        blockquote.content
-            +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
-            != comment.contents
-
-    if !user && comments.length == 0
-        include ../partials/nocomments
+    include newsitem
+    include ../comments/postcomment
+    include ../comments/listcomments

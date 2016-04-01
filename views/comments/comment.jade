@@ -1,0 +1,18 @@
+div.comment
+    - var editable = comment.editable && !editing;
+    - var userCanEdit = user && comment.poster.username === user.username;
+    if editable && userCanEdit
+        a(href="/news/#{item.id}/comments/#{comment.id}/edit", style="float:right")="edit"
+
+    a(href='/user/' + comment.poster.username)= comment.poster.username
+    if comment.poster.profile.description
+        span.description=comment.poster.profile.description
+    a.timeago(href="/news/#{item.id}/comments/#{comment.id}", title="#{comment.created}")= timeago(comment.created)
+
+    blockquote.content
+        if editing
+            include postcomment
+        else
+            +delete(comment.poster, '/news/' + item.id + '/comments/' + comment.id + '/delete')
+            != comment.contents
+
