@@ -228,12 +228,25 @@ exports.deleteComment = function (req, res, next) {
   }
 
   Comment
-    .findByIdAndRemove(req.params.comment_id)
+    .findById(req.params.comment_id)
     .exec(function(err, comment) {
       if (err) res.redirect('back');
 
-      req.flash('success', { msg: 'Comment deleted.' });
-      res.redirect('back');
+      if (req.user.id.toString() !== comment.poster.toString()){
+        req.flash('errors', [{
+          param: 'user',
+          msg: 'You do not have access to delete this comment.',
+          value: undefined
+        }]);
+        return res.redirect('back');
+      }
+
+      comment.remove(function(err){
+        if (err) res.redirect('back');
+
+        req.flash('success', { msg: 'Comment deleted.' });
+        res.redirect('back');
+      })
     });
 };
 
