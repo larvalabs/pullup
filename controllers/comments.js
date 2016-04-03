@@ -246,7 +246,7 @@ exports.deleteComment = function (req, res, next) {
 
         req.flash('success', { msg: 'Comment deleted.' });
         res.redirect('back');
-      })
+      });
     });
 };
 

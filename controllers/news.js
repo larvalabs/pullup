@@ -94,22 +94,38 @@ exports.deleteNewsItemAndComments = function (req, res, next) {
     return res.redirect('back');
   }
 
-  async.parallel({
-    newsItem: function(cb) {
-      NewsItem
-      .findByIdAndRemove(req.params.id)
-      .exec(cb);
-    },
-    comments: function(cb) {
-      Comment
-      .remove({item: req.params.id}, cb);
-    }
-  }, function (err, results) {
-    if (err) res.redirect('back');
+  NewsItem
+    .findById(req.params.id)
+    .exec(function(err, newsItem){
 
-    req.flash('success', { msg: 'News item and comments deleted.' });
-    res.redirect('/news');
-  });
+      if(req.user.id.toString() !== newsItem.poster.toString()){
+        req.flash('errors', [{
+          param: 'user',
+          msg: 'You do not have access to delete this itek.',
+          value: undefined
+        }]);
+        return res.redirect('back');
+      }
+
+      async.parallel({
+        newsItem: function(cb) {
+          NewsItem
+            .findByIdAndRemove(req.params.id)
+            .exec(cb);
+        },
+        comments: function(cb) {
+          Comment
+            .remove({item: req.params.id}, cb);
+        }
+      }, function (err, results) {
+        if (err) res.redirect('back');
+
+        req.flash('success', { msg: 'News item and comments deleted.' });
+        res.redirect('/news');
+      });
+    });
+
+
 };
 
 /**
