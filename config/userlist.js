@@ -93,6 +93,7 @@ module.exports = {
         'treygriffith',
         'utdemir',
         'vallyath',
+        'vellip',
         'vvayne',
         'williamle8300',
         'willurd',
