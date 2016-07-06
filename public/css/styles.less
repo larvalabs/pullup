@@ -251,6 +251,26 @@ body {
           }
         }
 
+        .upvote-wrapper.has-vote {
+          display: none;
+        }
+
+        .upvote-wrapper.has-vote + .vote-count-wrapper {
+          top: 0;
+          height: 100%;
+
+          &:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+          }
+
+          .vote-count {
+            top: 0;
+          }
+        }
+
         .vote-count-wrapper {
           position: absolute;
           left: 0;

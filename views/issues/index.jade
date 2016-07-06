@@ -16,7 +16,7 @@ block content
                 div.col-sm-10 Title
             each issue, index in issues
                 li.row.news-item
-                    div.col-xs-2.col-sm-1.upvote-wrapper
+                    div.col-xs-2.col-sm-1.upvote-wrapper(class=issue.votedFor ? 'has-vote' : '')
                         if !issue.votedFor
                             form(action='/issues/' + issue._id, method='POST', class='upvote-form')
                                 input(type='hidden', name='amount', value='1')

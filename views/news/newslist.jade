@@ -8,7 +8,7 @@ ul
             div.col-sm-3 Source
     each item, index in items
         li.row.news-item
-            div.col-xs-2.col-sm-2.col-lg-1.upvote-wrapper
+            div.col-xs-2.col-sm-2.col-lg-1.upvote-wrapper(class=item.votedFor ? 'has-vote' : '')
                 if page
                     span.hidden-xs.text-muted.col-sm-1= ((page - 1) * newsItemsPerPage) + (index + 1)
                 else
