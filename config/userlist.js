@@ -63,6 +63,7 @@ module.exports = {
         'michaelnovakjr',
         'mreinhardt',
         'msied',
+        'naeri-kailash',
         'naturalethic',
         'negitivezero',
         'omphalosskeptic',
