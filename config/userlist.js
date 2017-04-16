@@ -98,5 +98,6 @@ module.exports = {
         'williamle8300',
         'willurd',
         'zhanglun'
+        'gregtHill'
     ]
 };
