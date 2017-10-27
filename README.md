@@ -61,7 +61,7 @@ You can find out more technical details in the [Readme for Hackathon Starter](ht
 Seeding The Database
 --------------------
 
-Firstly make sure you have installed ```grunt-cli``` globally.
+Firstly make sure you have installed ```grunt-cli``` globally
 
 ```bash
 npm install -g grunt-cli
