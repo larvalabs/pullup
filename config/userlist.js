@@ -75,6 +75,7 @@ module.exports = {
         'roryokane',
         'rtfeldman',
         'ryanwi',
+        'ryjones',
         'samcal',
         'shedd',
         'singularperturbation',
