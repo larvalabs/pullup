@@ -24,7 +24,7 @@
     "github": "~0.1",
     "jade": "~1.1.5",
     "less-middleware": "~0.1.15",
-    "mongoose": "~3.8.5",
+    "mongoose": "~5.7.7",
     "node-cache": "~0.4.0",
     "octonode": "~0.5.0",
     "passport": "~0.2.0",
